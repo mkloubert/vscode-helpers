@@ -1,0 +1,55 @@
+{
+    "name": "vscode-toolbox",
+    "author": "Marcel Joachim Kloubert",
+    "version": "0.0.1",
+    "description": "Helper functions and classes for VS Code (extensions)",
+    "tags": [
+        "functions",
+        "classes",
+        "typescript",
+        "tools",
+        "toolbox",
+        "helpers",
+        "vscode"
+    ],
+    "keywords": [
+        "functions",
+        "classes",
+        "typescript",
+        "tools",
+        "toolbox",
+        "helpers",
+        "vscode"
+    ],
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/mkloubert/vscode-toolbox"
+    },
+    "bugs": {
+        "url": "https://github.com/mkloubert/vscode-toolbox/issues"
+    },
+    "homepage": "https://github.com/mkloubert/vscode-toolbox",
+    "scripts": {
+        "build": "tsc -p ./",
+        "prepack": "tsc -p ./",
+        "compile": "tsc -watch -p ./",
+        "lint": "tslint --project tsconfig.json -e src/*.d.ts -t verbose",
+        "prepare": "node ./node_modules/vscode/bin/install",
+        "test": "echo 'Test is not enabled for this package'"
+    },
+    "dependencies": {
+        "lodash": "^4.17.5"
+    },
+    "devDependencies": {
+        "@types/lodash": "^4.14.104",
+        "tslint": "^5.7.0",
+        "typescript": "^2.7.2",
+        "vscode": "^1.1.5"
+    },
+    "engines": {
+        "vscode": "^1.20.0"
+    }
+}

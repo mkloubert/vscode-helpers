@@ -1,0 +1,3 @@
+/lib/**/*.map
+/node_modules
+/pushall.sh
