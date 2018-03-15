@@ -37,10 +37,6 @@ export type SimpleCompletedAction<TResult> = (err: any, result?: TResult) => voi
 export function applyFuncFor<TFunc extends Function = Function>(
     func: TFunc, thisArgs: any
 ): TFunc {
-    if (!func) {
-        return func;
-    }
-
     return <any>function() {
         return func.apply(thisArgs, arguments);
     };
@@ -114,12 +110,8 @@ export function compareValues<T>(x: T, y: T): number {
  */
 export function compareValuesBy<T, U>(x: T, y: T,
                                       selector: (t: T) => U): number {
-    if (!selector) {
-        selector = (t) => <any>t;
-    }
-
-    return compareValues<U>(selector(x),
-                            selector(y));
+    return compareValues(selector(x),
+                         selector(y));
 }
 
 /**

@@ -1,0 +1,9 @@
+/.vscode/**/*
+/lib/**/*.map
+/src/**/*
+/typedoc/**/*
+/.gitignore
+/pushall.sh
+/tsconfig.json
+/tslint.json
+/typedoc.sh
