@@ -1,40 +1,7 @@
 import * as vscode from 'vscode';
 export * from './logging';
+export * from './progress';
 export * from './workflows';
-/**
- * A progress context.
- */
-export interface ProgressContext {
-    /**
-     * Gets or sets the status message.
-     */
-    message: string;
-}
-/**
- * Progress options.
- */
-export interface ProgressOptions {
-    /**
-     * The location.
-     */
-    readonly location?: vscode.ProgressLocation;
-    /**
-     * The title.
-     */
-    readonly title?: string;
-}
-/**
- * A progress result.
- */
-export declare type ProgressResult<TResult = any> = TResult | PromiseLike<TResult>;
-/**
- * A progress task.
- *
- * @param {ProgressContext} context The underlying context.
- *
- * @return {ProgressResult<TResult>} The result.
- */
-export declare type ProgressTask<TResult = any> = (context: ProgressContext) => ProgressResult<TResult>;
 /**
  * Describes a simple 'completed' action.
  *
@@ -139,12 +106,3 @@ export declare function toEOL(eol?: vscode.EndOfLine): string;
  * @return {string} 'val' as string.
  */
 export declare function toStringSafe(val: any, defaultVal?: string): string;
-/**
- * Runs a task with progress information.
- *
- * @param {ProgressTask<TResult>} task The task to execute.
- * @param {ProgressOptions} [options] Additional options.
- *
- * @return {Promise<TResult>} The promise with the result.
- */
-export declare function withProgress<TResult = any>(task: ProgressTask<TResult>, options?: ProgressOptions): Promise<TResult>;

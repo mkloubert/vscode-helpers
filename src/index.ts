@@ -20,45 +20,8 @@ import * as OS from 'os';
 import * as vscode from 'vscode';
 
 export * from './logging';
+export * from './progress';
 export * from './workflows';
-
-/**
- * A progress context.
- */
-export interface ProgressContext {
-    /**
-     * Gets or sets the status message.
-     */
-    message: string;
-}
-
-/**
- * Progress options.
- */
-export interface ProgressOptions {
-    /**
-     * The location.
-     */
-    readonly location?: vscode.ProgressLocation;
-    /**
-     * The title.
-     */
-    readonly title?: string;
-}
-
-/**
- * A progress result.
- */
-export type ProgressResult<TResult = any> = TResult | PromiseLike<TResult>;
-
-/**
- * A progress task.
- *
- * @param {ProgressContext} context The underlying context.
- *
- * @return {ProgressResult<TResult>} The result.
- */
-export type ProgressTask<TResult = any> = (context: ProgressContext) => ProgressResult<TResult>;
 
 /**
  * Describes a simple 'completed' action.
@@ -282,56 +245,4 @@ export function toStringSafe(val: any, defaultVal = ''): string {
     } catch { }
 
     return '' + val;
-}
-
-/**
- * Runs a task with progress information.
- *
- * @param {ProgressTask<TResult>} task The task to execute.
- * @param {ProgressOptions} [options] Additional options.
- *
- * @return {Promise<TResult>} The promise with the result.
- */
-export async function withProgress<TResult = any>(task: ProgressTask<TResult>,
-                                                  options?: ProgressOptions): Promise<TResult> {
-    if (!options) {
-        options = {};
-    }
-
-    const OPTS: vscode.ProgressOptions = {
-        location: _.isNil(options.location) ? vscode.ProgressLocation.Window : options.location,
-        title: toStringSafe(options.title),
-    };
-
-    return vscode.window.withProgress(OPTS, (p) => {
-        const CTX: ProgressContext = {
-            message: undefined,
-        };
-
-        // CTX.message
-        let msg: string;
-        Object.defineProperty(CTX, 'message', {
-            enumerable: true,
-
-            get: () => {
-                return msg;
-            },
-
-            set: (newValue) => {
-                if (!_.isNil(newValue)) {
-                    newValue = toStringSafe(newValue);
-                }
-
-                p.report({
-                    message: newValue,
-                });
-
-                msg = newValue;
-            }
-        });
-
-        return Promise.resolve(
-            task(CTX)
-        );
-    });
 }
