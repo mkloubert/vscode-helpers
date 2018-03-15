@@ -1,5 +1,5 @@
 {
-    "name": "vscode-toolbox",
+    "name": "vscode-helpers",
     "author": "Marcel Joachim Kloubert",
     "version": "0.1.0",
     "description": "Helper functions and classes for VS Code (extensions)",
@@ -8,7 +8,6 @@
         "classes",
         "typescript",
         "tools",
-        "toolbox",
         "helpers",
         "vscode"
     ],
@@ -20,7 +19,6 @@
         "javascript",
         "typescript",
         "tools",
-        "toolbox",
         "helpers",
         "vscode",
         "visual",
@@ -34,12 +32,12 @@
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/mkloubert/vscode-toolbox"
+        "url": "https://github.com/mkloubert/vscode-helpers"
     },
     "bugs": {
-        "url": "https://github.com/mkloubert/vscode-toolbox/issues"
+        "url": "https://github.com/mkloubert/vscode-helpers/issues"
     },
-    "homepage": "https://github.com/mkloubert/vscode-toolbox",
+    "homepage": "https://github.com/mkloubert/vscode-helpers",
     "scripts": {
         "build": "tsc -p ./",
         "prepack": "tsc -p ./",
