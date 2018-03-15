@@ -15,11 +15,19 @@
     "keywords": [
         "functions",
         "classes",
+        "js",
+        "ecmascript",
+        "javascript",
         "typescript",
         "tools",
         "toolbox",
         "helpers",
-        "vscode"
+        "vscode",
+        "visual",
+        "studio",
+        "code",
+        "extensions",
+        "modules"
     ],
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
@@ -36,7 +44,7 @@
         "build": "tsc -p ./",
         "prepack": "tsc -p ./",
         "compile": "tsc -watch -p ./",
-        "lint": "tslint --project tsconfig.json -e src/*.d.ts -t verbose",
+        "lint": "tslint --project tsconfig.json -e src/*.ts -t verbose",
         "prepare": "node ./node_modules/vscode/bin/install",
         "test": "echo 'Test is not enabled for this package'"
     },
@@ -47,7 +55,7 @@
         "@types/lodash": "^4.14.104",
         "tslint": "^5.7.0",
         "typescript": "^2.7.2",
-        "vscode": "^1.1.5"
+        "vscode": "^1.1.13"
     },
     "engines": {
         "vscode": "^1.20.0"
