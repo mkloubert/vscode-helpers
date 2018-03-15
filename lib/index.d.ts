@@ -1,3 +1,5 @@
+/// <reference types="node" />
+import * as Moment from 'moment';
 import * as vscode from 'vscode';
 export * from './logging';
 export * from './progress';
@@ -35,6 +37,22 @@ export declare function applyFuncFor<TFunc extends Function = Function>(func: TF
  * @return {T[]} The value as array.
  */
 export declare function asArray<T>(val: T | T[], removeEmpty?: boolean): T[];
+/**
+ * Returns a value as local Moment instance.
+ *
+ * @param {any} val The input value.
+ *
+ * @return {Moment.Moment} The output value.
+ */
+export declare function asLocalTime(val: any): Moment.Moment;
+/**
+ * Returns a value as UTC Moment instance.
+ *
+ * @param {any} val The input value.
+ *
+ * @return {Moment.Moment} The output value.
+ */
+export declare function asUTC(val: any): Moment.Moment;
 /**
  * Clones an object / value deep.
  *
@@ -80,6 +98,14 @@ export declare function createCompletedAction<TResult = any>(resolve: (value?: T
  * @return {string} The normalized value.
  */
 export declare function normalizeString(val: any, normalizer?: StringNormalizer): string;
+/**
+ * Promise version of 'crypto.randomBytes()' function.
+ *
+ * @param {number} size The size of the result.
+ *
+ * @return {Promise<Buffer>} The buffer with the random bytes.
+ */
+export declare function randomBytes(size: number): Promise<Buffer>;
 /**
  * Returns a value as boolean, which is not (null) and (undefined).
  *
