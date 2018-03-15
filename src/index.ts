@@ -259,5 +259,3 @@ export function toStringSafe(val: any, defaultVal = ''): string {
 
     return '' + val;
 }
-
-declare module "./logging";

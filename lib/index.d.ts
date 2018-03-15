@@ -112,4 +112,3 @@ export declare function toEOL(eol?: vscode.EndOfLine): string;
  * @return {string} 'val' as string.
  */
 export declare function toStringSafe(val: any, defaultVal?: string): string;
-declare module "./logging";
