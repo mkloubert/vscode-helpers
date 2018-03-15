@@ -27,6 +27,9 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [toBooleanSafe](#tobooleansafe-)
      * [toEOL](#toeol-)
      * [toStringSafe](#tostringsafe-)
+     * [tryClearInterval](#tryclearinterval-)
+     * [tryClearTimeout](#trycleartimeout-)
+     * [tryDispose](#trydispose-)
      * [withProgress](#withprogress-)
 4. [Support and contribute](#support-and-contribute-)
 5. [Documentation](#documentation-)
@@ -231,6 +234,39 @@ import { EndOfLine } as vscode from 'vscode';
 
 const eol_1 = vscode_helpers.toEOL();  // system's EOL
 const eol_2 = vscode_helpers.toEOL( EndOfLine.CRLF );  // \r\n
+```
+
+#### tryClearInterval [[&uarr;](#functions-)]
+
+```typescript
+let timer = setInterval(() => {
+    // do something
+}, 5979);
+
+vscode_helpers.tryClearInterval( timer );
+```
+
+#### tryClearTimeout [[&uarr;](#functions-)]
+
+```typescript
+let timer = setTimeout(() => {
+    // do something
+}, 23979);
+
+vscode_helpers.tryClearTimeout( timer );
+```
+
+#### tryDispose [[&uarr;](#functions-)]
+
+```typescript
+const OBJ = {
+    dispose: () => {
+        throw new Error( 'Could not dispose!' );
+    }
+};
+
+// (false)
+vscode_helpers.tryDispose( OBJ );
 ```
 
 #### toStringSafe [[&uarr;](#functions-)]

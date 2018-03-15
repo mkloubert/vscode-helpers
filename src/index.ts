@@ -330,3 +330,60 @@ export function toStringSafe(val: any, defaultVal = ''): string {
 
     return '' + val;
 }
+
+/**
+ * Tries to clear an interval.
+ *
+ * @param {NodeJS.Timer} intervalId The timeout (ID).
+ *
+ * @return {boolean} Operation was successfull or not.
+ */
+export function tryClearInterval(intervalId: NodeJS.Timer): boolean {
+    try {
+        if (!_.isNil(intervalId)) {
+            clearInterval(intervalId);
+        }
+
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
+/**
+ * Tries to clear a timeout.
+ *
+ * @param {NodeJS.Timer} timeoutId The timeout (ID).
+ *
+ * @return {boolean} Operation was successfull or not.
+ */
+export function tryClearTimeout(timeoutId: NodeJS.Timer): boolean {
+    try {
+        if (!_.isNil(timeoutId)) {
+            clearTimeout(timeoutId);
+        }
+
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
+/**
+ * Tries to dispose an object.
+ *
+ * @param {object} obj The object to dispose.
+ *
+ * @return {boolean} Operation was successful or not.
+ */
+export function tryDispose(obj: vscode.Disposable): boolean {
+    try {
+        if (obj && obj.dispose) {
+            obj.dispose();
+        }
+
+        return true;
+    } catch {
+        return false;
+    }
+}

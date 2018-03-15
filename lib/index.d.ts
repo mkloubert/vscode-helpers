@@ -132,3 +132,27 @@ export declare function toEOL(eol?: vscode.EndOfLine): string;
  * @return {string} 'val' as string.
  */
 export declare function toStringSafe(val: any, defaultVal?: string): string;
+/**
+ * Tries to clear an interval.
+ *
+ * @param {NodeJS.Timer} intervalId The timeout (ID).
+ *
+ * @return {boolean} Operation was successfull or not.
+ */
+export declare function tryClearInterval(intervalId: NodeJS.Timer): boolean;
+/**
+ * Tries to clear a timeout.
+ *
+ * @param {NodeJS.Timer} timeoutId The timeout (ID).
+ *
+ * @return {boolean} Operation was successfull or not.
+ */
+export declare function tryClearTimeout(timeoutId: NodeJS.Timer): boolean;
+/**
+ * Tries to dispose an object.
+ *
+ * @param {object} obj The object to dispose.
+ *
+ * @return {boolean} Operation was successful or not.
+ */
+export declare function tryDispose(obj: vscode.Disposable): boolean;
