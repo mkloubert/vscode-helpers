@@ -17,6 +17,8 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [compareValues](#comparevalues-)
      * [compareValuesBy](#comparevaluesny-)
      * [createCompletedAction](#createcompletedaction-)
+     * [createLogger](#createlogger-)
+     * [normalizeString](#normalizestring-)
      * [toBooleanSafe](#tobooleansafe-)
      * [toEOL](#toeol-)
      * [toStringSafe](#tostringsafe-)
@@ -116,6 +118,26 @@ function loadMyFileAsync() {
         });
     });
 }
+```
+
+#### createLogger [[&uarr;](#functions-)]
+
+```typescript
+import * as fs from 'fs';
+
+const LOGGER = vscode_helpers.createLogger((log) => {
+    fs.appendFileSync('./logFile.txt', log.message + "\r\n", 'utf8');
+});
+
+LOGGER.info('Hello, LOG!');
+```
+
+#### normalizeString [[&uarr;](#functions-)]
+
+```typescript
+const str_1 = vscode_helpers.normalizeString('aBc');  // 'abc'
+const str_2 = vscode_helpers.normalizeString(null);  // ''
+const str_3 = vscode_helpers.normalizeString('aBc', s => s.troUpperCase());  // 'ABC'
 ```
 
 #### toBooleanSafe [[&uarr;](#functions-)]

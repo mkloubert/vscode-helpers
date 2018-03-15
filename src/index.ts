@@ -18,6 +18,7 @@
 import * as _ from 'lodash';
 import * as OS from 'os';
 import * as vscode from 'vscode';
+import * as vscode_helpers_logging from './logging';
 
 /**
  * Describes a simple 'completed' action.
@@ -26,6 +27,15 @@ import * as vscode from 'vscode';
  * @param {TResult} [result] The result.
  */
 export type SimpleCompletedAction<TResult> = (err: any, result?: TResult) => void;
+
+/**
+ * Normalizes a string.
+ *
+ * @param {TStr} str The value to normalize.
+ *
+ * @return {string} The normalized string.
+ */
+export type StringNormalizer<TStr = string> = (str: TStr) => string;
 
 /**
  * Applies a function for a specific object / value.
@@ -143,6 +153,38 @@ export function createCompletedAction<TResult = any>(resolve: (value?: TResult |
             }
         }
     };
+}
+
+/**
+ * Creates a new logger instance.
+ *
+ * @param {vscode_helpers_logging.LogAction[]} [actions] One or more initial actions to define.
+ *
+ * @return {vscode_helpers_logging.ActionLogger} The new logger.
+ */
+export function createLogger(...actions: vscode_helpers_logging.LogAction[]): vscode_helpers_logging.ActionLogger {
+    const NEW_LOGGER = new vscode_helpers_logging.ActionLogger();
+    asArray(actions).forEach(a => {
+        NEW_LOGGER.addAction(a);
+    });
+
+    return NEW_LOGGER;
+}
+
+/**
+ * Normalizes a value as string so that is comparable.
+ *
+ * @param {any} val The value to convert.
+ * @param {StringNormalizer} [normalizer] The custom normalizer.
+ *
+ * @return {string} The normalized value.
+ */
+export function normalizeString(val: any, normalizer?: StringNormalizer): string {
+    if (!normalizer) {
+        normalizer = (str) => str.toLowerCase().trim();
+    }
+
+    return normalizer( toStringSafe(val) );
 }
 
 /**
