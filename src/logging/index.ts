@@ -18,7 +18,7 @@
 import * as Events from 'events';
 import * as Moment from 'moment';
 import * as vscode from 'vscode';
-import * as vscode_helpers from './index';
+import * as vscode_helpers from '../index';
 
 /**
  * A log action.
