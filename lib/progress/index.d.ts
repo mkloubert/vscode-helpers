@@ -15,11 +15,11 @@ export interface ProgressOptions {
     /**
      * The location.
      */
-    readonly location?: vscode.ProgressLocation;
+    location?: vscode.ProgressLocation;
     /**
      * The title.
      */
-    readonly title?: string;
+    title?: string;
 }
 /**
  * A progress result.

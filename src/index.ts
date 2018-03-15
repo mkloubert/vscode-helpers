@@ -27,6 +27,15 @@ export * from './progress';
 export * from './workflows';
 
 /**
+ * An action for 'invokeAfter()' function.
+ *
+ * @param {any[]} [args] The arguments for the action.
+ *
+ * @return {TResult|PromiseLike<TResult>} The result of the action.
+ */
+export type InvokeAfterAction<TResult = any> = (...args: any[]) => TResult | PromiseLike<TResult>;
+
+/**
  * Describes a simple 'completed' action.
  *
  * @param {any} err The occurred error.
@@ -42,6 +51,20 @@ export type SimpleCompletedAction<TResult> = (err: any, result?: TResult) => voi
  * @return {string} The normalized string.
  */
 export type StringNormalizer<TStr = string> = (str: TStr) => string;
+
+/**
+ * Additional options for 'waitWhile()' function.
+ */
+export interface WaitWhileOptions {
+    /**
+     * A timeout, in milliseconds.
+     */
+    timeout?: number;
+    /**
+     * The optional time, in milliseconds, to wait until next check.
+     */
+    timeUntilNextCheck?: number;
+}
 
 /**
  * Applies a function for a specific object / value.
@@ -220,6 +243,50 @@ export function createCompletedAction<TResult = any>(resolve: (value?: TResult |
 }
 
 /**
+ * Invokes an action after a timeout.
+ *
+ * @param {Function} action The action to invoke.
+ * @param {number} [ms] The custom time, in milliseconds, after the action should be invoked.
+ * @param {any[]} [args] One or more arguments for the action.
+ *
+ * @return {Promise<TResult>} The promise with the result.
+ */
+export function invokeAfter<TResult = any>(action: InvokeAfterAction<TResult>, ms?: number, ...args: any[]) {
+    const ACTION_ARGS = args.filter((x, index) => {
+        return index >= 2;
+    });
+
+    ms = parseInt(
+        toStringSafe(ms).trim()
+    );
+    if (isNaN(ms)) {
+        ms = 1000;
+    }
+
+    return new Promise<TResult>((resolve, reject) => {
+        const COMPLETED = createCompletedAction(resolve, reject);
+
+        try {
+            setTimeout(() => {
+                try {
+                    Promise.resolve(
+                        action.apply(null, ACTION_ARGS),
+                    ).then((result: TResult) => {
+                        COMPLETED(null, result);
+                    }).catch((err) => {
+                        COMPLETED(err);
+                    });
+                } catch (e) {
+                    COMPLETED(e);
+                }
+            }, ms);
+        } catch (e) {
+            COMPLETED(e);
+        }
+    });
+}
+
+/**
  * Normalizes a value as string so that is comparable.
  *
  * @param {any} val The value to convert.
@@ -248,14 +315,21 @@ export function randomBytes(size: number) {
     );
 
     return new Promise<Buffer>((resolve, reject) => {
+        const COMPLETED = createCompletedAction(resolve, reject);
+
         Crypto.randomBytes(size, (err, buf) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(buf);
-            }
+            COMPLETED(err, buf);
         });
     });
+}
+
+/**
+ * Waits a number of milliseconds.
+ *
+ * @param {number} [ms] The custom time, in milliseconds, to wait.
+ */
+export async function sleep(ms?: number) {
+    await invokeAfter(() => {}, ms);
 }
 
 /**
@@ -386,4 +460,59 @@ export function tryDispose(obj: vscode.Disposable): boolean {
     } catch {
         return false;
     }
+}
+
+/**
+ * Waits while a predicate matches.
+ *
+ * @param {Function} predicate The predicate.
+ * @param {WaitWhileOptions} {opts} Additional options.
+ *
+ * @return {Promise<boolean>} The promise that indicates if timeout reached (false) or not (true).
+ */
+export async function waitWhile(predicate: () => boolean | PromiseLike<boolean>,
+                                opts?: WaitWhileOptions) {
+    if (!opts) {
+        opts = <any>{};
+    }
+
+    const TIME_UNTIL_NEXT_CHECK = parseInt(
+        toStringSafe(opts.timeUntilNextCheck).trim()
+    );
+
+    const TIMEOUT = parseInt(
+        toStringSafe(opts.timeout).trim()
+    );
+
+    let runUntil: Moment.Moment | false = false;
+    if (!isNaN(TIMEOUT)) {
+        runUntil = Moment.utc()
+                         .add(TIMEOUT, 'ms');
+    }
+
+    let wait: boolean;
+    do {
+        const NOW = Moment.utc();
+
+        if (false !== runUntil) {
+            if (runUntil.isAfter(NOW)) {
+                return false;
+            }
+        }
+
+        wait = toBooleanSafe(
+            await Promise.resolve(
+                predicate()
+            )
+        );
+
+        if (wait) {
+            if (!isNaN(TIME_UNTIL_NEXT_CHECK)) {
+                await sleep(TIME_UNTIL_NEXT_CHECK);  // wait before next check
+            }
+        }
+    }
+    while (wait);
+
+    return true;
 }

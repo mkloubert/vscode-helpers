@@ -5,6 +5,14 @@ export * from './logging';
 export * from './progress';
 export * from './workflows';
 /**
+ * An action for 'invokeAfter()' function.
+ *
+ * @param {any[]} [args] The arguments for the action.
+ *
+ * @return {TResult|PromiseLike<TResult>} The result of the action.
+ */
+export declare type InvokeAfterAction<TResult = any> = (...args: any[]) => TResult | PromiseLike<TResult>;
+/**
  * Describes a simple 'completed' action.
  *
  * @param {any} err The occurred error.
@@ -19,6 +27,19 @@ export declare type SimpleCompletedAction<TResult> = (err: any, result?: TResult
  * @return {string} The normalized string.
  */
 export declare type StringNormalizer<TStr = string> = (str: TStr) => string;
+/**
+ * Additional options for 'waitWhile()' function.
+ */
+export interface WaitWhileOptions {
+    /**
+     * A timeout, in milliseconds.
+     */
+    timeout?: number;
+    /**
+     * The optional time, in milliseconds, to wait until next check.
+     */
+    timeUntilNextCheck?: number;
+}
 /**
  * Applies a function for a specific object / value.
  *
@@ -90,6 +111,16 @@ export declare function compareValuesBy<T, U>(x: T, y: T, selector: (t: T) => U)
  */
 export declare function createCompletedAction<TResult = any>(resolve: (value?: TResult | PromiseLike<TResult>) => void, reject?: (reason: any) => void): SimpleCompletedAction<TResult>;
 /**
+ * Invokes an action after a timeout.
+ *
+ * @param {Function} action The action to invoke.
+ * @param {number} [ms] The custom time, in milliseconds, after the action should be invoked.
+ * @param {any[]} [args] One or more arguments for the action.
+ *
+ * @return {Promise<TResult>} The promise with the result.
+ */
+export declare function invokeAfter<TResult = any>(action: InvokeAfterAction<TResult>, ms?: number, ...args: any[]): Promise<TResult>;
+/**
  * Normalizes a value as string so that is comparable.
  *
  * @param {any} val The value to convert.
@@ -106,6 +137,12 @@ export declare function normalizeString(val: any, normalizer?: StringNormalizer)
  * @return {Promise<Buffer>} The buffer with the random bytes.
  */
 export declare function randomBytes(size: number): Promise<Buffer>;
+/**
+ * Waits a number of milliseconds.
+ *
+ * @param {number} [ms] The custom time, in milliseconds, to wait.
+ */
+export declare function sleep(ms?: number): Promise<void>;
 /**
  * Returns a value as boolean, which is not (null) and (undefined).
  *
@@ -156,3 +193,12 @@ export declare function tryClearTimeout(timeoutId: NodeJS.Timer): boolean;
  * @return {boolean} Operation was successful or not.
  */
 export declare function tryDispose(obj: vscode.Disposable): boolean;
+/**
+ * Waits while a predicate matches.
+ *
+ * @param {Function} predicate The predicate.
+ * @param {WaitWhileOptions} {opts} Additional options.
+ *
+ * @return {Promise<boolean>} The promise that indicates if timeout reached (false) or not (true).
+ */
+export declare function waitWhile(predicate: () => boolean | PromiseLike<boolean>, opts?: WaitWhileOptions): Promise<boolean>;

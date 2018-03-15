@@ -36,11 +36,11 @@ export interface ProgressOptions {
     /**
      * The location.
      */
-    readonly location?: vscode.ProgressLocation;
+    location?: vscode.ProgressLocation;
     /**
      * The title.
      */
-    readonly title?: string;
+    title?: string;
 }
 
 /**
@@ -73,7 +73,7 @@ export async function withProgress<TResult = any>(task: ProgressTask<TResult>,
 
     const OPTS: vscode.ProgressOptions = {
         location: _.isNil(options.location) ? vscode.ProgressLocation.Window : options.location,
-        title: vscode_helpers.toStringSafe(options.title),
+        title: vscode_helpers.toStringSafe( options.title ),
     };
 
     return vscode.window.withProgress(OPTS, (p) => {

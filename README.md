@@ -22,14 +22,17 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [createCompletedAction](#createcompletedaction-)
      * [createLogger](#createlogger-)
      * [from](#from-)
+     * [invokeAfter](#invokeafter-)
      * [normalizeString](#normalizestring-)
      * [randomBytes](#randombytes-)
+     * [sleep](#sleep-)
      * [toBooleanSafe](#tobooleansafe-)
      * [toEOL](#toeol-)
      * [toStringSafe](#tostringsafe-)
      * [tryClearInterval](#tryclearinterval-)
      * [tryClearTimeout](#trycleartimeout-)
      * [tryDispose](#trydispose-)
+     * [waitWhile](#waitwhile-)
      * [withProgress](#withprogress-)
 4. [Support and contribute](#support-and-contribute-)
 5. [Documentation](#documentation-)
@@ -184,7 +187,7 @@ const LOGGER = vscode_helpers.createLogger((log) => {
 LOGGER.info('Hello, LOG!');
 ```
 
-#### from [[&uarr;](#from-)]
+#### from [[&uarr;](#functions-)]
 
 s. [node-enumerable](https://github.com/mkloubert/node-enumerable)
 
@@ -198,6 +201,18 @@ for (const ITEM of seq) {
     // [0] '1'
     // [1] '3'
 }
+```
+
+#### invokeAfter [[&uarr;](#functions-)]
+
+```typescript
+vscode_helpers.invokeAfter(() => {
+    return 23979;
+}, 5979).then((res) => {
+    // res === 23979
+}, (err) => {
+    // is invoked on error
+});
 ```
 
 #### normalizeString [[&uarr;](#functions-)]
@@ -216,6 +231,16 @@ vscode_helpers.randomBytes(5979).then((bytes) => {
     // in 'bytes' now
 }, (err) => {
     // error
+});
+```
+
+#### sleep [[&uarr;](#functions-)]
+
+```typescript
+vscode_helpers.sleep(23979).then(() => {
+    // 23979 milliseconds gone
+}, (err) => {
+    // is invoked on error
 });
 ```
 
@@ -275,6 +300,23 @@ vscode_helpers.tryDispose( OBJ );
 const str_1 = vscode_helpers.toStringSafe( 123 );  // '123'
 const str_2 = vscode_helpers.toStringSafe( null );  // ''
 const str_3 = vscode_helpers.toStringSafe( undefined, 'abc' );  // 'abc'
+```
+
+#### waitWhile [[&uarr;](#functions-)]
+
+```typescript
+let counter = 5979;
+
+vscode_helpers.waitWhile(() => {
+    return --counter < 1;
+}, {
+    timeUntilNextCheck: 100,
+    timeout: 60000,
+}).then((isTimeout: boolean) => {
+    // counter === 0
+}, (err) => {
+    // error occurred
+});
 ```
 
 #### withProgress [[&uarr;](#functions-)]
