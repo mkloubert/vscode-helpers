@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as vscode_helpers_logging from './logging';
+export * from './logging';
 /**
  * Describes a simple 'completed' action.
  *
