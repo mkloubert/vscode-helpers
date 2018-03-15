@@ -16,6 +16,9 @@
  */
 
 import * as _ from 'lodash';
+import * as Crypto from 'crypto';
+import { from } from 'node-enumerable';
+import * as Moment from 'moment';
 import * as OS from 'os';
 import * as vscode from 'vscode';
 
@@ -74,6 +77,64 @@ export function asArray<T>(val: T | T[], removeEmpty = true): T[] {
 
         return true;
     });
+}
+
+/**
+ * Returns a value as local Moment instance.
+ *
+ * @param {any} val The input value.
+ *
+ * @return {Moment.Moment} The output value.
+ */
+export function asLocalTime(val: any): Moment.Moment {
+    let localTime: Moment.Moment;
+
+    if (!_.isNil(val)) {
+        if (Moment.isMoment(val)) {
+            localTime = val;
+        } else if (Moment.isDate(val)) {
+            localTime = Moment( val );
+        } else {
+            localTime = Moment( toStringSafe(val) );
+        }
+    }
+
+    if (localTime) {
+        if (!localTime.isLocal()) {
+            localTime = localTime.local();
+        }
+    }
+
+    return localTime;
+}
+
+/**
+ * Returns a value as UTC Moment instance.
+ *
+ * @param {any} val The input value.
+ *
+ * @return {Moment.Moment} The output value.
+ */
+export function asUTC(val: any): Moment.Moment {
+    let utcTime: Moment.Moment;
+
+    if (!_.isNil(val)) {
+        if (Moment.isMoment(val)) {
+            utcTime = val;
+        } else if (Moment.isDate(val)) {
+            utcTime = Moment( val );
+        } else {
+            utcTime = Moment( toStringSafe(val) );
+        }
+    }
+
+    if (utcTime) {
+        if (!utcTime.isUTC()) {
+            utcTime = utcTime.utc();
+        }
+    }
+
+    return utcTime;
 }
 
 /**
@@ -172,6 +233,29 @@ export function normalizeString(val: any, normalizer?: StringNormalizer): string
     }
 
     return normalizer( toStringSafe(val) );
+}
+
+/**
+ * Promise version of 'crypto.randomBytes()' function.
+ *
+ * @param {number} size The size of the result.
+ *
+ * @return {Promise<Buffer>} The buffer with the random bytes.
+ */
+export function randomBytes(size: number) {
+    size = parseInt(
+        toStringSafe(size).trim()
+    );
+
+    return new Promise<Buffer>((resolve, reject) => {
+        Crypto.randomBytes(size, (err, buf) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(buf);
+            }
+        });
+    });
 }
 
 /**

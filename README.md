@@ -13,13 +13,17 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
    * [Functions](#functions-)
      * [applyFuncFor](#applyfuncfor-)
      * [asArray](#asarray-)
+     * [asLocalTime](#aslocaltime-)
+     * [asUTC](#asutc-)
      * [buildWorkflow](#buildworkflow-)
      * [cloneObject](#cloneobject-)
      * [compareValues](#comparevalues-)
      * [compareValuesBy](#comparevaluesny-)
      * [createCompletedAction](#createcompletedaction-)
      * [createLogger](#createlogger-)
+     * [from](#from-)
      * [normalizeString](#normalizestring-)
+     * [randomBytes](#randombytes-)
      * [toBooleanSafe](#tobooleansafe-)
      * [toEOL](#toeol-)
      * [toStringSafe](#tostringsafe-)
@@ -72,6 +76,26 @@ const ARR_1 = vscode_helpers.asArray([ 0, 1, null, 3, 4, undefined ]);  // [ 0, 
 const ARR_2 = vscode_helpers.asArray([ 0, 1, null, 3, 4, undefined ], false);  // [ 0, 1, null, 3, 4, undefined ]
 const ARR_3 = vscode_helpers.asArray( 5979 );  // [ 5979 ]
 const ARR_4 = vscode_helpers.asArray( null );  // [ ]
+```
+
+#### asLocalTime [[&uarr;](#functions-)]
+
+```typescript
+import * as Moment from 'moment';
+
+let utcNow = Moment.utc();
+let localNow = vscode_helpers.asLocalTime( utcNow );  // can also be a string
+                                                      // or Date object
+```
+
+#### asUTC [[&uarr;](#functions-)]
+
+```typescript
+import * as Moment from 'moment';
+
+let localNow = Moment();
+let utcNow = vscode_helpers.asUTC( localNow );  // can also be a string
+                                                // or Date object
 ```
 
 #### buildWorkflow [[&uarr;](#functions-)]
@@ -157,12 +181,39 @@ const LOGGER = vscode_helpers.createLogger((log) => {
 LOGGER.info('Hello, LOG!');
 ```
 
+#### from [[&uarr;](#from-)]
+
+s. [node-enumerable](https://github.com/mkloubert/node-enumerable)
+
+```typescript
+let seq = vscode_helpers.from([ 1, 2, 3 ])  // can also be a generator
+                                            // or string
+                        .select(x => '' + x)
+                        .where(x => x !== '2');
+
+for (const ITEM of seq) {
+    // [0] '1'
+    // [1] '3'
+}
+```
+
 #### normalizeString [[&uarr;](#functions-)]
 
 ```typescript
 const str_1 = vscode_helpers.normalizeString('aBc');  // 'abc'
 const str_2 = vscode_helpers.normalizeString(null);  // ''
 const str_3 = vscode_helpers.normalizeString('aBc', s => s.troUpperCase());  // 'ABC'
+```
+
+#### randomBytes [[&uarr;](#functions-)]
+
+```typescript
+vscode_helpers.randomBytes(5979).then((bytes) => {
+    // 5979 random bytes are stored
+    // in 'bytes' now
+}, (err) => {
+    // error
+});
 ```
 
 #### toBooleanSafe [[&uarr;](#functions-)]
