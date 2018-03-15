@@ -386,3 +386,19 @@ export class ActionLogger extends LoggerBase {
         }
     }
 }
+
+/**
+ * Creates a new logger instance.
+ *
+ * @param {LogAction[]} [actions] One or more initial actions to define.
+ *
+ * @return {vscode_helpers_logging.ActionLogger} The new logger.
+ */
+export function createLogger(...actions: LogAction[]): ActionLogger {
+    const NEW_LOGGER = new ActionLogger();
+    actions.forEach(a => {
+        NEW_LOGGER.addAction(a);
+    });
+
+    return NEW_LOGGER;
+}

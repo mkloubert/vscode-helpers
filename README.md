@@ -13,6 +13,7 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
    * [Functions](#functions-)
      * [applyFuncFor](#applyfuncfor-)
      * [asArray](#asarray-)
+     * [buildWorkflow](#buildworkflow-)
      * [cloneObject](#cloneobject-)
      * [compareValues](#comparevalues-)
      * [compareValuesBy](#comparevaluesny-)
@@ -22,6 +23,7 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [toBooleanSafe](#tobooleansafe-)
      * [toEOL](#toeol-)
      * [toStringSafe](#tostringsafe-)
+     * [withProgress](#withprogress-)
 4. [Support and contribute](#support-and-contribute-)
 5. [Documentation](#documentation-)
 
@@ -70,6 +72,29 @@ const ARR_1 = vscode_helpers.asArray([ 0, 1, null, 3, 4, undefined ]);  // [ 0, 
 const ARR_2 = vscode_helpers.asArray([ 0, 1, null, 3, 4, undefined ], false);  // [ 0, 1, null, 3, 4, undefined ]
 const ARR_3 = vscode_helpers.asArray( 5979 );  // [ 5979 ]
 const ARR_4 = vscode_helpers.asArray( null );  // [ ]
+```
+
+#### buildWorkflow [[&uarr;](#functions-)]
+
+```typescript
+const WORKFLOW = vscode_helpers.buildWorkflow()
+    .next((prevValue) => {
+              return 5979;
+          })
+    .next((prevValue, context) => {
+              context.value = 1000;
+
+              return prevValue + 23979;
+          })
+    .next((prevValue, context) => {
+              return prevValue * context.value;
+          });
+
+WORKFLOW.start().then((result) => {
+    // result === 29958
+}, (err) => {
+    // this only happens on errors
+});
 ```
 
 #### cloneObject [[&uarr;](#functions-)]
@@ -163,6 +188,33 @@ const eol_2 = vscode_helpers.toEOL( EndOfLine.CRLF );  // \r\n
 const str_1 = vscode_helpers.toStringSafe( 123 );  // '123'
 const str_2 = vscode_helpers.toStringSafe( null );  // ''
 const str_3 = vscode_helpers.toStringSafe( undefined, 'abc' );  // 'abc'
+```
+
+#### withProgress [[&uarr;](#functions-)]
+
+```typescript
+import { ProgressLocation } as vscode from 'vscode';
+
+vscode_helpers.withProgress((context) => {
+    let res = 0;
+
+    for (let i = 0; i < 10; i++) {
+        context.message = `Task ${i + 1} of 10 ...`;
+
+        // do something
+
+        ++res;
+    }
+
+    return res;
+}, {
+    location: ProgressLocation.Window,
+    title: 'My operation',
+}).then((res) => {
+    // res === 10
+}, (err) => {
+    // error
+});
 ```
 
 ## Support and contribute [[&uarr;](#table-of-contents)]

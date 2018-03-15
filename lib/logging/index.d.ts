@@ -251,3 +251,11 @@ export declare class ActionLogger extends LoggerBase {
     /** @inheritdoc */
     protected onLog(context: LogContext): Promise<void>;
 }
+/**
+ * Creates a new logger instance.
+ *
+ * @param {LogAction[]} [actions] One or more initial actions to define.
+ *
+ * @return {vscode_helpers_logging.ActionLogger} The new logger.
+ */
+export declare function createLogger(...actions: LogAction[]): ActionLogger;
