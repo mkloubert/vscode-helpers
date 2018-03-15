@@ -16,6 +16,7 @@
  */
 
 import * as _ from 'lodash';
+import * as OS from 'os';
 import * as vscode from 'vscode';
 
 /**
@@ -162,6 +163,25 @@ export function toBooleanSafe(val: any, defaultVal = false): boolean {
     }
 
     return !!val;
+}
+
+/**
+ * Converts an EOL enum value to a string.
+ *
+ * @param {vscode.EndOfLine} [eol] The (optional) enum value.
+ *
+ * @return string The EOL string.
+ */
+export function toEOL(eol?: vscode.EndOfLine): string {
+    switch (eol) {
+        case vscode.EndOfLine.CRLF:
+            return "\r\n";
+
+        case vscode.EndOfLine.LF:
+            return "\n";
+    }
+
+    return OS.EOL;
 }
 
 /**

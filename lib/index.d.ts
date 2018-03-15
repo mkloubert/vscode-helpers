@@ -1,3 +1,4 @@
+import * as vscode from 'vscode';
 /**
  * Describes a simple 'completed' action.
  *
@@ -68,6 +69,14 @@ export declare function createCompletedAction<TResult = any>(resolve: (value?: T
  * @return {boolean} 'val' as boolean.
  */
 export declare function toBooleanSafe(val: any, defaultVal?: boolean): boolean;
+/**
+ * Converts an EOL enum value to a string.
+ *
+ * @param {vscode.EndOfLine} [eol] The (optional) enum value.
+ *
+ * @return string The EOL string.
+ */
+export declare function toEOL(eol?: vscode.EndOfLine): string;
 /**
  * Returns a value as string, which is not (null) and (undefined).
  *

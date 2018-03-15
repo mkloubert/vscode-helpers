@@ -18,6 +18,7 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [compareValuesBy](#comparevaluesny-)
      * [createCompletedAction](#createcompletedaction-)
      * [toBooleanSafe](#tobooleansafe-)
+     * [toEOL](#toeol-)
      * [toStringSafe](#tostringsafe-)
 4. [Support and contribute](#support-and-contribute-)
 5. [Documentation](#documentation-)
@@ -123,6 +124,15 @@ function loadMyFileAsync() {
 const bool_1 = vscode_helpers.toBooleanSafe( true );  // (true)
 const bool_2 = vscode_helpers.toBooleanSafe( null );  // (false)
 const bool_3 = vscode_helpers.toBooleanSafe( undefined, true );  // (true)
+```
+
+#### toEOL [[&uarr;](#functions-)]
+
+```typescript
+import { EndOfLine } as vscode from 'vscode';
+
+const eol_1 = vscode_helpers.toEOL();  // system's EOL
+const eol_2 = vscode_helpers.toBooleanSafe( EndOfLine.CRLF );  // \r\n
 ```
 
 #### toStringSafe [[&uarr;](#functions-)]
