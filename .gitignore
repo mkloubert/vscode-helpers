@@ -1,4 +1,5 @@
 /lib/**/*.map
 /node_modules
+/tsdoc/**/*
 /pushall.sh
 /typedoc.sh

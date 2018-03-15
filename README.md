@@ -132,7 +132,7 @@ const bool_3 = vscode_helpers.toBooleanSafe( undefined, true );  // (true)
 import { EndOfLine } as vscode from 'vscode';
 
 const eol_1 = vscode_helpers.toEOL();  // system's EOL
-const eol_2 = vscode_helpers.toBooleanSafe( EndOfLine.CRLF );  // \r\n
+const eol_2 = vscode_helpers.toEOL( EndOfLine.CRLF );  // \r\n
 ```
 
 #### toStringSafe [[&uarr;](#functions-)]
