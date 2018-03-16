@@ -17,12 +17,18 @@
 
 import * as _ from 'lodash';
 import * as Crypto from 'crypto';
-import { from } from 'node-enumerable';
+import * as Enumerable from 'node-enumerable';
+import * as Glob from 'glob';
+const MergeDeep = require('merge-deep');
 import * as Moment from 'moment';
 import * as OS from 'os';
+import * as Path from 'path';
 import * as vscode from 'vscode';
+import * as vscode_workflows from './workflows';
 
+export * from './disposable';
 export * from './logging';
+export { from } from 'node-enumerable';
 export * from './progress';
 export * from './workflows';
 
@@ -243,6 +249,148 @@ export function createCompletedAction<TResult = any>(resolve: (value?: TResult |
 }
 
 /**
+ * Formats a string.
+ *
+ * @param {any} formatStr The value that represents the format string.
+ * @param {any[]} [args] The arguments for 'formatStr'.
+ *
+ * @return {string} The formated string.
+ */
+export function format(formatStr: any, ...args: any[]): string {
+    return formatArray(formatStr, args);
+}
+
+/**
+ * Formats a string.
+ *
+ * @param {any} formatStr The value that represents the format string.
+ * @param {any[]} [args] The arguments for 'formatStr'.
+ *
+ * @return {string} The formated string.
+ */
+export function formatArray(formatStr: any, args: any[]): string {
+    formatStr = toStringSafe(formatStr);
+
+    // apply arguments in
+    // placeholders
+    return formatStr.replace(/{(\d+)(\:)?([^}]*)}/g, (match, index, formatSeparator, formatExpr) => {
+        index = parseInt(
+            toStringSafe(index)
+        );
+
+        let resultValue = args[index];
+
+        if (':' === formatSeparator) {
+            // collect "format providers"
+            let formatProviders = toStringSafe(formatExpr).split(',')
+                                                          .map(x => x.toLowerCase().trim())
+                                                          .filter(x => x);
+
+            // transform argument by
+            // format providers
+            formatProviders.forEach(fp => {
+                switch (fp) {
+                    case 'ending_space':
+                        resultValue = toStringSafe(resultValue);
+                        if ('' !== resultValue) {
+                            resultValue = resultValue + ' ';
+                        }
+                        break;
+
+                    case 'leading_space':
+                        resultValue = toStringSafe(resultValue);
+                        if ('' !== resultValue) {
+                            resultValue = ' ' + resultValue;
+                        }
+                        break;
+
+                    case 'lower':
+                        resultValue = toStringSafe(resultValue).toLowerCase();
+                        break;
+
+                    case 'trim':
+                        resultValue = toStringSafe(resultValue).trim();
+                        break;
+
+                    case 'upper':
+                        resultValue = toStringSafe(resultValue).toUpperCase();
+                        break;
+
+                    case 'surround':
+                        resultValue = toStringSafe(resultValue);
+                        if ('' !== resultValue) {
+                            resultValue = "'" + toStringSafe(resultValue) + "'";
+                        }
+                        break;
+                }
+            });
+        }
+
+        if (_.isUndefined(resultValue)) {
+            return match;
+        }
+
+        return toStringSafe(resultValue);
+    });
+}
+
+/**
+ * Promise version of 'Glob()' function.
+ *
+ * @param {string|string[]} patterns One or more patterns.
+ * @param {Glob.IOptions} [opts] Custom options.
+ *
+ * @return {Promise<string[]>} The promise with the matches.
+ */
+export async function glob(patterns: string | string[], opts?: Glob.IOptions) {
+    const DEFAULT_OPTS: Glob.IOptions = {
+        absolute: true,
+        dot: false,
+        nocase: true,
+        nodir: true,
+        nonull: false,
+        nosort: false,
+        sync: false,
+    };
+
+    opts = MergeDeep({}, DEFAULT_OPTS, opts);
+
+    const WF = vscode_workflows.buildWorkflow();
+
+    WF.next(() => {
+        return [];
+    });
+
+    asArray(patterns).forEach(p => {
+        WF.next((allMatches: string[]) => {
+            return new Promise<string[]>((res, rej) => {
+                const COMPLETED = createCompletedAction(res, rej);
+
+                try {
+                    Glob(p, opts, (err, matches) => {
+                        if (err) {
+                            COMPLETED(err);
+                        } else {
+                            allMatches.push
+                                      .apply(allMatches, matches);
+
+                            COMPLETED(null, allMatches);
+                        }
+                    });
+                } catch (e) {
+                    COMPLETED(e);
+                }
+            });
+        });
+    });
+
+    return Enumerable.from( await WF.start<string[]>() )
+                     .select(m => Path.resolve(m))
+                     .distinct()
+                     .toArray();
+}
+
+/**
  * Invokes an action after a timeout.
  *
  * @param {Function} action The action to invoke.
@@ -439,25 +587,6 @@ export function tryClearTimeout(timeoutId: NodeJS.Timer): boolean {
 
         return true;
     } catch (e) {
-        return false;
-    }
-}
-
-/**
- * Tries to dispose an object.
- *
- * @param {object} obj The object to dispose.
- *
- * @return {boolean} Operation was successful or not.
- */
-export function tryDispose(obj: vscode.Disposable): boolean {
-    try {
-        if (obj && obj.dispose) {
-            obj.dispose();
-        }
-
-        return true;
-    } catch {
         return false;
     }
 }

@@ -1,7 +1,11 @@
+/// <reference types="glob" />
 /// <reference types="node" />
+import * as Glob from 'glob';
 import * as Moment from 'moment';
 import * as vscode from 'vscode';
+export * from './disposable';
 export * from './logging';
+export { from } from 'node-enumerable';
 export * from './progress';
 export * from './workflows';
 /**
@@ -111,6 +115,33 @@ export declare function compareValuesBy<T, U>(x: T, y: T, selector: (t: T) => U)
  */
 export declare function createCompletedAction<TResult = any>(resolve: (value?: TResult | PromiseLike<TResult>) => void, reject?: (reason: any) => void): SimpleCompletedAction<TResult>;
 /**
+ * Formats a string.
+ *
+ * @param {any} formatStr The value that represents the format string.
+ * @param {any[]} [args] The arguments for 'formatStr'.
+ *
+ * @return {string} The formated string.
+ */
+export declare function format(formatStr: any, ...args: any[]): string;
+/**
+ * Formats a string.
+ *
+ * @param {any} formatStr The value that represents the format string.
+ * @param {any[]} [args] The arguments for 'formatStr'.
+ *
+ * @return {string} The formated string.
+ */
+export declare function formatArray(formatStr: any, args: any[]): string;
+/**
+ * Promise version of 'Glob()' function.
+ *
+ * @param {string|string[]} patterns One or more patterns.
+ * @param {Glob.IOptions} [opts] Custom options.
+ *
+ * @return {Promise<string[]>} The promise with the matches.
+ */
+export declare function glob(patterns: string | string[], opts?: Glob.IOptions): Promise<string[]>;
+/**
  * Invokes an action after a timeout.
  *
  * @param {Function} action The action to invoke.
@@ -185,14 +216,6 @@ export declare function tryClearInterval(intervalId: NodeJS.Timer): boolean;
  * @return {boolean} Operation was successfull or not.
  */
 export declare function tryClearTimeout(timeoutId: NodeJS.Timer): boolean;
-/**
- * Tries to dispose an object.
- *
- * @param {object} obj The object to dispose.
- *
- * @return {boolean} Operation was successful or not.
- */
-export declare function tryDispose(obj: vscode.Disposable): boolean;
 /**
  * Waits while a predicate matches.
  *

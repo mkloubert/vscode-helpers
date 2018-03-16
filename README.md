@@ -21,7 +21,10 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [compareValuesBy](#comparevaluesny-)
      * [createCompletedAction](#createcompletedaction-)
      * [createLogger](#createlogger-)
+     * [format](#format-)
+     * [formatArray](#formatarray-)
      * [from](#from-)
+     * [glob](#glob-)
      * [invokeAfter](#invokeafter-)
      * [normalizeString](#normalizestring-)
      * [randomBytes](#randombytes-)
@@ -34,6 +37,8 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [tryDispose](#trydispose-)
      * [waitWhile](#waitwhile-)
      * [withProgress](#withprogress-)
+   * [Classes](#classes-)
+     * [DisposableBase](#disposablebase-)
 4. [Support and contribute](#support-and-contribute-)
 5. [Documentation](#documentation-)
 
@@ -57,7 +62,7 @@ import * as vscode_helpers from 'vscode-helpers';
 
 ## Examples [[&uarr;](#table-of-contents)]
 
-### Functions [[&uarr;](#functions-)]
+### Functions [[&uarr;](#examples-)]
 
 #### applyFuncFor [[&uarr;](#functions-)]
 
@@ -187,6 +192,27 @@ const LOGGER = vscode_helpers.createLogger((log) => {
 LOGGER.info('Hello, LOG!');
 ```
 
+#### format [[&uarr;](#functions-)]
+
+```typescript
+// "MK:23979 + TM: '5979'"
+let str_1 = vscode_helpers.format(
+    'MK:{1} + TM:{1:trim,surround,leading_space}',
+    5979,
+    23979
+);
+```
+
+#### formatArray [[&uarr;](#functions-)]
+
+```typescript
+// "MK:23979 + TM: '5979'"
+let str_1 = vscode_helpers.formatArray(
+    'MK:{1} + TM:{1:trim,surround,leading_space}',
+    [ 5979, 23979 ]
+);
+```
+
 #### from [[&uarr;](#functions-)]
 
 s. [node-enumerable](https://github.com/mkloubert/node-enumerable)
@@ -201,6 +227,20 @@ for (const ITEM of seq) {
     // [0] '1'
     // [1] '3'
 }
+```
+
+#### glob [[&uarr;](#functions-)]
+
+```typescript
+vscode_helpers.glob([ '**/*.txt' ], {
+    cwd: '/path/to/directory',
+    ignore: [ '/log/**/*' ],
+    root: '/path/to/directory',
+}).then((matches: string) => {
+    // 'matches' contains the found files
+}, (err) => {
+    // error
+});
 ```
 
 #### invokeAfter [[&uarr;](#functions-)]
@@ -344,6 +384,20 @@ vscode_helpers.withProgress((context) => {
 }, (err) => {
     // error
 });
+```
+
+### Classes [[&uarr;](#examples-)]
+
+#### DisposableBase [[&uarr;](#classes-)]
+
+```typescript
+class MyDisposable extends vscode_helpers.MyDisposable {
+    protected onDispose() {
+        // your custom logic
+    }
+}
+
+vscode_helpers.tryDispose( new MyDisposable() );
 ```
 
 ## Support and contribute [[&uarr;](#table-of-contents)]
