@@ -538,12 +538,18 @@ export function toArray<T>(arr: Enumerable.Sequence<T>, normalize = true): T[] {
         return <any>arr;
     }
 
-    if (!_.isArray(arr)) {
-        return Enumerable.from( arr )
-                         .toArray();
+    if (_.isArrayLike(arr)) {
+        const NEW_ARRAY: T[] = [];
+
+        for (let i = 0; i < arr.length; i++) {
+            NEW_ARRAY.push( arr[i] );
+        }
+
+        return NEW_ARRAY;
     }
 
-    return arr.map(x => x);
+    return Enumerable.from( arr )
+                     .toArray();
 }
 
 
