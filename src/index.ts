@@ -34,6 +34,17 @@ export * from './workflows';
 export * from './workspaces';
 
 /**
+ * Action for 'forEachAsync()' function.
+ *
+ * @param {T} item The current item.
+ * @param {number} index The zero based index.
+ * @param {T[]} array The array of all elements.
+ *
+ * @return {TResult|PromiseLike<TResult>} The result.
+ */
+export type ForEachAsyncAction<T, TResult> = (item: T, index: number, array: T[]) => TResult | PromiseLike<TResult>;
+
+/**
  * An action for 'invokeAfter()' function.
  *
  * @param {any[]} [args] The arguments for the action.
@@ -247,6 +258,35 @@ export function createCompletedAction<TResult = any>(resolve: (value?: TResult |
             }
         }
     };
+}
+
+/**
+ * Async 'forEach'.
+ *
+ * @param {Enumerable.Sequence<T>} items The items to iterate.
+ * @param {Function} action The item action.
+ * @param {any} [thisArg] The underlying object / value for the item action.
+ *
+ * @return {TResult} The result of the last action call.
+ */
+export async function forEachAsync<T, TResult>(items: Enumerable.Sequence<T>,
+                                               action: ForEachAsyncAction<T, TResult>,
+                                               thisArg?: any) {
+    if (!_.isArray(items)) {
+        items = Enumerable.from(items)
+                          .toArray();
+    }
+
+    let lastResult: TResult;
+
+    for (let i = 0; i < (<T[]>items).length; i++) {
+        lastResult = await Promise.resolve(
+            action.apply(thisArg,
+                         [ items[i], i, items ]),
+        );
+    }
+
+    return lastResult;
 }
 
 /**
@@ -480,6 +520,32 @@ export function randomBytes(size: number) {
 export async function sleep(ms?: number) {
     await invokeAfter(() => {}, ms);
 }
+
+/**
+ * Returns a sequence object as new array.
+ *
+ * @param {Enumerable.Sequence<T>} arr The input object.
+ * @param {boolean} [normalize] Returns an empty array, if input object is (null) / (undefined).
+ *
+ * @return {T[]} The input object as array.
+ */
+export function toArray<T>(arr: Enumerable.Sequence<T>, normalize = true): T[] {
+    if (_.isNil(arr)) {
+        if (toBooleanSafe(normalize, true)) {
+            return [];
+        }
+
+        return <any>arr;
+    }
+
+    if (!_.isArray(arr)) {
+        return Enumerable.from( arr )
+                         .toArray();
+    }
+
+    return arr.map(x => x);
+}
+
 
 /**
  * Returns a value as boolean, which is not (null) and (undefined).

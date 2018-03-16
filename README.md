@@ -21,6 +21,7 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [compareValuesBy](#comparevaluesny-)
      * [createCompletedAction](#createcompletedaction-)
      * [createLogger](#createlogger-)
+     * [forEachAsync](#foreachasync-)
      * [format](#format-)
      * [formatArray](#formatarray-)
      * [from](#from-)
@@ -30,6 +31,7 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [randomBytes](#randombytes-)
      * [registerWorkspaceWatcher](#registerworkspacewatcher-)
      * [sleep](#sleep-)
+     * [toArray](#toarray-)
      * [toBooleanSafe](#tobooleansafe-)
      * [toEOL](#toeol-)
      * [toStringSafe](#tostringsafe-)
@@ -194,6 +196,21 @@ const LOGGER = vscode_helpers.createLogger((log) => {
 LOGGER.info('Hello, LOG!');
 ```
 
+#### forEachAsync [[&uarr;](#functions-)]
+
+```typescript
+vscode_helpers.forEachAsync([ 5979, 23979 ], async (item, index) => {
+    // [index === 0] => item === 5979
+    // [index === 1] => item === 23979
+
+    return item * 1000;
+}).then((lastResult) => {
+    // lastResult === 23979000
+}, (err) => {
+    // error
+});
+```
+
 #### format [[&uarr;](#functions-)]
 
 ```typescript
@@ -249,6 +266,7 @@ vscode_helpers.glob([ '**/*.txt' ], {
 
 ```typescript
 vscode_helpers.invokeAfter(() => {
+    // this is invoked after 5979 milliseconds
     return 23979;
 }, 5979).then((res) => {
     // res === 23979
@@ -327,6 +345,18 @@ vscode_helpers.sleep(23979).then(() => {
 const bool_1 = vscode_helpers.toBooleanSafe( true );  // (true)
 const bool_2 = vscode_helpers.toBooleanSafe( null );  // (false)
 const bool_3 = vscode_helpers.toBooleanSafe( undefined, true );  // (true)
+```
+
+#### toArray [[&uarr;](#functions-)]
+
+```typescript
+let myGenerator = function* () {
+    yield 5979;
+    yield 23979;
+};
+
+let arr_1 = vscode_helpers.toArray( myGenerator() );
+let arr_2 = vscode_helpers.toArray( [ 19861222, 'PZSUX' ] );  // new array
 ```
 
 #### toEOL [[&uarr;](#functions-)]

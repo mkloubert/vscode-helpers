@@ -1,5 +1,6 @@
 /// <reference types="glob" />
 /// <reference types="node" />
+import * as Enumerable from 'node-enumerable';
 import * as Glob from 'glob';
 import * as Moment from 'moment';
 import * as vscode from 'vscode';
@@ -9,6 +10,16 @@ export { from } from 'node-enumerable';
 export * from './progress';
 export * from './workflows';
 export * from './workspaces';
+/**
+ * Action for 'forEachAsync()' function.
+ *
+ * @param {T} item The current item.
+ * @param {number} index The zero based index.
+ * @param {T[]} array The array of all elements.
+ *
+ * @return {TResult|PromiseLike<TResult>} The result.
+ */
+export declare type ForEachAsyncAction<T, TResult> = (item: T, index: number, array: T[]) => TResult | PromiseLike<TResult>;
 /**
  * An action for 'invokeAfter()' function.
  *
@@ -116,6 +127,16 @@ export declare function compareValuesBy<T, U>(x: T, y: T, selector: (t: T) => U)
  */
 export declare function createCompletedAction<TResult = any>(resolve: (value?: TResult | PromiseLike<TResult>) => void, reject?: (reason: any) => void): SimpleCompletedAction<TResult>;
 /**
+ * Async 'forEach'.
+ *
+ * @param {Enumerable.Sequence<T>} items The items to iterate.
+ * @param {Function} action The item action.
+ * @param {any} [thisArg] The underlying object / value for the item action.
+ *
+ * @return {TResult} The result of the last action call.
+ */
+export declare function forEachAsync<T, TResult>(items: Enumerable.Sequence<T>, action: ForEachAsyncAction<T, TResult>, thisArg?: any): Promise<TResult>;
+/**
  * Formats a string.
  *
  * @param {any} formatStr The value that represents the format string.
@@ -175,6 +196,15 @@ export declare function randomBytes(size: number): Promise<Buffer>;
  * @param {number} [ms] The custom time, in milliseconds, to wait.
  */
 export declare function sleep(ms?: number): Promise<void>;
+/**
+ * Returns a sequence object as new array.
+ *
+ * @param {Enumerable.Sequence<T>} arr The input object.
+ * @param {boolean} [normalize] Returns an empty array, if input object is (null) / (undefined).
+ *
+ * @return {T[]} The input object as array.
+ */
+export declare function toArray<T>(arr: Enumerable.Sequence<T>, normalize?: boolean): T[];
 /**
  * Returns a value as boolean, which is not (null) and (undefined).
  *
