@@ -31,6 +31,7 @@ export * from './logging';
 export { from } from 'node-enumerable';
 export * from './progress';
 export * from './workflows';
+export * from './workspaces';
 
 /**
  * An action for 'invokeAfter()' function.

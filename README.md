@@ -28,6 +28,7 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [invokeAfter](#invokeafter-)
      * [normalizeString](#normalizestring-)
      * [randomBytes](#randombytes-)
+     * [registerWorkspaceWatcher](#registerworkspacewatcher-)
      * [sleep](#sleep-)
      * [toBooleanSafe](#tobooleansafe-)
      * [toEOL](#toeol-)
@@ -39,6 +40,7 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [withProgress](#withprogress-)
    * [Classes](#classes-)
      * [DisposableBase](#disposablebase-)
+     * [WorkspaceBase](#workspacebase-)
 4. [Support and contribute](#support-and-contribute-)
 5. [Documentation](#documentation-)
 
@@ -274,6 +276,41 @@ vscode_helpers.randomBytes(5979).then((bytes) => {
 });
 ```
 
+#### registerWorkspaceWatcher [[&uarr;](#functions-)]
+
+```typescript
+import { Uri } as vscode from 'vscode';
+
+class MyWorkspace extends vscode_helpers.WorkspaceBase {
+    // this is important for 'onDidChangeConfiguration'
+    public get configSource() {
+        return {
+            section: 'my.extension',
+            resource: Uri.file('/path/to/.vscode/settings.json'),
+        };
+    }    
+
+    public async initialize() {
+        // initialize your workspace here
+    }
+
+    public async onDidChangeConfiguration(e) {
+        // is invoked when workspace config changed
+    }
+}
+
+vscode_helpers.registerWorkspaceWatcher((event, folder, workspace?) => {
+    switch (event) {
+        case vscode_helpers.WorkspaceWatcherEvent.Added:            
+            const NEW_WORKSPACE = new MyWorkspace( folder );
+            {
+                await NEW_WORKSPACE.initialize();
+            }
+            return NEW_WORKSPACE;
+    }
+});
+```
+
 #### sleep [[&uarr;](#functions-)]
 
 ```typescript
@@ -398,6 +435,34 @@ class MyDisposable extends vscode_helpers.MyDisposable {
 }
 
 vscode_helpers.tryDispose( new MyDisposable() );
+```
+
+#### WorkspaceBase [[&uarr;](#classes-)]
+
+```typescript
+import { Uri } as vscode from 'vscode';
+
+class MyWorkspace extends vscode_helpers.WorkspaceBase {
+    // this is important for 'onDidChangeConfiguration'
+    public get configSource() {
+        return {
+            section: 'my.extension',
+            resource: Uri.file('/path/to/.vscode/settings.json'),
+        };
+    }    
+
+    public async initialize() {
+        // initialize your workspace here
+    }
+
+    public async onDidChangeConfiguration(e) {
+        // is invoked when workspace config changed
+    }
+
+    protected onDispose(): void {
+        // put code here to cleanup the workspace
+    }
+}
 ```
 
 ## Support and contribute [[&uarr;](#table-of-contents)]
