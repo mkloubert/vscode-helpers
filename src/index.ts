@@ -27,6 +27,8 @@ import * as Path from 'path';
 import * as vscode from 'vscode';
 import * as vscode_workflows from './workflows';
 
+// sub modules
+export * from './cache';
 export * from './disposable';
 export * from './html';
 export * from './logging';

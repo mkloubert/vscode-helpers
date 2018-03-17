@@ -46,7 +46,9 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [waitWhile](#waitwhile-)
      * [withProgress](#withprogress-)
    * [Classes](#classes-)
+     * [CacheProviderBase](#cacheproviderbase-)
      * [DisposableBase](#disposablebase-)
+     * [MemoryCache](#memorycache-)
      * [WorkspaceBase](#workspacebase-)
 4. [Support and contribute](#support-and-contribute-)
 5. [Documentation](#documentation-)
@@ -515,6 +517,14 @@ vscode_helpers.withProgress((context) => {
 
 ### Classes [[&uarr;](#examples-)]
 
+#### CacheProviderBase [[&uarr;](#classes-)]
+
+```typescript
+class MyCache extends vscode_helpers.CacheProviderBase {
+    // implement abstract members here
+}
+```
+
 #### DisposableBase [[&uarr;](#classes-)]
 
 ```typescript
@@ -525,6 +535,18 @@ class MyDisposable extends vscode_helpers.MyDisposable {
 }
 
 vscode_helpers.tryDispose( new MyDisposable() );
+```
+
+#### MemoryCache [[&uarr;](#classes-)]
+
+```typescript
+const CACHE = new vscode_helpers.MemoryCache();
+
+CACHE.get('a', 23979);  // 23979
+CACHE.set('a', 5979);  // 5979
+CACHE.has('a');  // (true)
+CACHE.unset('a');
+CACHE.has('a');  // (false)
 ```
 
 #### WorkspaceBase [[&uarr;](#classes-)]

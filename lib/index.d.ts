@@ -4,6 +4,7 @@ import * as Enumerable from 'node-enumerable';
 import * as Glob from 'glob';
 import * as Moment from 'moment';
 import * as vscode from 'vscode';
+export * from './cache';
 export * from './disposable';
 export * from './html';
 export * from './logging';
