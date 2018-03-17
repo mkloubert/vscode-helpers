@@ -15,6 +15,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import * as _ from 'lodash';
 import * as Events from 'events';
 import * as vscode from 'vscode';
 import * as vscode_helpers from '../index';
@@ -125,6 +126,35 @@ export abstract class DisposableBase extends Events.EventEmitter implements vsco
      */
     protected onDispose(): void {
     }
+}
+
+/**
+ * Clones an object and makes it non disposable.
+ *
+ * @param {TObj} obj The object to clone.
+ * @param {boolean} [throwOnDispose] Throw error when coll 'dispose()' method or not.
+ *
+ * @return {TObj} The cloned object.
+ */
+export function makeNonDisposable<TObj extends vscode.Disposable>(
+    obj: TObj,
+    throwOnDispose = true,
+): TObj {
+    throwOnDispose = vscode_helpers.toBooleanSafe(throwOnDispose, true);
+
+    const CLONED_OBJ: any = vscode_helpers.cloneObjectFlat(obj);
+
+    if (CLONED_OBJ) {
+        if (_.isFunction(CLONED_OBJ.dispose)) {
+            CLONED_OBJ.dispose = () => {
+                if (throwOnDispose) {
+                    throw new Error('Disposing object is not allowed!');
+                }
+            };
+        }
+    }
+
+    return CLONED_OBJ;
 }
 
 /**

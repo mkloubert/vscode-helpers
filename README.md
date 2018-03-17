@@ -32,9 +32,11 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [isBinaryContent](#isbinarycontent-)
      * [isBinaryContentSync](#isbinarycontentsync-)
      * [isEmptyString](#isemptystring-)
+     * [makeNonDisposable](#makenondisposable-)
      * [normalizeString](#normalizestring-)
      * [randomBytes](#randombytes-)
      * [registerWorkspaceWatcher](#registerworkspacewatcher-)
+     * [readAll](#readall-)
      * [sleep](#sleep-)
      * [toArray](#toarray-)
      * [toBooleanSafe](#tobooleansafe-)
@@ -43,6 +45,7 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [tryClearInterval](#tryclearinterval-)
      * [tryClearTimeout](#trycleartimeout-)
      * [tryDispose](#trydispose-)
+     * [tryRemoveListener](#tryremovelistener-)
      * [waitWhile](#waitwhile-)
      * [withProgress](#withprogress-)
    * [Classes](#classes-)
@@ -337,12 +340,42 @@ vscode_helpers.isEmptyString( undefined );  // (true)
 vscode_helpers.isEmptyString( '123' );  // (false)
 ```
 
+### makeNonDisposable [[&uarr;](#functions-)]
+
+```typescript
+const OBJ = {
+    dispose: () => {
+        console.log('Disposed!');
+    }
+};
+
+const OBJ_1 = vscode_helpers.makeNonDisposable( OBJ, false );
+OBJ_1.dispose();  // does nothing
+
+const OBJ_2 = vscode_helpers.makeNonDisposable( OBJ );
+OBJ_2.dispose();  // throws an exception
+```
+
 #### normalizeString [[&uarr;](#functions-)]
 
 ```typescript
 const str_1 = vscode_helpers.normalizeString('aBc');  // 'abc'
 const str_2 = vscode_helpers.normalizeString(null);  // ''
 const str_3 = vscode_helpers.normalizeString('aBc', s => s.troUpperCase());  // 'ABC'
+```
+
+#### readAll [[&uarr;](#functions-)]
+
+```typescript
+import * as fs from 'fs';
+
+const STREAM = fs.createReadStream('./my-file.txt');
+
+readAll( STREAM ).then((data: Buffer) => {
+    // all data read
+}, (err) => {
+    // error
+});
 ```
 
 #### randomBytes [[&uarr;](#functions-)]
@@ -430,6 +463,14 @@ const eol_1 = vscode_helpers.toEOL();  // system's EOL
 const eol_2 = vscode_helpers.toEOL( EndOfLine.CRLF );  // \r\n
 ```
 
+#### toStringSafe [[&uarr;](#functions-)]
+
+```typescript
+const str_1 = vscode_helpers.toStringSafe( 123 );  // '123'
+const str_2 = vscode_helpers.toStringSafe( null );  // ''
+const str_3 = vscode_helpers.toStringSafe( undefined, 'abc' );  // 'abc'
+```
+
 #### tryClearInterval [[&uarr;](#functions-)]
 
 ```typescript
@@ -463,12 +504,23 @@ const OBJ = {
 vscode_helpers.tryDispose( OBJ );
 ```
 
-#### toStringSafe [[&uarr;](#functions-)]
+#### tryRemoveListener [[&uarr;](#functions-)]
 
 ```typescript
-const str_1 = vscode_helpers.toStringSafe( 123 );  // '123'
-const str_2 = vscode_helpers.toStringSafe( null );  // ''
-const str_3 = vscode_helpers.toStringSafe( undefined, 'abc' );  // 'abc'
+import * as fs from 'fs';
+
+const STREAM = fs.createReadStream('./my-file.txt');
+
+let dataListener = (chunk) => {
+    //TODO
+};
+
+STREAM.on('data', datalistener);
+
+STREAM.once('end', () => {
+    vscode_helpers.tryRemoveListener('data',
+                                     dataListener);
+});
 ```
 
 #### waitWhile [[&uarr;](#functions-)]

@@ -3,6 +3,7 @@
 import * as Enumerable from 'node-enumerable';
 import * as Glob from 'glob';
 import * as Moment from 'moment';
+import * as Stream from 'stream';
 import * as vscode from 'vscode';
 export * from './cache';
 export * from './disposable';
@@ -228,6 +229,15 @@ export declare function normalizeString(val: any, normalizer?: StringNormalizer)
  */
 export declare function randomBytes(size: number): Promise<Buffer>;
 /**
+ * Reads the content of a stream.
+ *
+ * @param {Stream.Readable} stream The stream.
+ * @param {string} [enc] The custom (string) encoding to use.
+ *
+ * @returns {Promise<Buffer>} The promise with the content.
+ */
+export declare function readAll(stream: Stream.Readable, enc?: string): Promise<Buffer>;
+/**
  * Waits a number of milliseconds.
  *
  * @param {number} [ms] The custom time, in milliseconds, to wait.
@@ -284,6 +294,16 @@ export declare function tryClearInterval(intervalId: NodeJS.Timer): boolean;
  * @return {boolean} Operation was successfull or not.
  */
 export declare function tryClearTimeout(timeoutId: NodeJS.Timer): boolean;
+/**
+ * Tries to remove a listener from an event emitter.
+ *
+ * @param {NodeJS.EventEmitter} obj The emitter.
+ * @param {string|symbol} ev The event.
+ * @param {Function} listener The listener.
+ *
+ * @return {boolean} Operation was successfull or not.
+ */
+export declare function tryRemoveListener(obj: NodeJS.EventEmitter, ev: string | symbol, listener: Function): boolean;
 /**
  * Waits while a predicate matches.
  *

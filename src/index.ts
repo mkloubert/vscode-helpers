@@ -24,6 +24,7 @@ const MergeDeep = require('merge-deep');
 import * as Moment from 'moment';
 import * as OS from 'os';
 import * as Path from 'path';
+import * as Stream from 'stream';
 import * as vscode from 'vscode';
 import * as vscode_workflows from './workflows';
 
@@ -611,6 +612,92 @@ export function randomBytes(size: number) {
 }
 
 /**
+ * Reads the content of a stream.
+ *
+ * @param {Stream.Readable} stream The stream.
+ * @param {string} [enc] The custom (string) encoding to use.
+ *
+ * @returns {Promise<Buffer>} The promise with the content.
+ */
+export function readAll(stream: Stream.Readable, enc?: string): Promise<Buffer> {
+    enc = normalizeString(enc);
+    if ('' === enc) {
+        enc = undefined;
+    }
+
+    return new Promise<Buffer>((resolve, reject) => {
+        let buff: Buffer;
+
+        let dataListener: (chunk: Buffer | string) => void;
+        let endListener: () => void;
+        let errorListener: (err: any) => void;
+
+        let completedInvoked = false;
+        const COMPLETED = (err: any) => {
+            if (completedInvoked) {
+                return;
+            }
+            completedInvoked = true;
+
+            tryRemoveListener(stream, 'data', dataListener);
+            tryRemoveListener(stream, 'end', endListener);
+            tryRemoveListener(stream, 'error', errorListener);
+
+            if (err) {
+                reject(err);
+            } else {
+                resolve(buff);
+            }
+        };
+
+        if (_.isNil(stream)) {
+            buff = <any>stream;
+
+            COMPLETED(null);
+            return;
+        }
+
+        errorListener = (err: any) => {
+            if (err) {
+                COMPLETED(err);
+            }
+        };
+
+        dataListener = (chunk: Buffer | string) => {
+            try {
+                if (!chunk || chunk.length < 1) {
+                    return;
+                }
+
+                if (_.isString(chunk)) {
+                    chunk = new Buffer(chunk, enc);
+                }
+
+                buff = Buffer.concat([ buff, chunk ]);
+            } catch (e) {
+                COMPLETED(e);
+            }
+        };
+
+        endListener = () => {
+            COMPLETED(null);
+        };
+
+        try {
+            stream.on('error', errorListener);
+
+            buff = Buffer.alloc(0);
+
+            stream.once('end', endListener);
+
+            stream.on('data', dataListener);
+        } catch (e) {
+            COMPLETED(e);
+        }
+    });
+}
+
+/**
  * Waits a number of milliseconds.
  *
  * @param {number} [ms] The custom time, in milliseconds, to wait.
@@ -758,6 +845,30 @@ export function tryClearTimeout(timeoutId: NodeJS.Timer): boolean {
 
         return true;
     } catch (e) {
+        return false;
+    }
+}
+
+/**
+ * Tries to remove a listener from an event emitter.
+ *
+ * @param {NodeJS.EventEmitter} obj The emitter.
+ * @param {string|symbol} ev The event.
+ * @param {Function} listener The listener.
+ *
+ * @return {boolean} Operation was successfull or not.
+ */
+export function tryRemoveListener(
+    obj: NodeJS.EventEmitter,
+    ev: string | symbol, listener: Function,
+) {
+    try {
+        if (obj && obj.removeListener) {
+            obj.removeListener(ev, listener);
+        }
+
+        return true;
+    } catch {
         return false;
     }
 }
