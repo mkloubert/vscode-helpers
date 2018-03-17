@@ -198,6 +198,56 @@ export function cloneObject<T>(val: T): T {
 }
 
 /**
+ * Clones an value flat.
+ *
+ * @param {T} val The object to clone.
+ * @param {boolean} [useNewObjectForFunctions] Use new object as 'thisArg' for functions (true) or
+ *                                             the original 'val' (false).
+ *
+ * @return {T} The cloned object.
+ */
+export function cloneObjectFlat<T>(val: T,
+                                   useNewObjectForFunctions = true): T {
+    useNewObjectForFunctions = toBooleanSafe(useNewObjectForFunctions, true);
+
+    if (_.isNil(val)) {
+        return val;
+    }
+
+    const CLONED_OBJ: T = <any>{};
+    const THIS_ARG: any = useNewObjectForFunctions ? CLONED_OBJ : val;
+
+    const ADD_PROPERTY = (prop: string, value: any) => {
+        Object.defineProperty(CLONED_OBJ, prop, {
+            configurable: true,
+            enumerable: true,
+
+            get: () => {
+                return value;
+            },
+            set: (newValue) => {
+                value = newValue;
+            },
+        });
+    };
+
+    _.forIn(val, (value, prop) => {
+        let valueToSet: any = value;
+        if (_.isFunction(valueToSet)) {
+            const FUNC = valueToSet;
+
+            valueToSet = function() {
+                return FUNC.apply(THIS_ARG, arguments);
+            };
+        }
+
+        ADD_PROPERTY(prop, valueToSet);
+    });
+
+    return CLONED_OBJ;
+}
+
+/**
  * Compares two values for a sort operation.
  *
  * @param {T} x The left value.

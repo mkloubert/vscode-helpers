@@ -17,6 +17,7 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [asUTC](#asutc-)
      * [buildWorkflow](#buildworkflow-)
      * [cloneObject](#cloneobject-)
+     * [cloneObjectFlat](#cloneobjectflat-)
      * [compareValues](#comparevalues-)
      * [compareValuesBy](#comparevaluesny-)
      * [createCompletedAction](#createcompletedaction-)
@@ -146,6 +147,17 @@ WORKFLOW.start().then((result) => {
 const CLONED_OBJ = vscode_helpers.cloneObject({
     mk: 23979,
     tm: 5979,
+});
+```
+
+#### cloneObjectFlat [[&uarr;](#functions-)]
+
+```typescript
+const CLONED_OBJ = vscode_helpers.cloneObjectFlat({
+    mk: 23979,
+    tm: function(a) {
+        return a * (5979 * this.mk);
+    },
 });
 ```
 

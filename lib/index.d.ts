@@ -100,6 +100,16 @@ export declare function asUTC(val: any): Moment.Moment;
  */
 export declare function cloneObject<T>(val: T): T;
 /**
+ * Clones an value flat.
+ *
+ * @param {T} val The object to clone.
+ * @param {boolean} [useNewObjectForFunctions] Use new object as 'thisArg' for functions (true) or
+ *                                             the original 'val' (false).
+ *
+ * @return {T} The cloned object.
+ */
+export declare function cloneObjectFlat<T>(val: T, useNewObjectForFunctions?: boolean): T;
+/**
  * Compares two values for a sort operation.
  *
  * @param {T} x The left value.
