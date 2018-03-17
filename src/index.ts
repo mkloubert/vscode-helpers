@@ -19,6 +19,7 @@ import * as _ from 'lodash';
 import * as Crypto from 'crypto';
 import * as Enumerable from 'node-enumerable';
 import * as Glob from 'glob';
+const IsBinaryFile = require("isbinaryfile");
 const MergeDeep = require('merge-deep');
 import * as Moment from 'moment';
 import * as OS from 'os';
@@ -27,6 +28,7 @@ import * as vscode from 'vscode';
 import * as vscode_workflows from './workflows';
 
 export * from './disposable';
+export * from './html';
 export * from './logging';
 export { from } from 'node-enumerable';
 export * from './progress';
@@ -272,14 +274,14 @@ export function createCompletedAction<TResult = any>(resolve: (value?: TResult |
 export async function forEachAsync<T, TResult>(items: Enumerable.Sequence<T>,
                                                action: ForEachAsyncAction<T, TResult>,
                                                thisArg?: any) {
-    if (!_.isArray(items)) {
+    if (!_.isArrayLike(items)) {
         items = Enumerable.from(items)
                           .toArray();
     }
 
     let lastResult: TResult;
 
-    for (let i = 0; i < (<T[]>items).length; i++) {
+    for (let i = 0; i < (<ArrayLike<T>>items).length; i++) {
         lastResult = await Promise.resolve(
             action.apply(thisArg,
                          [ items[i], i, items ]),
@@ -473,6 +475,50 @@ export function invokeAfter<TResult = any>(action: InvokeAfterAction<TResult>, m
             COMPLETED(e);
         }
     });
+}
+
+/**
+ * Checks if data is binary or text content.
+ *
+ * @param {Buffer} data The data to check.
+ *
+ * @returns {Promise<boolean>} The promise that indicates if content is binary or not.
+ */
+export function isBinaryContent(data: Buffer): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+        const COMPLETED = createCompletedAction<boolean>(resolve, reject);
+
+        try {
+            IsBinaryFile(data, data.length, (err, result) => {
+                COMPLETED(err, result);
+            });
+        } catch (e) {
+            COMPLETED(e);
+        }
+    });
+}
+
+/**
+ * Checks if data is binary or text content (sync).
+ *
+ * @param {Buffer} data The data to check.
+ *
+ * @returns {boolean} Content is binary or not.
+ */
+export function isBinaryContentSync(data: Buffer): boolean {
+    return IsBinaryFile.sync(data, data.length);
+}
+
+/**
+ * Checks if the string representation of a value is empty
+ * or contains whitespaces only.
+ *
+ * @param {any} val The value to check.
+ *
+ * @return {boolean} Is empty or not.
+ */
+export function isEmptyString(val: any): boolean {
+    return '' === toStringSafe(val).trim();
 }
 
 /**

@@ -5,6 +5,7 @@ import * as Glob from 'glob';
 import * as Moment from 'moment';
 import * as vscode from 'vscode';
 export * from './disposable';
+export * from './html';
 export * from './logging';
 export { from } from 'node-enumerable';
 export * from './progress';
@@ -173,6 +174,31 @@ export declare function glob(patterns: string | string[], opts?: Glob.IOptions):
  * @return {Promise<TResult>} The promise with the result.
  */
 export declare function invokeAfter<TResult = any>(action: InvokeAfterAction<TResult>, ms?: number, ...args: any[]): Promise<TResult>;
+/**
+ * Checks if data is binary or text content.
+ *
+ * @param {Buffer} data The data to check.
+ *
+ * @returns {Promise<boolean>} The promise that indicates if content is binary or not.
+ */
+export declare function isBinaryContent(data: Buffer): Promise<boolean>;
+/**
+ * Checks if data is binary or text content (sync).
+ *
+ * @param {Buffer} data The data to check.
+ *
+ * @returns {boolean} Content is binary or not.
+ */
+export declare function isBinaryContentSync(data: Buffer): boolean;
+/**
+ * Checks if the string representation of a value is empty
+ * or contains whitespaces only.
+ *
+ * @param {any} val The value to check.
+ *
+ * @return {boolean} Is empty or not.
+ */
+export declare function isEmptyString(val: any): boolean;
 /**
  * Normalizes a value as string so that is comparable.
  *

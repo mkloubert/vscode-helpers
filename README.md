@@ -25,8 +25,12 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [format](#format-)
      * [formatArray](#formatarray-)
      * [from](#from-)
+     * [fromMarkdown](#frommarkdown-)
      * [glob](#glob-)
      * [invokeAfter](#invokeafter-)
+     * [isBinaryContent](#isbinarycontent-)
+     * [isBinaryContentSync](#isbinarycontentsync-)
+     * [isEmptyString](#isemptystring-)
      * [normalizeString](#normalizestring-)
      * [randomBytes](#randombytes-)
      * [registerWorkspaceWatcher](#registerworkspacewatcher-)
@@ -248,6 +252,14 @@ for (const ITEM of seq) {
 }
 ```
 
+#### fromMarkdown [[&uarr;](#functions-)]
+
+```typescript
+let html = vscode_helpers.fromMarkdown(
+    'Vessel     | Captain\n-----------|-------------\nNCC-1701   | James T Kirk\nNCC-1701 A | James T Kirk\nNCC-1701 D | Picard'
+);
+```
+
 #### glob [[&uarr;](#functions-)]
 
 ```typescript
@@ -273,6 +285,42 @@ vscode_helpers.invokeAfter(() => {
 }, (err) => {
     // is invoked on error
 });
+```
+
+#### isBinaryContent [[&uarr;](#functions-)]
+
+```typescript
+import * as fs from 'fs';
+
+vscode_helpers.isBinaryContent( fs.readFileSync('./myPic.jpg') ).then((isBinary) => {
+    // should be (true)
+}, (err) => {
+    // error
+});
+vscode_helpers.isBinaryContent( fs.readFileSync('./myText.txt') ).then((isBinary) => {
+    // should be (false)
+}, (err) => {
+    // error
+});
+```
+
+#### isBinaryContentSync [[&uarr;](#functions-)]
+
+```typescript
+import * as fs from 'fs';
+
+// should be (true)
+vscode_helpers.isBinaryContentSync( fs.readFileSync('./myPic.jpeg') );
+// should be (false)
+vscode_helpers.isBinaryContentSync( fs.readFileSync('./myText.txt') );
+```
+
+#### isEmptyString [[&uarr;](#functions-)]
+
+```typescript
+vscode_helpers.isEmptyString( null );  // (true)
+vscode_helpers.isEmptyString( undefined );  // (true)
+vscode_helpers.isEmptyString( '123' );  // (false)
 ```
 
 #### normalizeString [[&uarr;](#functions-)]
