@@ -20,7 +20,7 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [cloneObject](#cloneobject-)
      * [cloneObjectFlat](#cloneobjectflat-)
      * [compareValues](#comparevalues-)
-     * [compareValuesBy](#comparevaluesny-)
+     * [compareValuesBy](#comparevaluesby-)
      * [createCompletedAction](#createcompletedaction-)
      * [createLogger](#createlogger-)
      * [doesMatch](#doesmatch-)
