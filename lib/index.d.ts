@@ -1,6 +1,6 @@
+/// <reference types="node" />
 /// <reference types="minimatch" />
 /// <reference types="glob" />
-/// <reference types="node" />
 import * as Enumerable from 'node-enumerable';
 import * as Glob from 'glob';
 import * as Minimatch from 'minimatch';
@@ -79,6 +79,16 @@ export declare function applyFuncFor<TFunc extends Function = Function>(func: TF
  * @return {T[]} The value as array.
  */
 export declare function asArray<T>(val: T | T[], removeEmpty?: boolean): T[];
+/**
+ * Returns a value as buffer.
+ *
+ * @param {any} val The value to convert / cast.
+ * @param {string} enc The custom encoding for the string parsers.
+ * @param {number} [maxDepth] The custom value for the max depth of wrapped functions. Default: 63
+ *
+ * @return {Promise<Buffer>} The promise with the buffer.
+ */
+export declare function asBuffer(val: any, enc?: string, maxDepth?: number): Promise<Buffer>;
 /**
  * Returns a value as local Moment instance.
  *

@@ -20,6 +20,7 @@ import * as Crypto from 'crypto';
 import * as Enumerable from 'node-enumerable';
 import * as Glob from 'glob';
 const IsBinaryFile = require("isbinaryfile");
+import * as IsStream from 'is-stream';
 const MergeDeep = require('merge-deep');
 import * as Minimatch from 'minimatch';
 import * as Moment from 'moment';
@@ -124,6 +125,70 @@ export function asArray<T>(val: T | T[], removeEmpty = true): T[] {
 
         return true;
     });
+}
+
+/**
+ * Returns a value as buffer.
+ *
+ * @param {any} val The value to convert / cast.
+ * @param {string} enc The custom encoding for the string parsers.
+ * @param {number} [maxDepth] The custom value for the max depth of wrapped functions. Default: 63
+ *
+ * @return {Promise<Buffer>} The promise with the buffer.
+ */
+export async function asBuffer(val: any, enc?: string, maxDepth?: number): Promise<Buffer> {
+    return await asBufferInner(val, enc, null, maxDepth);
+}
+
+async function asBufferInner(val: any, enc?: string,
+                             funcDepth?: number, maxDepth?: number) {
+    if (isNaN(funcDepth)) {
+        funcDepth = 0;
+    }
+
+    if (isNaN(maxDepth)) {
+        maxDepth = 63;
+    }
+
+    if (funcDepth > maxDepth) {
+        throw new Error(`Maximum depth of ${maxDepth} reached!`);
+    }
+
+    if (Buffer.isBuffer(val) || _.isNil(val)) {
+        return val;
+    }
+
+    if (_.isFunction(val)) {
+        // wrapped
+
+        return await asBufferInner(
+            await Promise.resolve(
+                val(enc, funcDepth, maxDepth),
+            ),
+            enc,
+            funcDepth + 1, maxDepth,
+        );
+    }
+
+    enc = normalizeString(enc);
+    if ('' === enc) {
+        enc = undefined;
+    }
+
+    if (IsStream.readable(val)) {
+        // stream
+        return await readAll(val);
+    }
+
+    if (_.isObject(val)) {
+        // JSON object
+        return new Buffer(JSON.stringify(val),
+                          enc);
+    }
+
+    // handle as string
+    return new Buffer(toStringSafe(val),
+                      enc);
 }
 
 /**

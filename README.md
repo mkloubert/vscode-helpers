@@ -13,6 +13,7 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
    * [Functions](#functions-)
      * [applyFuncFor](#applyfuncfor-)
      * [asArray](#asarray-)
+     * [asBuffer](#asbuffer-)
      * [asLocalTime](#aslocaltime-)
      * [asUTC](#asutc-)
      * [buildWorkflow](#buildworkflow-)
@@ -102,6 +103,20 @@ const ARR_1 = vscode_helpers.asArray([ 0, 1, null, 3, 4, undefined ]);  // [ 0, 
 const ARR_2 = vscode_helpers.asArray([ 0, 1, null, 3, 4, undefined ], false);  // [ 0, 1, null, 3, 4, undefined ]
 const ARR_3 = vscode_helpers.asArray( 5979 );  // [ 5979 ]
 const ARR_4 = vscode_helpers.asArray( null );  // [ ]
+```
+
+#### asBuffer [[&uarr;](#functions-)]
+
+```typescript
+import * as fs from 'fs';
+
+const STREAM = fs.createReadStream('./my-file.txt');
+
+asBuffer( STREAM ).then((data: Buffer) => {
+    // all data read
+}, (err) => {
+    // error
+});
 ```
 
 #### asLocalTime [[&uarr;](#functions-)]
@@ -246,7 +261,7 @@ vscode_helpers.forEachAsync([ 5979, 23979 ], async (item, index) => {
 ```typescript
 // "MK:23979 + TM: '5979'"
 let str_1 = vscode_helpers.format(
-    'MK:{1} + TM:{1:trim,surround,leading_space}',
+    'MK:{1} + TM:{0:trim,surround,leading_space}',
     5979,
     23979
 );
@@ -257,7 +272,7 @@ let str_1 = vscode_helpers.format(
 ```typescript
 // "MK:23979 + TM: '5979'"
 let str_1 = vscode_helpers.formatArray(
-    'MK:{1} + TM:{1:trim,surround,leading_space}',
+    'MK:{1} + TM:{0:trim,surround,leading_space}',
     [ 5979, 23979 ]
 );
 ```
