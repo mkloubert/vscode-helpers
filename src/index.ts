@@ -21,6 +21,7 @@ import * as Enumerable from 'node-enumerable';
 import * as Glob from 'glob';
 const IsBinaryFile = require("isbinaryfile");
 const MergeDeep = require('merge-deep');
+import * as Minimatch from 'minimatch';
 import * as Moment from 'moment';
 import * as OS from 'os';
 import * as Path from 'path';
@@ -313,6 +314,31 @@ export function createCompletedAction<TResult = any>(resolve: (value?: TResult |
             }
         }
     };
+}
+
+/**
+ * Handles a value as string and checks if it does match at least one (minimatch) pattern.
+ *
+ * @param {any} val The value to check.
+ * @param {string|string[]} patterns One or more patterns.
+ * @param {Minimatch.IOptions} [options] Additional options.
+ *
+ * @return {boolean} Does match or not.
+ */
+export function doesMatch(val: any, patterns: string | string[], options?: Minimatch.IOptions): boolean {
+    val = toStringSafe(val);
+
+    patterns = asArray(patterns).map(p => {
+        return toStringSafe(p);
+    });
+
+    for (const P of patterns) {
+        if (Minimatch(val, P, options)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 /**

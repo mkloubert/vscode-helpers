@@ -1,7 +1,9 @@
+/// <reference types="minimatch" />
 /// <reference types="glob" />
 /// <reference types="node" />
 import * as Enumerable from 'node-enumerable';
 import * as Glob from 'glob';
+import * as Minimatch from 'minimatch';
 import * as Moment from 'moment';
 import * as Stream from 'stream';
 import * as vscode from 'vscode';
@@ -139,6 +141,16 @@ export declare function compareValuesBy<T, U>(x: T, y: T, selector: (t: T) => U)
  * @return {SimpleCompletedAction<TResult>} The created action.
  */
 export declare function createCompletedAction<TResult = any>(resolve: (value?: TResult | PromiseLike<TResult>) => void, reject?: (reason: any) => void): SimpleCompletedAction<TResult>;
+/**
+ * Handles a value as string and checks if it does match at least one (minimatch) pattern.
+ *
+ * @param {any} val The value to check.
+ * @param {string|string[]} patterns One or more patterns.
+ * @param {Minimatch.IOptions} [options] Additional options.
+ *
+ * @return {boolean} Does match or not.
+ */
+export declare function doesMatch(val: any, patterns: string | string[], options?: Minimatch.IOptions): boolean;
 /**
  * Async 'forEach'.
  *

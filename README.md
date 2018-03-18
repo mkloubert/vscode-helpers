@@ -22,6 +22,7 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [compareValuesBy](#comparevaluesny-)
      * [createCompletedAction](#createcompletedaction-)
      * [createLogger](#createlogger-)
+     * [doesMatch](#doesmatch-)
      * [forEachAsync](#foreachasync-)
      * [format](#format-)
      * [formatArray](#formatarray-)
@@ -215,6 +216,14 @@ const LOGGER = vscode_helpers.createLogger((log) => {
 });
 
 LOGGER.info('Hello, LOG!');
+```
+
+#### doesMatch [[&uarr;](#functions-)]
+
+```typescript
+vscode_helpers.doesMatch('my-file.txt', '*.txt');  // (true)
+vscode_helpers.doesMatch('my-picture.jpg', [ '*.txt' ]);  // (false)
+vscode_helpers.doesMatch('my-picture.jpg', [ '*.txt', '*.jpg' ]);  // (true)
 ```
 
 #### forEachAsync [[&uarr;](#functions-)]
