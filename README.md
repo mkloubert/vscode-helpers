@@ -22,8 +22,10 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [compareValues](#comparevalues-)
      * [compareValuesBy](#comparevaluesby-)
      * [createCompletedAction](#createcompletedaction-)
+     * [createDirectoryIfNeeded](#createdirectoryifneeded-)
      * [createLogger](#createlogger-)
      * [doesMatch](#doesmatch-)
+     * [exists](#exists-)
      * [forEachAsync](#foreachasync-)
      * [format](#format-)
      * [formatArray](#formatarray-)
@@ -205,6 +207,16 @@ const SORTED_OBJS = [ OBJ_1, OBJ_2 ].sort((x, y) => {
 });
 ```
 
+#### createDirectoryIfNeeded [[&uarr;](#functions-)]
+
+```typescript
+vscode_helpers.createDirectoryIfNeeded('/dir/to/create').then((hasBeenCreated: boolean) => {
+
+}, (err) => {
+    // error
+});
+```
+
 #### createCompletedAction [[&uarr;](#functions-)]
 
 ```typescript
@@ -239,6 +251,16 @@ LOGGER.info('Hello, LOG!');
 vscode_helpers.doesMatch('my-file.txt', '*.txt');  // (true)
 vscode_helpers.doesMatch('my-picture.jpg', [ '*.txt' ]);  // (false)
 vscode_helpers.doesMatch('my-picture.jpg', [ '*.txt', '*.jpg' ]);  // (true)
+```
+
+#### exists [[&uarr;](#functions-)]
+
+```typescript
+vscode_helpers.exists('/path/of/thing/to/check', (doesExist: boolean) => {
+    //TODO    
+}, (err) => {
+    // error
+});
 ```
 
 #### forEachAsync [[&uarr;](#functions-)]
@@ -308,7 +330,7 @@ vscode_helpers.glob([ '**/*.txt' ], {
     cwd: '/path/to/directory',
     ignore: [ '/log/**/*' ],
     root: '/path/to/directory',
-}).then((matches: string) => {
+}).then((matches: string[]) => {
     // 'matches' contains the found files
 }, (err) => {
     // error

@@ -18,6 +18,8 @@
 import * as _ from 'lodash';
 import * as Crypto from 'crypto';
 import * as Enumerable from 'node-enumerable';
+import * as FS from 'fs';
+import * as FSExtra from 'fs-extra';
 import * as Glob from 'glob';
 const IsBinaryFile = require("isbinaryfile");
 import * as IsStream from 'is-stream';
@@ -382,6 +384,25 @@ export function createCompletedAction<TResult = any>(resolve: (value?: TResult |
 }
 
 /**
+ * Creates a directory (if needed).
+ *
+ * @param {string} dir The path of the directory to create.
+ *
+ * @return {Promise<boolean>} The promise that indicates if directory has been created or not.
+ */
+export async function createDirectoryIfNeeded(dir: string) {
+    dir = toStringSafe(dir);
+
+    if (!(await exists(dir))) {
+        await FSExtra.mkdirs(dir);
+
+        return true;
+    }
+
+    return false;
+}
+
+/**
  * Handles a value as string and checks if it does match at least one (minimatch) pattern.
  *
  * @param {any} val The value to check.
@@ -433,6 +454,27 @@ export async function forEachAsync<T, TResult>(items: Enumerable.Sequence<T>,
     }
 
     return lastResult;
+}
+
+/**
+ * Promise version of 'FS.exists()' function.
+ *
+ * @param {string|Buffer} path The path.
+ *
+ * @return {Promise<boolean>} The promise that indicates if path exists or not.
+ */
+export function exists(path: string | Buffer) {
+    return new Promise<boolean>((resolve, reject) => {
+        const COMPLETED = createCompletedAction(resolve, reject);
+
+        try {
+            FS.exists(path, (doesExist) => {
+                COMPLETED(null, doesExist);
+            });
+        } catch (e) {
+            COMPLETED(e);
+        }
+    });
 }
 
 /**

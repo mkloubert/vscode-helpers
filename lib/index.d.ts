@@ -152,6 +152,14 @@ export declare function compareValuesBy<T, U>(x: T, y: T, selector: (t: T) => U)
  */
 export declare function createCompletedAction<TResult = any>(resolve: (value?: TResult | PromiseLike<TResult>) => void, reject?: (reason: any) => void): SimpleCompletedAction<TResult>;
 /**
+ * Creates a directory (if needed).
+ *
+ * @param {string} dir The path of the directory to create.
+ *
+ * @return {Promise<boolean>} The promise that indicates if directory has been created or not.
+ */
+export declare function createDirectoryIfNeeded(dir: string): Promise<boolean>;
+/**
  * Handles a value as string and checks if it does match at least one (minimatch) pattern.
  *
  * @param {any} val The value to check.
@@ -171,6 +179,14 @@ export declare function doesMatch(val: any, patterns: string | string[], options
  * @return {TResult} The result of the last action call.
  */
 export declare function forEachAsync<T, TResult>(items: Enumerable.Sequence<T>, action: ForEachAsyncAction<T, TResult>, thisArg?: any): Promise<TResult>;
+/**
+ * Promise version of 'FS.exists()' function.
+ *
+ * @param {string|Buffer} path The path.
+ *
+ * @return {Promise<boolean>} The promise that indicates if path exists or not.
+ */
+export declare function exists(path: string | Buffer): Promise<boolean>;
 /**
  * Formats a string.
  *
