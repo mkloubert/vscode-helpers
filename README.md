@@ -57,6 +57,8 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [DisposableBase](#disposablebase-)
      * [MemoryCache](#memorycache-)
      * [WorkspaceBase](#workspacebase-)
+   * [Constants and variables](#constants-and-variables-)
+     * [EVENTS](#events-)
 4. [Support and contribute](#support-and-contribute-)
 5. [Documentation](#documentation-)
 
@@ -673,6 +675,19 @@ class MyWorkspace extends vscode_helpers.WorkspaceBase {
         // put code here to cleanup the workspace
     }
 }
+```
+
+### Constants and variables [[&uarr;](#examples-)]
+
+#### EVENTS [[&uarr;](#constants-and-variables-)]
+
+```typescript
+vscode_helpers.EVENTS.on('myEvent', (a, b) => {
+    console.log('myEvent' + (a + b));
+});
+
+vscode_helpers.EVENTS
+              .emit('myEvent', 5979, 23979);
 ```
 
 ## Support and contribute [[&uarr;](#table-of-contents)]

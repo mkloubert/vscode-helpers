@@ -62,6 +62,10 @@ export interface WaitWhileOptions {
     timeUntilNextCheck?: number;
 }
 /**
+ * Stores the global event emitter.
+ */
+export declare const EVENTS: NodeJS.EventEmitter;
+/**
  * Applies a function for a specific object / value.
  *
  * @param {TFunc} func The function.

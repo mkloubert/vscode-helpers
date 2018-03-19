@@ -18,6 +18,7 @@
 import * as _ from 'lodash';
 import * as Crypto from 'crypto';
 import * as Enumerable from 'node-enumerable';
+import * as Events from 'events';
 import * as FS from 'fs';
 import * as FSExtra from 'fs-extra';
 import * as Glob from 'glob';
@@ -92,6 +93,11 @@ export interface WaitWhileOptions {
      */
     timeUntilNextCheck?: number;
 }
+
+/**
+ * Stores the global event emitter.
+ */
+export const EVENTS: NodeJS.EventEmitter = new Events.EventEmitter();
 
 /**
  * Applies a function for a specific object / value.

@@ -16,6 +16,7 @@
  */
 
 import * as _ from 'lodash';
+import * as Path from 'path';
 import * as vscode from 'vscode';
 import * as vscode_helpers from '../index';
 import * as vscode_disposable from '../disposable';
@@ -36,6 +37,10 @@ export interface Workspace extends vscode.Disposable, NodeJS.EventEmitter {
      * Is invoked when the configuration for that workspace changed.
      */
     readonly onDidChangeConfiguration: (e: vscode.ConfigurationChangeEvent) => void | PromiseLike<void>;
+    /**
+     * Gets the root path of that workspace.
+     */
+    readonly rootPath: string;
 }
 
 /**
@@ -134,6 +139,13 @@ export abstract class WorkspaceBase extends vscode_disposable.DisposableBase imp
 
     /** @inheritdoc */
     public async onDidChangeConfiguration(e: vscode.ConfigurationChangeEvent) {
+    }
+
+    /** @inheritdoc */
+    public get rootPath(): string {
+        return Path.resolve(
+            this.folder.uri.fsPath
+        );
     }
 }
 

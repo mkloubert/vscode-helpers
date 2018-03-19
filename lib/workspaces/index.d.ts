@@ -17,6 +17,10 @@ export interface Workspace extends vscode.Disposable, NodeJS.EventEmitter {
      * Is invoked when the configuration for that workspace changed.
      */
     readonly onDidChangeConfiguration: (e: vscode.ConfigurationChangeEvent) => void | PromiseLike<void>;
+    /**
+     * Gets the root path of that workspace.
+     */
+    readonly rootPath: string;
 }
 /**
  * Stores data of configuration source.
@@ -101,6 +105,8 @@ export declare abstract class WorkspaceBase extends vscode_disposable.Disposable
     readonly abstract configSource: WorkspaceConfigSource;
     /** @inheritdoc */
     onDidChangeConfiguration(e: vscode.ConfigurationChangeEvent): Promise<void>;
+    /** @inheritdoc */
+    readonly rootPath: string;
 }
 /**
  * Registers a workspace watcher.
