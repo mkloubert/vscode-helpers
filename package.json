@@ -1,7 +1,7 @@
 {
     "name": "vscode-helpers",
     "author": "Marcel Joachim Kloubert",
-    "version": "0.22.0",
+    "version": "0.23.0",
     "description": "Helper functions and classes for VS Code (extensions)",
     "tags": [
         "functions",
@@ -50,16 +50,16 @@
         "@types/fs-extra": "^5.0.1",
         "@types/glob": "^5.0.35",
         "@types/is-stream": "^1.1.0",
-        "@types/lodash": "^4.14.104",
+        "@types/lodash": "^4.14.106",
         "@types/marked": "^0.3.0",
         "@types/minimatch": "^3.0.3",
-        "@types/node": "^7.0.55",
+        "@types/node": "^7.0.56",
         "fs-extra": "^5.0.0",
         "glob": "^7.1.2",
         "is-stream": "^1.1.0",
         "isbinaryfile": "^3.0.2",
         "lodash": "^4.17.5",
-        "marked": "^0.3.17",
+        "marked": "^0.3.18",
         "merge-deep": "^3.0.1",
         "minimatch": "^3.0.4",
         "moment": "^2.21.0",
@@ -68,7 +68,7 @@
     "devDependencies": {
         "tslint": "^5.7.0",
         "typescript": "^2.7.2",
-        "vscode": "^1.1.13"
+        "vscode": "^1.1.14"
     },
     "engines": {
         "vscode": "^1.20.0"

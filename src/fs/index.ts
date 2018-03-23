@@ -137,6 +137,270 @@ export function globSync(patterns: string | string[], opts?: Glob.IOptions) {
                          .toArray();
 }
 
+async function invokeForStats<TResult = any>(
+    path: string, useLSTAT,
+    func: (stats: FS.Stats) => TResult,
+    defaultValue?: TResult,
+): Promise<TResult> {
+    path = vscode_helpers.toStringSafe(path);
+    useLSTAT = vscode_helpers.toBooleanSafe(useLSTAT, true);
+
+    if (await exists(path)) {
+        const STATS = useLSTAT ? (await FSExtra.lstat(path))
+                               : (await FSExtra.stat(path));
+
+        if (STATS) {
+            return func(STATS);
+        }
+    }
+
+    return defaultValue;
+}
+
+function invokeForStatsSync<TResult = any>(
+    path: string, useLSTAT,
+    func: (stats: FS.Stats) => TResult,
+    defaultValue?: TResult,
+): TResult {
+    path = vscode_helpers.toStringSafe(path);
+    useLSTAT = vscode_helpers.toBooleanSafe(useLSTAT, true);
+
+    if (FS.existsSync(path)) {
+        const STATS = useLSTAT ? FS.lstatSync(path)
+                               : FS.statSync(path);
+
+        if (STATS) {
+            return func(STATS);
+        }
+    }
+
+    return defaultValue;
+}
+
+/**
+ * Checks if a path exists and is a block device.
+ *
+ * @param {string} path The path to check.
+ * @param {boolean} [useLSTAT] If (true) use 'FS.lstat()' function, otherwise 'FS.stat()'.
+ *
+ * @return {Promise<boolean>} The promise with the value that indicates if condition matches or not.
+ */
+export async function isBlockDevice(path: string, useLSTAT = true) {
+    return invokeForStats<boolean>(
+        path, useLSTAT,
+        (stats) => stats.isBlockDevice(),
+        false
+    );
+}
+
+/**
+ * Checks if a path exists and is a block device.
+ *
+ * @param {string} path The path to check.
+ * @param {boolean} [useLSTAT] If (true) use 'FS.lstat()' function, otherwise 'FS.stat()'.
+ *
+ * @return {boolean} A value that indicates if condition matches or not.
+ */
+export function isBlockDeviceSync(path: string, useLSTAT = true) {
+    return invokeForStatsSync<boolean>(
+        path, useLSTAT,
+        (stats) => stats.isBlockDevice(),
+        false
+    );
+}
+
+/**
+ * Checks if a path exists and is a character device.
+ *
+ * @param {string} path The path to check.
+ * @param {boolean} [useLSTAT] If (true) use 'FS.lstat()' function, otherwise 'FS.stat()'.
+ *
+ * @return {Promise<boolean>} The promise with the value that indicates if condition matches or not.
+ */
+export async function isCharacterDevice(path: string, useLSTAT = true) {
+    return invokeForStats<boolean>(
+        path, useLSTAT,
+        (stats) => stats.isCharacterDevice(),
+        false
+    );
+}
+
+/**
+ * Checks if a path exists and is a character device.
+ *
+ * @param {string} path The path to check.
+ * @param {boolean} [useLSTAT] If (true) use 'FS.lstat()' function, otherwise 'FS.stat()'.
+ *
+ * @return {boolean} A value that indicates if condition matches or not.
+ */
+export function isCharacterDeviceSync(path: string, useLSTAT = true) {
+    return invokeForStatsSync<boolean>(
+        path, useLSTAT,
+        (stats) => stats.isCharacterDevice(),
+        false
+    );
+}
+
+/**
+ * Checks if a path exists and is a directory.
+ *
+ * @param {string} path The path to check.
+ * @param {boolean} [useLSTAT] If (true) use 'FS.lstat()' function, otherwise 'FS.stat()'.
+ *
+ * @return {Promise<boolean>} The promise with the value that indicates if condition matches or not.
+ */
+export async function isDirectory(path: string, useLSTAT = true) {
+    return invokeForStats<boolean>(
+        path, useLSTAT,
+        (stats) => stats.isDirectory(),
+        false
+    );
+}
+
+/**
+ * Checks if a path exists and is a directory.
+ *
+ * @param {string} path The path to check.
+ * @param {boolean} [useLSTAT] If (true) use 'FS.lstat()' function, otherwise 'FS.stat()'.
+ *
+ * @return {boolean} A value that indicates if condition matches or not.
+ */
+export function isDirectorySync(path: string, useLSTAT = true) {
+    return invokeForStatsSync<boolean>(
+        path, useLSTAT,
+        (stats) => stats.isDirectory(),
+        false
+    );
+}
+
+/**
+ * Checks if a path exists and is FIFO.
+ *
+ * @param {string} path The path to check.
+ * @param {boolean} [useLSTAT] If (true) use 'FS.lstat()' function, otherwise 'FS.stat()'.
+ *
+ * @return {Promise<boolean>} The promise with the value that indicates if condition matches or not.
+ */
+export async function isFIFO(path: string, useLSTAT = true) {
+    return invokeForStats<boolean>(
+        path, useLSTAT,
+        (stats) => stats.isFIFO(),
+        false
+    );
+}
+
+/**
+ * Checks if a path exists and is FIFO.
+ *
+ * @param {string} path The path to check.
+ * @param {boolean} [useLSTAT] If (true) use 'FS.lstat()' function, otherwise 'FS.stat()'.
+ *
+ * @return {boolean} A value that indicates if condition matches or not.
+ */
+export function isFIFOSync(path: string, useLSTAT = true) {
+    return invokeForStatsSync<boolean>(
+        path, useLSTAT,
+        (stats) => stats.isFIFO(),
+        false
+    );
+}
+
+/**
+ * Checks if a path exists and is a file.
+ *
+ * @param {string} path The path to check.
+ * @param {boolean} [useLSTAT] If (true) use 'FS.lstat()' function, otherwise 'FS.stat()'.
+ *
+ * @return {Promise<boolean>} The promise with the value that indicates if condition matches or not.
+ */
+export async function isFile(path: string, useLSTAT = true) {
+    return invokeForStats<boolean>(
+        path, useLSTAT,
+        (stats) => stats.isFile(),
+        false
+    );
+}
+
+/**
+ * Checks if a path exists and is a file.
+ *
+ * @param {string} path The path to check.
+ * @param {boolean} [useLSTAT] If (true) use 'FS.lstat()' function, otherwise 'FS.stat()'.
+ *
+ * @return {boolean} A value that indicates if condition matches or not.
+ */
+export function isFileSync(path: string, useLSTAT = true) {
+    return invokeForStatsSync<boolean>(
+        path, useLSTAT,
+        (stats) => stats.isFile(),
+        false
+    );
+}
+
+/**
+ * Checks if a path exists and is a socket.
+ *
+ * @param {string} path The path to check.
+ * @param {boolean} [useLSTAT] If (true) use 'FS.lstat()' function, otherwise 'FS.stat()'.
+ *
+ * @return {Promise<boolean>} The promise with the value that indicates if condition matches or not.
+ */
+export async function isSocket(path: string, useLSTAT = true) {
+    return invokeForStats<boolean>(
+        path, useLSTAT,
+        (stats) => stats.isSocket(),
+        false
+    );
+}
+
+/**
+ * Checks if a path exists and is a socket.
+ *
+ * @param {string} path The path to check.
+ * @param {boolean} [useLSTAT] If (true) use 'FS.lstat()' function, otherwise 'FS.stat()'.
+ *
+ * @return {boolean} A value that indicates if condition matches or not.
+ */
+export function isSocketSync(path: string, useLSTAT = true) {
+    return invokeForStatsSync<boolean>(
+        path, useLSTAT,
+        (stats) => stats.isSocket(),
+        false
+    );
+}
+
+/**
+ * Checks if a path exists and is a symbolic link.
+ *
+ * @param {string} path The path to check.
+ * @param {boolean} [useLSTAT] If (true) use 'FS.lstat()' function, otherwise 'FS.stat()'.
+ *
+ * @return {Promise<boolean>} The promise with the value that indicates if condition matches or not.
+ */
+export async function isSymbolicLink(path: string, useLSTAT = true) {
+    return invokeForStats<boolean>(
+        path, useLSTAT,
+        (stats) => stats.isSymbolicLink(),
+        false
+    );
+}
+
+/**
+ * Checks if a path exists and is a symbolic link.
+ *
+ * @param {string} path The path to check.
+ * @param {boolean} [useLSTAT] If (true) use 'FS.lstat()' function, otherwise 'FS.stat()'.
+ *
+ * @return {boolean} A value that indicates if condition matches or not.
+ */
+export function isSymbolicLinkSync(path: string, useLSTAT = true) {
+    return invokeForStatsSync<boolean>(
+        path, useLSTAT,
+        (stats) => stats.isSymbolicLink(),
+        false
+    );
+}
+
 function normalizeGlobOptions(opts: Glob.IOptions, callerDefaultOpts: Glob.IOptions): Glob.IOptions {
     const DEFAULT_OPTS: Glob.IOptions = {
         absolute: true,

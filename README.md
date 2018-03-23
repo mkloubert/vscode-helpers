@@ -36,7 +36,21 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [invokeAfter](#invokeafter-)
      * [isBinaryContent](#isbinarycontent-)
      * [isBinaryContentSync](#isbinarycontentsync-)
+     * [isBlockDevice](#isblockdevice-)
+     * [isBlockDeviceSync](#isblockdevicesync-)
+     * [isCharacterDevice](#ischaracterdevice-)
+     * [isCharacterDeviceSync](#ischaracterdevicesync-)
+     * [isDirectory](#isdirectory-)
+     * [isDirectorySync](#isdirectorysync-)
      * [isEmptyString](#isemptystring-)
+     * [isFIFO](#isfifo-)
+     * [isFIFOSync](#isfifosync-)
+     * [isFile](#isfile-)
+     * [isFileSync](#isfilesync-)
+     * [isSocket](#issocket-)
+     * [isSocketSync](#issocketsync-)
+     * [isSymbolicLink](#issymboliclink-)
+     * [isSymbolicLinkSync](#issymboliclinksync-)
      * [loadModule](#loadmodule-)
      * [makeNonDisposable](#makenondisposable-)
      * [normalizeString](#normalizestring-)
@@ -363,7 +377,6 @@ vscode_helpers.invokeAfter(() => {
     // is invoked on error
 });
 ```
-
 #### isBinaryContent [[&uarr;](#functions-)]
 
 ```typescript
@@ -392,12 +405,124 @@ vscode_helpers.isBinaryContentSync( fs.readFileSync('./myPic.jpeg') );
 vscode_helpers.isBinaryContentSync( fs.readFileSync('./myText.txt') );
 ```
 
+#### isBlockDevice [[&uarr;](#functions-)]
+
+```typescript
+vscode_helpers.isBlockDevice('/path/to/check').then((isABlockDevice) => {
+    // TODO
+}, (err) => {
+    // error
+})
+```
+
+#### isBlockDeviceSync [[&uarr;](#functions-)]
+
+```typescript
+const IS_A_BLOCK_DEVICE: boolean = vscode_helpers.isBlockDeviceSync('/path/to/check');
+```
+
+#### isCharacterDevice [[&uarr;](#functions-)]
+
+```typescript
+vscode_helpers.isCharacterDevice('/path/to/check').then((isACharacterDevice) => {
+    // TODO
+}, (err) => {
+    // error
+})
+```
+
+#### isCharacterDeviceSync [[&uarr;](#functions-)]
+
+```typescript
+const IS_A_CHARACTER_DEVICE: boolean = vscode_helpers.isCharacterDeviceSync('/path/to/check');
+```
+
+#### isDirectory [[&uarr;](#functions-)]
+
+```typescript
+vscode_helpers.isDirectory('/path/to/check').then((isADirectory) => {
+    // TODO
+}, (err) => {
+    // error
+})
+```
+
+#### isDirectorySync [[&uarr;](#functions-)]
+
+```typescript
+const IS_A_DIRECTORY: boolean = vscode_helpers.isDirectorySync('/path/to/check');
+```
+
 #### isEmptyString [[&uarr;](#functions-)]
 
 ```typescript
 vscode_helpers.isEmptyString( null );  // (true)
 vscode_helpers.isEmptyString( undefined );  // (true)
 vscode_helpers.isEmptyString( '123' );  // (false)
+```
+
+#### isFIFO [[&uarr;](#functions-)]
+
+```typescript
+vscode_helpers.isFIFO('/path/to/check').then((isAFIFO) => {
+    // TODO
+}, (err) => {
+    // error
+})
+```
+
+#### isFIFOSync [[&uarr;](#functions-)]
+
+```typescript
+const IS_A_FIFO: boolean = vscode_helpers.isFIFOSync('/path/to/check');
+```
+
+#### isFile [[&uarr;](#functions-)]
+
+```typescript
+vscode_helpers.isFile('/path/to/check').then((isAFile) => {
+    // TODO
+}, (err) => {
+    // error
+})
+```
+
+#### isFileSync [[&uarr;](#functions-)]
+
+```typescript
+const IS_A_FILE: boolean = vscode_helpers.isFileSync('/path/to/check');
+```
+
+#### isSocket [[&uarr;](#functions-)]
+
+```typescript
+vscode_helpers.isSocket('/path/to/check').then((isASocket) => {
+    // TODO
+}, (err) => {
+    // error
+})
+```
+
+#### isSocketSync [[&uarr;](#functions-)]
+
+```typescript
+const IS_A_SOCKET: boolean = vscode_helpers.isSocketSync('/path/to/check');
+```
+
+#### isSymbolicLink [[&uarr;](#functions-)]
+
+```typescript
+vscode_helpers.isSymbolicLink('/path/to/check').then((isASymbolicLink) => {
+    // TODO
+}, (err) => {
+    // error
+})
+```
+
+#### isSymbolicLinkSync [[&uarr;](#functions-)]
+
+```typescript
+const IS_A_SYMBOLIC_LINK: boolean = vscode_helpers.isSymbolicLinkSync('/path/to/check');
 ```
 
 #### loadModule [[&uarr;](#functions-)]
