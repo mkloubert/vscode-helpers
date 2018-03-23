@@ -32,10 +32,12 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [from](#from-)
      * [fromMarkdown](#frommarkdown-)
      * [glob](#glob-)
+     * [globSync](#globsync-)
      * [invokeAfter](#invokeafter-)
      * [isBinaryContent](#isbinarycontent-)
      * [isBinaryContentSync](#isbinarycontentsync-)
      * [isEmptyString](#isemptystring-)
+     * [loadModule](#loadmodule-)
      * [makeNonDisposable](#makenondisposable-)
      * [normalizeString](#normalizestring-)
      * [randomBytes](#randombytes-)
@@ -339,6 +341,16 @@ vscode_helpers.glob([ '**/*.txt' ], {
 });
 ```
 
+#### globSync [[&uarr;](#functions-)]
+
+```typescript
+let matches: string[] = vscode_helpers.globSync([ '**/*.txt' ], {
+    cwd: '/path/to/directory',
+    ignore: [ '/log/**/*' ],
+    root: '/path/to/directory',
+});
+```
+
 #### invokeAfter [[&uarr;](#functions-)]
 
 ```typescript
@@ -386,6 +398,18 @@ vscode_helpers.isBinaryContentSync( fs.readFileSync('./myText.txt') );
 vscode_helpers.isEmptyString( null );  // (true)
 vscode_helpers.isEmptyString( undefined );  // (true)
 vscode_helpers.isEmptyString( '123' );  // (false)
+```
+
+#### loadModule [[&uarr;](#functions-)]
+
+```typescript
+interface MyModule {
+    execute(): any;
+}
+
+let mod = vscode_helpers.loadModule<MyModule>('/path/to/module.js');
+
+let modResult = mod.execute();
 ```
 
 ### makeNonDisposable [[&uarr;](#functions-)]

@@ -1,14 +1,13 @@
 /// <reference types="node" />
 /// <reference types="minimatch" />
-/// <reference types="glob" />
 import * as Enumerable from 'node-enumerable';
-import * as Glob from 'glob';
 import * as Minimatch from 'minimatch';
 import * as Moment from 'moment';
 import * as Stream from 'stream';
 import * as vscode from 'vscode';
 export * from './cache';
 export * from './disposable';
+export * from './fs';
 export * from './html';
 export * from './logging';
 export { from } from 'node-enumerable';
@@ -156,14 +155,6 @@ export declare function compareValuesBy<T, U>(x: T, y: T, selector: (t: T) => U)
  */
 export declare function createCompletedAction<TResult = any>(resolve: (value?: TResult | PromiseLike<TResult>) => void, reject?: (reason: any) => void): SimpleCompletedAction<TResult>;
 /**
- * Creates a directory (if needed).
- *
- * @param {string} dir The path of the directory to create.
- *
- * @return {Promise<boolean>} The promise that indicates if directory has been created or not.
- */
-export declare function createDirectoryIfNeeded(dir: string): Promise<boolean>;
-/**
  * Handles a value as string and checks if it does match at least one (minimatch) pattern.
  *
  * @param {any} val The value to check.
@@ -184,14 +175,6 @@ export declare function doesMatch(val: any, patterns: string | string[], options
  */
 export declare function forEachAsync<T, TResult>(items: Enumerable.Sequence<T>, action: ForEachAsyncAction<T, TResult>, thisArg?: any): Promise<TResult>;
 /**
- * Promise version of 'FS.exists()' function.
- *
- * @param {string|Buffer} path The path.
- *
- * @return {Promise<boolean>} The promise that indicates if path exists or not.
- */
-export declare function exists(path: string | Buffer): Promise<boolean>;
-/**
  * Formats a string.
  *
  * @param {any} formatStr The value that represents the format string.
@@ -209,15 +192,6 @@ export declare function format(formatStr: any, ...args: any[]): string;
  * @return {string} The formated string.
  */
 export declare function formatArray(formatStr: any, args: any[]): string;
-/**
- * Promise version of 'Glob()' function.
- *
- * @param {string|string[]} patterns One or more patterns.
- * @param {Glob.IOptions} [opts] Custom options.
- *
- * @return {Promise<string[]>} The promise with the matches.
- */
-export declare function glob(patterns: string | string[], opts?: Glob.IOptions): Promise<string[]>;
 /**
  * Invokes an action after a timeout.
  *
@@ -253,6 +227,15 @@ export declare function isBinaryContentSync(data: Buffer): boolean;
  * @return {boolean} Is empty or not.
  */
 export declare function isEmptyString(val: any): boolean;
+/**
+ * Loads a module from a script.
+ *
+ * @param {string} file The path to the script.
+ * @param {boolean} [fromCache] Cache module or not.
+ *
+ * @return {TModule} The loaded module.
+ */
+export declare function loadModule<TModule = any>(file: string, fromCache?: boolean): TModule;
 /**
  * Normalizes a value as string so that is comparable.
  *

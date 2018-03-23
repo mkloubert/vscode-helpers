@@ -19,23 +19,19 @@ import * as _ from 'lodash';
 import * as Crypto from 'crypto';
 import * as Enumerable from 'node-enumerable';
 import * as Events from 'events';
-import * as FS from 'fs';
-import * as FSExtra from 'fs-extra';
-import * as Glob from 'glob';
 const IsBinaryFile = require("isbinaryfile");
 import * as IsStream from 'is-stream';
-const MergeDeep = require('merge-deep');
 import * as Minimatch from 'minimatch';
 import * as Moment from 'moment';
 import * as OS from 'os';
 import * as Path from 'path';
 import * as Stream from 'stream';
 import * as vscode from 'vscode';
-import * as vscode_workflows from './workflows';
 
 // sub modules
 export * from './cache';
 export * from './disposable';
+export * from './fs';
 export * from './html';
 export * from './logging';
 export { from } from 'node-enumerable';
@@ -390,25 +386,6 @@ export function createCompletedAction<TResult = any>(resolve: (value?: TResult |
 }
 
 /**
- * Creates a directory (if needed).
- *
- * @param {string} dir The path of the directory to create.
- *
- * @return {Promise<boolean>} The promise that indicates if directory has been created or not.
- */
-export async function createDirectoryIfNeeded(dir: string) {
-    dir = toStringSafe(dir);
-
-    if (!(await exists(dir))) {
-        await FSExtra.mkdirs(dir);
-
-        return true;
-    }
-
-    return false;
-}
-
-/**
  * Handles a value as string and checks if it does match at least one (minimatch) pattern.
  *
  * @param {any} val The value to check.
@@ -460,27 +437,6 @@ export async function forEachAsync<T, TResult>(items: Enumerable.Sequence<T>,
     }
 
     return lastResult;
-}
-
-/**
- * Promise version of 'FS.exists()' function.
- *
- * @param {string|Buffer} path The path.
- *
- * @return {Promise<boolean>} The promise that indicates if path exists or not.
- */
-export function exists(path: string | Buffer) {
-    return new Promise<boolean>((resolve, reject) => {
-        const COMPLETED = createCompletedAction(resolve, reject);
-
-        try {
-            FS.exists(path, (doesExist) => {
-                COMPLETED(null, doesExist);
-            });
-        } catch (e) {
-            COMPLETED(e);
-        }
-    });
 }
 
 /**
@@ -570,62 +526,6 @@ export function formatArray(formatStr: any, args: any[]): string {
 }
 
 /**
- * Promise version of 'Glob()' function.
- *
- * @param {string|string[]} patterns One or more patterns.
- * @param {Glob.IOptions} [opts] Custom options.
- *
- * @return {Promise<string[]>} The promise with the matches.
- */
-export async function glob(patterns: string | string[], opts?: Glob.IOptions) {
-    const DEFAULT_OPTS: Glob.IOptions = {
-        absolute: true,
-        dot: false,
-        nocase: true,
-        nodir: true,
-        nonull: false,
-        nosort: false,
-        sync: false,
-    };
-
-    opts = MergeDeep({}, DEFAULT_OPTS, opts);
-
-    const WF = vscode_workflows.buildWorkflow();
-
-    WF.next(() => {
-        return [];
-    });
-
-    asArray(patterns).forEach(p => {
-        WF.next((allMatches: string[]) => {
-            return new Promise<string[]>((res, rej) => {
-                const COMPLETED = createCompletedAction(res, rej);
-
-                try {
-                    Glob(p, opts, (err, matches) => {
-                        if (err) {
-                            COMPLETED(err);
-                        } else {
-                            allMatches.push
-                                      .apply(allMatches, matches);
-
-                            COMPLETED(null, allMatches);
-                        }
-                    });
-                } catch (e) {
-                    COMPLETED(e);
-                }
-            });
-        });
-    });
-
-    return Enumerable.from( await WF.start<string[]>() )
-                     .select(m => Path.resolve(m))
-                     .distinct()
-                     .toArray();
-}
-
-/**
  * Invokes an action after a timeout.
  *
  * @param {Function} action The action to invoke.
@@ -711,6 +611,33 @@ export function isBinaryContentSync(data: Buffer): boolean {
  */
 export function isEmptyString(val: any): boolean {
     return '' === toStringSafe(val).trim();
+}
+
+/**
+ * Loads a module from a script.
+ *
+ * @param {string} file The path to the script.
+ * @param {boolean} [fromCache] Cache module or not.
+ *
+ * @return {TModule} The loaded module.
+ */
+export function loadModule<TModule = any>(file: string, fromCache = false): TModule {
+    file = toStringSafe(file);
+    if (isEmptyString(file)) {
+        file = './module.js';
+    }
+    if (!Path.isAbsolute(file)) {
+        file = Path.join(process.cwd(), file);
+    }
+    file = Path.resolve(file);
+
+    fromCache = toBooleanSafe(fromCache);
+
+    if (!fromCache) {
+        delete require.cache[file];
+    }
+
+    return require(file);
 }
 
 /**

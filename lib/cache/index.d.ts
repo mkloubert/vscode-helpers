@@ -57,9 +57,9 @@ export declare abstract class CacheProviderBase implements CacheProvider {
     /** @inheritdoc */
     abstract clear(): this;
     /** @inheritdoc */
-    abstract get<TValue = any, TDefault = TValue>(key: any, defaultValue?: TDefault): any;
+    abstract get<TValue = any, TDefault = TValue>(key: any, defaultValue?: TDefault): TValue | TDefault;
     /** @inheritdoc */
-    abstract has(key: any): any;
+    abstract has(key: any): boolean;
     /** @inheritdoc */
     abstract set<TValue>(key: any, value: TValue): this;
     /** @inheritdoc */
