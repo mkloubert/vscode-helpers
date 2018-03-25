@@ -96,6 +96,21 @@ export interface WaitWhileOptions {
 export const EVENTS: NodeJS.EventEmitter = new Events.EventEmitter();
 
 /**
+ * Disposes the event emitter, stored in 'EVENTS'.
+ */
+export const EVENT_DISPOSER: vscode.Disposable = {
+    /** @inheritdoc */
+    dispose: () => {
+        EVENTS.removeAllListeners();
+    }
+};
+
+/**
+ * Stores global data for the current extension session.
+ */
+export const SESSION: { [key: string]: any } = {};
+
+/**
  * Applies a function for a specific object / value.
  *
  * @param {TFunc} func The function.
@@ -145,7 +160,12 @@ export async function asBuffer(val: any, enc?: string, maxDepth?: number): Promi
 }
 
 async function asBufferInner(val: any, enc?: string,
-                             funcDepth?: number, maxDepth?: number) {
+                             funcDepth?: number, maxDepth?: number): Promise<Buffer> {
+    enc = normalizeString(enc);
+    if ('' === enc) {
+        enc = undefined;
+    }
+
     if (isNaN(funcDepth)) {
         funcDepth = 0;
     }
@@ -165,18 +185,13 @@ async function asBufferInner(val: any, enc?: string,
     if (_.isFunction(val)) {
         // wrapped
 
-        return await asBufferInner(
+        return asBufferInner(
             await Promise.resolve(
                 val(enc, funcDepth, maxDepth),
             ),
             enc,
             funcDepth + 1, maxDepth,
         );
-    }
-
-    enc = normalizeString(enc);
-    if ('' === enc) {
-        enc = undefined;
     }
 
     if (IsStream.readable(val)) {

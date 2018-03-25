@@ -75,6 +75,7 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [WorkspaceBase](#workspacebase-)
    * [Constants and variables](#constants-and-variables-)
      * [EVENTS](#events-)
+     * [SESSION](#session-)
 4. [Support and contribute](#support-and-contribute-)
 5. [Documentation](#documentation-)
 
@@ -589,34 +590,39 @@ vscode_helpers.randomBytes(5979).then((bytes) => {
 #### registerWorkspaceWatcher [[&uarr;](#functions-)]
 
 ```typescript
-import { Uri } as vscode from 'vscode';
+import * as Path from 'path';
+import { ConfigurationChangeEvent, Uri } from 'vscode';
 
 class MyWorkspace extends vscode_helpers.WorkspaceBase {
-    // this is important for 'onDidChangeConfiguration'
+    private _configSrc: vscode_helpers.WorkspaceConfigSource;
+
+    // this is important for 'onDidChangeConfiguration' (s. below)
     public get configSource() {
-        return {
-            section: 'my.extension',
-            resource: Uri.file('/path/to/.vscode/settings.json'),
-        };
+        return this._configSrc;
     }    
 
     public async initialize() {
         // initialize your workspace here
+
+        this._configSrc = {
+            section: 'my.extension',
+            resource: Uri.file( Path.join(this.rootPath,
+                                          '.vscode/settings.json') ),
+        };
     }
 
-    public async onDidChangeConfiguration(e) {
+    public async onDidChangeConfiguration(e: ConfigurationChangeEvent) {
         // is invoked when workspace config changed
     }
 }
 
-vscode_helpers.registerWorkspaceWatcher((event, folder, workspace?) => {
-    switch (event) {
-        case vscode_helpers.WorkspaceWatcherEvent.Added:            
-            const NEW_WORKSPACE = new MyWorkspace( folder );
-            {
-                await NEW_WORKSPACE.initialize();
-            }
-            return NEW_WORKSPACE;
+vscode_helpers.registerWorkspaceWatcher(async (event, folder, workspace?) => {
+    if (event == vscode_helpers.WorkspaceWatcherEvent.Added) {
+        const NEW_WORKSPACE = new MyWorkspace( folder );
+        
+        await NEW_WORKSPACE.initialize();
+        
+        return NEW_WORKSPACE;
     }
 });
 ```
@@ -712,7 +718,7 @@ let dataListener = (chunk) => {
     //TODO
 };
 
-STREAM.on('data', datalistener);
+STREAM.on('data', dataListener);
 
 STREAM.once('end', () => {
     vscode_helpers.tryRemoveListener('data',
@@ -801,27 +807,28 @@ CACHE.has('a');  // (false)
 #### WorkspaceBase [[&uarr;](#classes-)]
 
 ```typescript
-import { Uri } as vscode from 'vscode';
+import { ConfigurationChangeEvent, Uri } as vscode from 'vscode';
 
 class MyWorkspace extends vscode_helpers.WorkspaceBase {
-    // this is important for 'onDidChangeConfiguration'
+    private _configSrc: vscode_helpers.WorkspaceConfigSource;
+
+    // this is important for 'onDidChangeConfiguration' (s. below)
     public get configSource() {
-        return {
-            section: 'my.extension',
-            resource: Uri.file('/path/to/.vscode/settings.json'),
-        };
+        return this._configSrc;
     }    
 
     public async initialize() {
         // initialize your workspace here
+
+        this._configSrc = {
+            section: 'my.extension',
+            resource: Uri.file( Path.join(this.rootPath,
+                                          '.vscode/settings.json') ),
+        };
     }
 
-    public async onDidChangeConfiguration(e) {
+    public async onDidChangeConfiguration(e: ConfigurationChangeEvent) {
         // is invoked when workspace config changed
-    }
-
-    protected onDispose(): void {
-        // put code here to cleanup the workspace
     }
 }
 ```
@@ -837,6 +844,16 @@ vscode_helpers.EVENTS.on('myEvent', (a, b) => {
 
 vscode_helpers.EVENTS
               .emit('myEvent', 5979, 23979);
+```
+
+#### SESSION [[&uarr;](#constants-and-variables-)]
+
+```typescript
+let var_1 = vscode_helpers.SESSION['a'];  // undefined
+vscode_helpers.SESSION['a'] = 5979;
+let var_2 = vscode_helpers.SESSION['a'];  // 5979
+delete vscode_helpers.SESSION['a'];
+let var_3 = vscode_helpers.SESSION['a'];  // undefined
 ```
 
 ## Support and contribute [[&uarr;](#table-of-contents)]

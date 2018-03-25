@@ -65,6 +65,16 @@ export interface WaitWhileOptions {
  */
 export declare const EVENTS: NodeJS.EventEmitter;
 /**
+ * Disposes the event emitter, stored in 'EVENTS'.
+ */
+export declare const EVENT_DISPOSER: vscode.Disposable;
+/**
+ * Stores global data for the current extension session.
+ */
+export declare const SESSION: {
+    [key: string]: any;
+};
+/**
  * Applies a function for a specific object / value.
  *
  * @param {TFunc} func The function.
