@@ -75,6 +75,10 @@ export declare const SESSION: {
     [key: string]: any;
 };
 /**
+ * Disposes 'SESSION', by removing its data.
+ */
+export declare const SESSION_DISPOSER: vscode.Disposable;
+/**
  * Applies a function for a specific object / value.
  *
  * @param {TFunc} func The function.
@@ -89,7 +93,7 @@ export declare function applyFuncFor<TFunc extends Function = Function>(func: TF
  * @param {T|T[]} val The value.
  * @param {boolean} [removeEmpty] Remove items that are (null) / (undefined) or not.
  *
- * @return {T[]} The value as array.
+ * @return {T[]} The value as (new) array.
  */
 export declare function asArray<T>(val: T | T[], removeEmpty?: boolean): T[];
 /**
@@ -197,11 +201,11 @@ export declare function format(formatStr: any, ...args: any[]): string;
  * Formats a string.
  *
  * @param {any} formatStr The value that represents the format string.
- * @param {any[]} [args] The arguments for 'formatStr'.
+ * @param {Enumerable.Sequence<any>} [args] The arguments for 'formatStr'.
  *
  * @return {string} The formated string.
  */
-export declare function formatArray(formatStr: any, args: any[]): string;
+export declare function formatArray(formatStr: any, args: Enumerable.Sequence<any>): string;
 /**
  * Invokes an action after a timeout.
  *
@@ -281,12 +285,12 @@ export declare function sleep(ms?: number): Promise<void>;
 /**
  * Returns a sequence object as new array.
  *
- * @param {Enumerable.Sequence<T>} arr The input object.
+ * @param {Enumerable.Sequence<T>} seq The input object.
  * @param {boolean} [normalize] Returns an empty array, if input object is (null) / (undefined).
  *
  * @return {T[]} The input object as array.
  */
-export declare function toArray<T>(arr: Enumerable.Sequence<T>, normalize?: boolean): T[];
+export declare function toArray<T>(seq: Enumerable.Sequence<T>, normalize?: boolean): T[];
 /**
  * Returns a value as boolean, which is not (null) and (undefined).
  *

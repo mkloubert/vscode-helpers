@@ -111,6 +111,18 @@ export const EVENT_DISPOSER: vscode.Disposable = {
 export const SESSION: { [key: string]: any } = {};
 
 /**
+ * Disposes 'SESSION', by removing its data.
+ */
+export const SESSION_DISPOSER: vscode.Disposable = {
+    /** @inheritdoc */
+    dispose: () => {
+        for (const P of Object.keys(SESSION)) {
+            delete SESSION[ P ];
+        }
+    }
+};
+
+/**
  * Applies a function for a specific object / value.
  *
  * @param {TFunc} func The function.
@@ -132,7 +144,7 @@ export function applyFuncFor<TFunc extends Function = Function>(
  * @param {T|T[]} val The value.
  * @param {boolean} [removeEmpty] Remove items that are (null) / (undefined) or not.
  *
- * @return {T[]} The value as array.
+ * @return {T[]} The value as (new) array.
  */
 export function asArray<T>(val: T | T[], removeEmpty = true): T[] {
     removeEmpty = toBooleanSafe(removeEmpty, true);
@@ -470,12 +482,17 @@ export function format(formatStr: any, ...args: any[]): string {
  * Formats a string.
  *
  * @param {any} formatStr The value that represents the format string.
- * @param {any[]} [args] The arguments for 'formatStr'.
+ * @param {Enumerable.Sequence<any>} [args] The arguments for 'formatStr'.
  *
  * @return {string} The formated string.
  */
-export function formatArray(formatStr: any, args: any[]): string {
+export function formatArray(formatStr: any, args: Enumerable.Sequence<any>): string {
     formatStr = toStringSafe(formatStr);
+
+    if (!_.isArrayLike(args)) {
+        args = Enumerable.from(args)
+                         .toArray();
+    }
 
     // apply arguments in
     // placeholders
@@ -484,17 +501,17 @@ export function formatArray(formatStr: any, args: any[]): string {
             toStringSafe(index)
         );
 
-        let resultValue = args[index];
+        let resultValue = (<ArrayLike<any>>args)[index];
 
         if (':' === formatSeparator) {
             // collect "format providers"
-            let formatProviders = toStringSafe(formatExpr).split(',')
-                                                          .map(x => x.toLowerCase().trim())
-                                                          .filter(x => x);
+            const FORMAT_PROVIDERS = toStringSafe(formatExpr).split(',')
+                                                             .map(x => x.toLowerCase().trim())
+                                                             .filter(x => x);
 
             // transform argument by
             // format providers
-            formatProviders.forEach(fp => {
+            FORMAT_PROVIDERS.forEach(fp => {
                 switch (fp) {
                     case 'ending_space':
                         resultValue = toStringSafe(resultValue);
@@ -790,31 +807,31 @@ export async function sleep(ms?: number) {
 /**
  * Returns a sequence object as new array.
  *
- * @param {Enumerable.Sequence<T>} arr The input object.
+ * @param {Enumerable.Sequence<T>} seq The input object.
  * @param {boolean} [normalize] Returns an empty array, if input object is (null) / (undefined).
  *
  * @return {T[]} The input object as array.
  */
-export function toArray<T>(arr: Enumerable.Sequence<T>, normalize = true): T[] {
-    if (_.isNil(arr)) {
+export function toArray<T>(seq: Enumerable.Sequence<T>, normalize = true): T[] {
+    if (_.isNil(seq)) {
         if (toBooleanSafe(normalize, true)) {
             return [];
         }
 
-        return <any>arr;
+        return <any>seq;
     }
 
-    if (_.isArrayLike(arr)) {
+    if (_.isArrayLike(seq)) {
         const NEW_ARRAY: T[] = [];
 
-        for (let i = 0; i < arr.length; i++) {
-            NEW_ARRAY.push( arr[i] );
+        for (let i = 0; i < seq.length; i++) {
+            NEW_ARRAY.push( seq[i] );
         }
 
         return NEW_ARRAY;
     }
 
-    return Enumerable.from( arr )
+    return Enumerable.from( seq )
                      .toArray();
 }
 

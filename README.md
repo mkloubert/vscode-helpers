@@ -164,22 +164,24 @@ let utcNow = vscode_helpers.asUTC( localNow );  // can also be a string
 
 ```typescript
 const WORKFLOW = vscode_helpers.buildWorkflow()
-    .next((prevValue) => {
-              return 5979;
-          })
-    .next((prevValue, context) => {
+    .next((prevValue: undefined, context: vscode_helpers.WorkflowActionContext) => {
               context.value = 1000;
 
-              return prevValue + 23979;
+              return 5979;
           })
-    .next((prevValue, context) => {
-              return prevValue * context.value;
+    .next((prevValue: number, context: vscode_helpers.WorkflowActionContext) => {
+              return prevValue + 23979;  // prevValue === 5979
+          })
+    .next((prevValue: number, context: vscode_helpers.WorkflowActionContext) => {
+              // prevValue === 29958
+              // context.value === 1000
+              return '' + (prevValue * context.value);
           });
 
-WORKFLOW.start().then((result) => {
-    // result === 29958
+WORKFLOW.start().then((result: string) => {
+    // result === '29958000'
 }, (err) => {
-    // this only happens on errors
+    // this only happens on error
 });
 ```
 
@@ -201,27 +203,34 @@ const CLONED_OBJ = vscode_helpers.cloneObjectFlat({
         return a * (5979 * this.mk);
     },
 });
+
+CLONED_OBJ.mk = 1000;
+CLONED_OBJ.tm(2000);  // 11.958.000.000 === 2000 * (5979 * 1000)
 ```
 
 #### compareValues [[&uarr;](#functions-)]
 
 ```typescript
-const VAL_1 = 2;
-const VAL_2 = 1;
+const VAL_1 = 1;
+const VAL_2 = 2;
 
-const SORTED_OBJS = [ VAL_1, VAL_2 ].sort((x, y) => {
-    return vscode_helpers.compareValues(x, y);
+// SORTED_VALUES[0] === VAL_2
+// SORTED_VALUES[1] === VAL_1
+const SORTED_VALUES = [ VAL_1, VAL_2 ].sort((x, y) => {
+    return vscode_helpers.compareValues(y, x);
 });
 ```
 
 #### compareValuesBy [[&uarr;](#functions-)]
 
 ```typescript
-const OBJ_1 = { sortValue: 2 };
-const OBJ_2 = { sortValue: 1 };
+const OBJ_1 = { sortValue: 1 };
+const OBJ_2 = { sortValue: 2 };
 
+// SORTED_OBJS[0] === OBJ_2
+// SORTED_OBJS[1] === OBJ_1
 const SORTED_OBJS = [ OBJ_1, OBJ_2 ].sort((x, y) => {
-    return vscode_helpers.compareValuesBy(x, y,
+    return vscode_helpers.compareValuesBy(y, x,
                                           i => i.sortValue);
 });
 ```
@@ -230,7 +239,7 @@ const SORTED_OBJS = [ OBJ_1, OBJ_2 ].sort((x, y) => {
 
 ```typescript
 vscode_helpers.createDirectoryIfNeeded('/dir/to/create').then((hasBeenCreated: boolean) => {
-
+    // hasBeenCreated === (false), if directory already exists
 }, (err) => {
     // error
 });
@@ -326,18 +335,19 @@ s. [node-enumerable](https://github.com/mkloubert/node-enumerable)
 let seq = vscode_helpers.from([ 1, 2, 3 ])  // can also be a generator
                                             // or string
                         .select(x => '' + x)
-                        .where(x => x !== '2');
+                        .where(x => x !== '2')
+                        .reverse();
 
 for (const ITEM of seq) {
-    // [0] '1'
-    // [1] '3'
+    // [0] '3'
+    // [1] '1'
 }
 ```
 
 #### fromMarkdown [[&uarr;](#functions-)]
 
 ```typescript
-let html = vscode_helpers.fromMarkdown(
+let htmlFromMarkdown = vscode_helpers.fromMarkdown(
     'Vessel     | Captain\n-----------|-------------\nNCC-1701   | James T Kirk\nNCC-1701 A | James T Kirk\nNCC-1701 D | Picard'
 );
 ```
@@ -849,9 +859,11 @@ vscode_helpers.EVENTS
 #### SESSION [[&uarr;](#constants-and-variables-)]
 
 ```typescript
-let var_1 = vscode_helpers.SESSION['a'];  // undefined
+let var_1 = vscode_helpers.SESSION['a'];  // undefined (at the beginning)
+
 vscode_helpers.SESSION['a'] = 5979;
 let var_2 = vscode_helpers.SESSION['a'];  // 5979
+
 delete vscode_helpers.SESSION['a'];
 let var_3 = vscode_helpers.SESSION['a'];  // undefined
 ```
