@@ -18,7 +18,6 @@
 import * as _ from 'lodash';
 import * as Crypto from 'crypto';
 import * as Enumerable from 'node-enumerable';
-import * as Events from 'events';
 const IsBinaryFile = require("isbinaryfile");
 import * as IsStream from 'is-stream';
 import * as Minimatch from 'minimatch';
@@ -27,10 +26,15 @@ import * as OS from 'os';
 import * as Path from 'path';
 import * as Stream from 'stream';
 import * as vscode from 'vscode';
+import * as vscode_helpers_events from './events';
+
+// !!!THESE MUST BE INCLUDED AFTER UPPER INCLUDED MODULES!!!
+import * as MomentTimeZone from 'moment-timezone';
 
 // sub modules
 export * from './cache';
 export * from './disposable';
+export * from './events';
 export * from './fs';
 export * from './html';
 export * from './logging';
@@ -89,21 +93,6 @@ export interface WaitWhileOptions {
      */
     timeUntilNextCheck?: number;
 }
-
-/**
- * Stores the global event emitter.
- */
-export const EVENTS: NodeJS.EventEmitter = new Events.EventEmitter();
-
-/**
- * Disposes the event emitter, stored in 'EVENTS'.
- */
-export const EVENT_DISPOSER: vscode.Disposable = {
-    /** @inheritdoc */
-    dispose: () => {
-        EVENTS.removeAllListeners();
-    }
-};
 
 /**
  * Stores global data for the current extension session.
@@ -689,6 +678,21 @@ export function normalizeString(val: any, normalizer?: StringNormalizer): string
 }
 
 /**
+ * Returns the current time.
+ *
+ * @param {string} [timezone] The custom timezone to use.
+ *
+ * @return {Moment.Moment} The current time.
+ */
+export function now(timezone?: string): Moment.Moment {
+    timezone = toStringSafe(timezone).trim();
+
+    const NOW = Moment();
+    return '' === timezone ? NOW
+                           : NOW.tz(timezone);
+}
+
+/**
  * Promise version of 'crypto.randomBytes()' function.
  *
  * @param {number} size The size of the result.
@@ -737,9 +741,9 @@ export function readAll(stream: Stream.Readable, enc?: string): Promise<Buffer> 
             }
             completedInvoked = true;
 
-            tryRemoveListener(stream, 'data', dataListener);
-            tryRemoveListener(stream, 'end', endListener);
-            tryRemoveListener(stream, 'error', errorListener);
+            vscode_helpers_events.tryRemoveListener(stream, 'data', dataListener);
+            vscode_helpers_events.tryRemoveListener(stream, 'end', endListener);
+            vscode_helpers_events.tryRemoveListener(stream, 'error', errorListener);
 
             if (err) {
                 reject(err);
@@ -948,27 +952,12 @@ export function tryClearTimeout(timeoutId: NodeJS.Timer): boolean {
 }
 
 /**
- * Tries to remove a listener from an event emitter.
+ * Returns the current UTC time.
  *
- * @param {NodeJS.EventEmitter} obj The emitter.
- * @param {string|symbol} ev The event.
- * @param {Function} listener The listener.
- *
- * @return {boolean} Operation was successfull or not.
+ * @return {Moment.Moment} The current UTC time.
  */
-export function tryRemoveListener(
-    obj: NodeJS.EventEmitter,
-    ev: string | symbol, listener: Function,
-) {
-    try {
-        if (obj && obj.removeListener) {
-            obj.removeListener(ev, listener);
-        }
-
-        return true;
-    } catch {
-        return false;
-    }
+export function utcNow(): Moment.Moment {
+    return Moment.utc();
 }
 
 /**

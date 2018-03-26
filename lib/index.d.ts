@@ -7,6 +7,7 @@ import * as Stream from 'stream';
 import * as vscode from 'vscode';
 export * from './cache';
 export * from './disposable';
+export * from './events';
 export * from './fs';
 export * from './html';
 export * from './logging';
@@ -60,14 +61,6 @@ export interface WaitWhileOptions {
      */
     timeUntilNextCheck?: number;
 }
-/**
- * Stores the global event emitter.
- */
-export declare const EVENTS: NodeJS.EventEmitter;
-/**
- * Disposes the event emitter, stored in 'EVENTS'.
- */
-export declare const EVENT_DISPOSER: vscode.Disposable;
 /**
  * Stores global data for the current extension session.
  */
@@ -260,6 +253,14 @@ export declare function loadModule<TModule = any>(file: string, fromCache?: bool
  */
 export declare function normalizeString(val: any, normalizer?: StringNormalizer): string;
 /**
+ * Returns the current time.
+ *
+ * @param {string} [timezone] The custom timezone to use.
+ *
+ * @return {Moment.Moment} The current time.
+ */
+export declare function now(timezone?: string): Moment.Moment;
+/**
  * Promise version of 'crypto.randomBytes()' function.
  *
  * @param {number} size The size of the result.
@@ -334,15 +335,11 @@ export declare function tryClearInterval(intervalId: NodeJS.Timer): boolean;
  */
 export declare function tryClearTimeout(timeoutId: NodeJS.Timer): boolean;
 /**
- * Tries to remove a listener from an event emitter.
+ * Returns the current UTC time.
  *
- * @param {NodeJS.EventEmitter} obj The emitter.
- * @param {string|symbol} ev The event.
- * @param {Function} listener The listener.
- *
- * @return {boolean} Operation was successfull or not.
+ * @return {Moment.Moment} The current UTC time.
  */
-export declare function tryRemoveListener(obj: NodeJS.EventEmitter, ev: string | symbol, listener: Function): boolean;
+export declare function utcNow(): Moment.Moment;
 /**
  * Waits while a predicate matches.
  *

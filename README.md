@@ -54,6 +54,7 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [loadModule](#loadmodule-)
      * [makeNonDisposable](#makenondisposable-)
      * [normalizeString](#normalizestring-)
+     * [now](#now-)
      * [randomBytes](#randombytes-)
      * [registerWorkspaceWatcher](#registerworkspacewatcher-)
      * [readAll](#readall-)
@@ -65,7 +66,9 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [tryClearInterval](#tryclearinterval-)
      * [tryClearTimeout](#trycleartimeout-)
      * [tryDispose](#trydispose-)
+     * [tryRemoveAllListeners](#tryremovealllisteners-)
      * [tryRemoveListener](#tryremovelistener-)
+     * [utcNow](#utcnow-)
      * [waitWhile](#waitwhile-)
      * [withProgress](#withprogress-)
    * [Classes](#classes-)
@@ -572,6 +575,15 @@ const str_2 = vscode_helpers.normalizeString(null);  // ''
 const str_3 = vscode_helpers.normalizeString('aBc', s => s.troUpperCase());  // 'ABC'
 ```
 
+#### now [[&uarr;](#functions-)]
+
+s. [Moment Timezone](https://momentjs.com/timezone/) for more information about using (optional) timezones.
+
+```typescript
+const NOW = vscode_helpers.now('America/New_York')  // optional
+                          .format('DD.MM.YYYY HH:mm:ss');
+```
+
 #### readAll [[&uarr;](#functions-)]
 
 ```typescript
@@ -717,6 +729,28 @@ const OBJ = {
 vscode_helpers.tryDispose( OBJ );
 ```
 
+#### tryRemoveAllListeners [[&uarr;](#functions-)]
+
+```typescript
+import * as fs from 'fs';
+
+const STREAM = fs.createReadStream('./my-file.txt');
+
+STREAM.once('error', (err) => {
+    //TODO
+
+    vscode_helpers.tryRemoveAllListeners(STREAM);
+});
+
+STREAM.once('end', () => {
+    vscode_helpers.tryRemoveAllListeners(STREAM);
+});
+
+STREAM.on('data', (chunk) => {
+    //TODO
+});
+```
+
 #### tryRemoveListener [[&uarr;](#functions-)]
 
 ```typescript
@@ -724,16 +758,23 @@ import * as fs from 'fs';
 
 const STREAM = fs.createReadStream('./my-file.txt');
 
-let dataListener = (chunk) => {
+const DATA_LISTENER = (chunk) => {
     //TODO
 };
 
-STREAM.on('data', dataListener);
+STREAM.on('data', DATA_LISTENER);
 
 STREAM.once('end', () => {
-    vscode_helpers.tryRemoveListener('data',
-                                     dataListener);
+    vscode_helpers.tryRemoveListener(STREAM,
+                                     'data', DATA_LISTENER);
 });
+```
+
+#### utcNow [[&uarr;](#functions-)]
+
+```typescript
+const UTC_NOW = vscode_helpers.utcNow()
+                              .format('DD.MM.YYYY HH:mm:ss');
 ```
 
 #### waitWhile [[&uarr;](#functions-)]
