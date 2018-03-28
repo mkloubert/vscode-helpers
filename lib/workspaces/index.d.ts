@@ -57,6 +57,15 @@ export interface WorkspaceContext {
  */
 export declare type WorkspaceWatcher<TWorkspace extends Workspace = Workspace> = (event: WorkspaceWatcherEvent, folder: vscode.WorkspaceFolder, workspace?: TWorkspace) => WorkspaceWatcherResult<TWorkspace> | PromiseLike<WorkspaceWatcherResult>;
 /**
+ * A workspace watcher 'complete action'.
+ *
+ * @param {any} err The error (if occurred).
+ * @param {WorkspaceEvent} event The event.
+ * @param {vscode.WorkspaceFolder} folder The underlying folder.
+ * @param {TWorkspace} [workspace] The workspace to remove.
+ */
+export declare type WorkspaceWatcherCompleteAction<TWorkspace> = (err: any, event: WorkspaceWatcherEvent, folder: vscode.WorkspaceFolder, workspace?: TWorkspace) => void | PromiseLike<void>;
+/**
  * A workspace watcher context.
  */
 export interface WorkspaceWatcherContext<TWorkspace extends Workspace = Workspace> extends vscode.Disposable {
@@ -113,7 +122,8 @@ export declare abstract class WorkspaceBase extends vscode_disposable.Disposable
  *
  * @param {vscode.ExtensionContext} extension The underlying extension (context).
  * @param {WorkspaceWatcher<TWorkspace>} watcher The watcher.
+ * @param {WorkspaceWatcherCompleteAction<TWorkspace>} [complete] Optional 'complete action'.
  *
  * @return {WorkspaceWatcherContext<TWorkspace>} The watcher context.
  */
-export declare function registerWorkspaceWatcher<TWorkspace extends Workspace = Workspace>(extension: vscode.ExtensionContext, watcher: WorkspaceWatcher<TWorkspace>): WorkspaceWatcherContext<TWorkspace>;
+export declare function registerWorkspaceWatcher<TWorkspace extends Workspace = Workspace>(extension: vscode.ExtensionContext, watcher: WorkspaceWatcher<TWorkspace>, complete?: WorkspaceWatcherCompleteAction<TWorkspace>): WorkspaceWatcherContext<TWorkspace>;

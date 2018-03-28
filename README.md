@@ -102,6 +102,67 @@ import * as vscode_helpers from 'vscode-helpers';
 
 ## Examples [[&uarr;](#table-of-contents)]
 
+An example of a [multi-root workspace](https://code.visualstudio.com/docs/editor/multi-root-workspaces) ready extension (`extension.ts`):
+
+```typescript
+'use strict';
+
+import * as Path from 'path';
+import * as vscode from 'vscode';
+import * as vscode_helpers from 'vscode-helpers';
+
+class MyWorkspace extends vscode_helpers.WorkspaceBase {
+    private _configSrc: vscode_helpers.WorkspaceConfigSource;
+
+    // this is important for 'onDidChangeConfiguration' (s. below)
+    public get configSource() {
+        return this._configSrc;
+    }    
+
+    public async initialize() {
+        // initialize your workspace here
+
+        this._configSrc = {
+            section: 'my.extension',
+            resource: Uri.file( Path.join(this.rootPath,
+                                          '.vscode/settings.json') ),
+        };
+    }
+
+    public async onDidChangeConfiguration(e) {
+        const NEW_CONFIG = vscode.workspace.getConfiguration(
+            this.configSource.section,
+            this.configSource.resource
+        );
+
+        // handle new config here
+    }
+}
+
+let workspaceWatcher: vscode_helpers.WorkspaceWatcherContext<MyWorkspace>;
+
+export async function activate(context: vscode.ExtensionContext) {
+    context.subscriptions.push(
+        workspaceWatcher = 
+            vscode_helpers.registerWorkspaceWatcher<MyWorkspace>(context, async (ev, folder) => {
+                if (ev === vscode_helpers.WorkspaceWatcherEvent.Added) {
+                    const NEW_WORKSPACE = new MyWorkspace(folder);
+
+                    await NEW_WORKSPACE.initialize();
+
+                    return NEW_WORKSPACE;
+                }            
+            }),
+    );
+
+    await workspaceWatcher.reload();
+}
+
+export async function deactivate() {
+    //TODO
+}
+```
+
 ### Functions [[&uarr;](#examples-)]
 
 #### applyFuncFor [[&uarr;](#functions-)]

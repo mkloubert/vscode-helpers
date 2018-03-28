@@ -85,6 +85,21 @@ export type WorkspaceWatcher<TWorkspace extends Workspace = Workspace> = (
 ) => WorkspaceWatcherResult<TWorkspace> | PromiseLike<WorkspaceWatcherResult>;
 
 /**
+ * A workspace watcher 'complete action'.
+ *
+ * @param {any} err The error (if occurred).
+ * @param {WorkspaceEvent} event The event.
+ * @param {vscode.WorkspaceFolder} folder The underlying folder.
+ * @param {TWorkspace} [workspace] The workspace to remove.
+ */
+export type WorkspaceWatcherCompleteAction<TWorkspace> = (
+    err: any,
+    event: WorkspaceWatcherEvent,
+    folder: vscode.WorkspaceFolder,
+    workspace?: TWorkspace
+) => void | PromiseLike<void>;
+
+/**
  * A workspace watcher context.
  */
 export interface WorkspaceWatcherContext<TWorkspace extends Workspace = Workspace> extends vscode.Disposable {
@@ -154,12 +169,14 @@ export abstract class WorkspaceBase extends vscode_disposable.DisposableBase imp
  *
  * @param {vscode.ExtensionContext} extension The underlying extension (context).
  * @param {WorkspaceWatcher<TWorkspace>} watcher The watcher.
+ * @param {WorkspaceWatcherCompleteAction<TWorkspace>} [complete] Optional 'complete action'.
  *
  * @return {WorkspaceWatcherContext<TWorkspace>} The watcher context.
  */
 export function registerWorkspaceWatcher<TWorkspace extends Workspace = Workspace>(
     extension: vscode.ExtensionContext,
-    watcher: WorkspaceWatcher<TWorkspace>
+    watcher: WorkspaceWatcher<TWorkspace>,
+    complete?: WorkspaceWatcherCompleteAction<TWorkspace>,
 ): WorkspaceWatcherContext<TWorkspace> {
     let workspaces: TWorkspace[] = [];
 
@@ -192,6 +209,7 @@ export function registerWorkspaceWatcher<TWorkspace extends Workspace = Workspac
                     });
 
                     for (const MWS of MATCHING_WORKSPACES) {
+                        let watcherErr: any;
                         try {
                             workspaces = workspaces.filter(ws => {
                                 return ws !== MWS;
@@ -206,7 +224,20 @@ export function registerWorkspaceWatcher<TWorkspace extends Workspace = Workspac
                                     MWS,
                                 )
                             );
-                        } catch { }
+                        } catch (e) {
+                            watcherErr = e;
+                        } finally {
+                            if (complete) {
+                                await Promise.resolve(
+                                    complete(
+                                        watcherErr,
+                                        WorkspaceWatcherEvent.Removed,
+                                        MWS.folder,
+                                        MWS,
+                                    )
+                                );
+                            }
+                        }
                     }
                 } catch { }
             }
@@ -214,18 +245,33 @@ export function registerWorkspaceWatcher<TWorkspace extends Workspace = Workspac
 
         if (added) {
             for (const WF of added) {
+                let watcherErr: any;
+                let newWorkspace: any;
                 try {
-                    const NEW_WORKSPACE = await Promise.resolve(
+                    newWorkspace = await Promise.resolve(
                         watcher(
                             WorkspaceWatcherEvent.Added,
                             WF,
                         )
                     );
 
-                    if (!_.isNil(NEW_WORKSPACE)) {
-                        workspaces.push( <TWorkspace>NEW_WORKSPACE );
+                    if (!_.isNil(newWorkspace)) {
+                        workspaces.push( <TWorkspace>newWorkspace );
                     }
-                } catch { }
+                } catch (e) {
+                    watcherErr = e;
+                } finally {
+                    if (complete) {
+                        await Promise.resolve(
+                            complete(
+                                watcherErr,
+                                WorkspaceWatcherEvent.Added,
+                                WF,
+                                newWorkspace,
+                            )
+                        );
+                    }
+                }
             }
         }
     };
