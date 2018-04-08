@@ -98,6 +98,13 @@ export async function withProgress<TResult = any>(task: ProgressTask<TResult>,
 
         let msg: string;
         let increment: number;
+        const UPDATE_PROGRESS = () => {
+            p.report(<any>{
+                increment: increment,
+                message: msg,
+                percentage: increment,
+            });
+        };
 
         // CTX.increment
         Object.defineProperty(CTX, 'increment', {
@@ -113,12 +120,8 @@ export async function withProgress<TResult = any>(task: ProgressTask<TResult>,
                     newValue = undefined;
                 }
 
-                p.report({
-                    increment: newValue,
-                    message: msg,
-                });
-
                 increment = newValue;
+                UPDATE_PROGRESS();
             }
         });
 
@@ -131,16 +134,14 @@ export async function withProgress<TResult = any>(task: ProgressTask<TResult>,
             },
 
             set: (newValue) => {
-                if (!_.isNil(newValue)) {
+                if (_.isNil(newValue)) {
+                    newValue = undefined;
+                } else {
                     newValue = vscode_helpers.toStringSafe(newValue);
                 }
 
-                p.report({
-                    increment: increment,
-                    message: newValue,
-                });
-
                 msg = newValue;
+                UPDATE_PROGRESS();
             }
         });
 
