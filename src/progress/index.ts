@@ -102,12 +102,12 @@ export async function withProgress<TResult = any>(task: ProgressTask<TResult>,
         };
 
         let msg: string;
-        let percentage: number;
+        let increment: number;
         const UPDATE_PROGRESS = () => {
             p.report(<any>{
-                increment: percentage,
+                increment: increment,
                 message: msg,
-                percentage: percentage,
+                // percentage: increment,
             });
         };
 
@@ -115,12 +115,18 @@ export async function withProgress<TResult = any>(task: ProgressTask<TResult>,
         Object.defineProperty(CTX, 'increment', {
             enumerable: true,
 
-            get: function() {
-                return this.percentage;
+            get: () => {
+                return increment;
             },
 
-            set: function (newValue) {
-                this.percentage = newValue;
+            set: (newValue) => {
+                newValue = parseInt( vscode_helpers.toStringSafe(newValue).trim() );
+                if (isNaN(newValue)) {
+                    newValue = undefined;
+                }
+
+                increment = newValue;
+                UPDATE_PROGRESS();
             }
         });
 
@@ -148,18 +154,12 @@ export async function withProgress<TResult = any>(task: ProgressTask<TResult>,
         Object.defineProperty(CTX, 'percentage', {
             enumerable: true,
 
-            get: () => {
-                return percentage;
+            get: function() {
+                return this.increment;
             },
 
-            set: (newValue) => {
-                newValue = parseInt( vscode_helpers.toStringSafe(newValue).trim() );
-                if (isNaN(newValue)) {
-                    newValue = undefined;
-                }
-
-                percentage = newValue;
-                UPDATE_PROGRESS();
+            set: function (newValue) {
+                this.increment = newValue;
             }
         });
 
