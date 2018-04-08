@@ -35,6 +35,10 @@ export interface ProgressContext {
      * Gets or sets the status message.
      */
     message: string;
+    /**
+     * The progress value.
+     */
+    percentage: number;
 }
 
 /**
@@ -94,15 +98,16 @@ export async function withProgress<TResult = any>(task: ProgressTask<TResult>,
             cancellationToken: ct,
             increment: undefined,
             message: undefined,
+            percentage: undefined,
         };
 
         let msg: string;
-        let increment: number;
+        let percentage: number;
         const UPDATE_PROGRESS = () => {
             p.report(<any>{
-                increment: increment,
+                increment: percentage,
                 message: msg,
-                percentage: increment,
+                percentage: percentage,
             });
         };
 
@@ -110,18 +115,12 @@ export async function withProgress<TResult = any>(task: ProgressTask<TResult>,
         Object.defineProperty(CTX, 'increment', {
             enumerable: true,
 
-            get: () => {
-                return increment;
+            get: function() {
+                return this.percentage;
             },
 
-            set: (newValue) => {
-                newValue = parseInt( vscode_helpers.toStringSafe(newValue).trim() );
-                if (isNaN(newValue)) {
-                    newValue = undefined;
-                }
-
-                increment = newValue;
-                UPDATE_PROGRESS();
+            set: function (newValue) {
+                this.percentage = newValue;
             }
         });
 
@@ -141,6 +140,25 @@ export async function withProgress<TResult = any>(task: ProgressTask<TResult>,
                 }
 
                 msg = newValue;
+                UPDATE_PROGRESS();
+            }
+        });
+
+        // CTX.percentage
+        Object.defineProperty(CTX, 'percentage', {
+            enumerable: true,
+
+            get: () => {
+                return percentage;
+            },
+
+            set: (newValue) => {
+                newValue = parseInt( vscode_helpers.toStringSafe(newValue).trim() );
+                if (isNaN(newValue)) {
+                    newValue = undefined;
+                }
+
+                percentage = newValue;
                 UPDATE_PROGRESS();
             }
         });
