@@ -8,6 +8,10 @@ export interface ProgressContext {
      */
     cancellationToken?: vscode.CancellationToken;
     /**
+     * The progress value.
+     */
+    increment: number;
+    /**
      * Gets or sets the status message.
      */
     message: string;

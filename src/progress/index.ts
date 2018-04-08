@@ -28,6 +28,10 @@ export interface ProgressContext {
      */
     cancellationToken?: vscode.CancellationToken;
     /**
+     * The progress value.
+     */
+    increment: number;
+    /**
      * Gets or sets the status message.
      */
     message: string;
@@ -88,6 +92,7 @@ export async function withProgress<TResult = any>(task: ProgressTask<TResult>,
     return vscode.window.withProgress(OPTS, (p, ct) => {
         const CTX: ProgressContext = {
             cancellationToken: ct,
+            increment: undefined,
             message: undefined,
         };
 
