@@ -99,10 +99,9 @@ export async function withProgress<TResult = any>(task: ProgressTask<TResult>,
         let msg: string;
         let increment: number;
         const UPDATE_PROGRESS = () => {
-            p.report(<any>{
+            p.report({
                 increment: increment,
                 message: msg,
-                // percentage: increment,
             });
         };
 
@@ -116,11 +115,10 @@ export async function withProgress<TResult = any>(task: ProgressTask<TResult>,
 
             set: (newValue) => {
                 if (!_.isNil(newValue)) {
-                    newValue = parseInt( vscode_helpers.toStringSafe(newValue).trim() );
+                    newValue = parseFloat( vscode_helpers.toStringSafe(newValue).trim() );
                 }
 
                 increment = newValue;
-                UPDATE_PROGRESS();
             }
         });
 
