@@ -4,6 +4,10 @@ import * as vscode from 'vscode';
  */
 export interface ProgressContext {
     /**
+     * If cancellable, this contains the "cancellation token".
+     */
+    cancellationToken?: vscode.CancellationToken;
+    /**
      * Gets or sets the status message.
      */
     message: string;
@@ -12,6 +16,10 @@ export interface ProgressContext {
  * Progress options.
  */
 export interface ProgressOptions {
+    /**
+     * Show cancel button or not.
+     */
+    cancellable?: boolean;
     /**
      * The location.
      */

@@ -24,6 +24,10 @@ import * as vscode_helpers from '../index';
  */
 export interface ProgressContext {
     /**
+     * If cancellable, this contains the "cancellation token".
+     */
+    cancellationToken?: vscode.CancellationToken;
+    /**
      * Gets or sets the status message.
      */
     message: string;
@@ -33,6 +37,10 @@ export interface ProgressContext {
  * Progress options.
  */
 export interface ProgressOptions {
+    /**
+     * Show cancel button or not.
+     */
+    cancellable?: boolean;
     /**
      * The location.
      */
@@ -72,17 +80,44 @@ export async function withProgress<TResult = any>(task: ProgressTask<TResult>,
     }
 
     const OPTS: vscode.ProgressOptions = {
-        location: _.isNil(options.location) ? vscode.ProgressLocation.Window : options.location,
+        cancellable: vscode_helpers.toBooleanSafe(options.cancellable),
+        location: _.isNil(options.location) ? vscode.ProgressLocation.Notification : options.location,
         title: vscode_helpers.toStringSafe( options.title ),
     };
 
-    return vscode.window.withProgress(OPTS, (p) => {
+    return vscode.window.withProgress(OPTS, (p, ct) => {
         const CTX: ProgressContext = {
+            cancellationToken: ct,
             message: undefined,
         };
 
-        // CTX.message
         let msg: string;
+        let increment: number;
+
+        // CTX.increment
+        Object.defineProperty(CTX, 'increment', {
+            enumerable: true,
+
+            get: () => {
+                return increment;
+            },
+
+            set: (newValue) => {
+                newValue = parseInt( vscode_helpers.toStringSafe(newValue).trim() );
+                if (isNaN(newValue)) {
+                    newValue = undefined;
+                }
+
+                p.report({
+                    increment: newValue,
+                    message: msg,
+                });
+
+                increment = newValue;
+            }
+        });
+
+        // CTX.message
         Object.defineProperty(CTX, 'message', {
             enumerable: true,
 
@@ -96,6 +131,7 @@ export async function withProgress<TResult = any>(task: ProgressTask<TResult>,
                 }
 
                 p.report({
+                    increment: increment,
                     message: newValue,
                 });
 
