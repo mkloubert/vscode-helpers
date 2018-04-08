@@ -15,10 +15,6 @@ export interface ProgressContext {
      * Gets or sets the status message.
      */
     message: string;
-    /**
-     * The progress value.
-     */
-    percentage: number;
 }
 /**
  * Progress options.

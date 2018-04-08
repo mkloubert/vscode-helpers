@@ -35,10 +35,6 @@ export interface ProgressContext {
      * Gets or sets the status message.
      */
     message: string;
-    /**
-     * The progress value.
-     */
-    percentage: number;
 }
 
 /**
@@ -98,7 +94,6 @@ export async function withProgress<TResult = any>(task: ProgressTask<TResult>,
             cancellationToken: ct,
             increment: undefined,
             message: undefined,
-            percentage: undefined,
         };
 
         let msg: string;
@@ -147,19 +142,6 @@ export async function withProgress<TResult = any>(task: ProgressTask<TResult>,
 
                 msg = newValue;
                 UPDATE_PROGRESS();
-            }
-        });
-
-        // CTX.percentage
-        Object.defineProperty(CTX, 'percentage', {
-            enumerable: true,
-
-            get: function() {
-                return this.increment;
-            },
-
-            set: function (newValue) {
-                this.increment = newValue;
             }
         });
 
