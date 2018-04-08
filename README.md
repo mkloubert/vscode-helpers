@@ -743,7 +743,7 @@ let arr_2 = vscode_helpers.toArray( [ 19861222, 'PZSUX' ] );  // new array
 #### toEOL [[&uarr;](#functions-)]
 
 ```typescript
-import { EndOfLine } as vscode from 'vscode';
+import { EndOfLine } from 'vscode';
 
 const eol_1 = vscode_helpers.toEOL();  // system's EOL
 const eol_2 = vscode_helpers.toEOL( EndOfLine.CRLF );  // \r\n
@@ -858,7 +858,7 @@ vscode_helpers.waitWhile(() => {
 #### withProgress [[&uarr;](#functions-)]
 
 ```typescript
-import { ProgressLocation } as vscode from 'vscode';
+import { ProgressLocation } from 'vscode';
 
 vscode_helpers.withProgress((context) => {
     let res = 0;
@@ -919,7 +919,7 @@ CACHE.has('a');  // (false)
 #### WorkspaceBase [[&uarr;](#classes-)]
 
 ```typescript
-import { ConfigurationChangeEvent, Uri } as vscode from 'vscode';
+import { ConfigurationChangeEvent, Uri } from 'vscode';
 
 class MyWorkspace extends vscode_helpers.WorkspaceBase {
     private _configSrc: vscode_helpers.WorkspaceConfigSource;
