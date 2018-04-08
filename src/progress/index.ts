@@ -115,9 +115,8 @@ export async function withProgress<TResult = any>(task: ProgressTask<TResult>,
             },
 
             set: (newValue) => {
-                newValue = parseInt( vscode_helpers.toStringSafe(newValue).trim() );
-                if (isNaN(newValue)) {
-                    newValue = undefined;
+                if (!_.isNil(newValue)) {
+                    newValue = parseInt( vscode_helpers.toStringSafe(newValue).trim() );
                 }
 
                 increment = newValue;
