@@ -59,6 +59,7 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [registerWorkspaceWatcher](#registerworkspacewatcher-)
      * [readAll](#readall-)
      * [sleep](#sleep-)
+     * [startWatch](#startwatch-)
      * [toArray](#toarray-)
      * [toBooleanSafe](#tobooleansafe-)
      * [toEOL](#toeol-)
@@ -75,6 +76,7 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [CacheProviderBase](#cacheproviderbase-)
      * [DisposableBase](#disposablebase-)
      * [MemoryCache](#memorycache-)
+     * [StopWatch](#stopwatch-)
      * [WorkspaceBase](#workspacebase-)
    * [Constants and variables](#constants-and-variables-)
      * [EVENTS](#events-)
@@ -720,6 +722,16 @@ vscode_helpers.sleep(23979).then(() => {
 });
 ```
 
+#### startWatch [[&uarr;](#functions-)]
+
+```typescript
+const WATCH = vscode_helpers.startWatch();
+
+vscode_helpers.sleep(1000).then(() => {
+    const MS = WATCH.stop();  // 'MS' should be a least 1000    
+});
+```
+
 #### toBooleanSafe [[&uarr;](#functions-)]
 
 ```typescript
@@ -914,6 +926,17 @@ CACHE.set('a', 5979);  // 5979
 CACHE.has('a');  // (true)
 CACHE.unset('a');
 CACHE.has('a');  // (false)
+```
+
+#### StopWatch [[&uarr;](#classes-)]
+
+```typescript
+const WATCH = new vscode_helpers.StopWatch();
+WATCH.start();
+
+vscode_helpers.sleep(1000).then(() => {
+    const MS = WATCH.stop();  // 'MS' should be a least 1000    
+});
 ```
 
 #### WorkspaceBase [[&uarr;](#classes-)]

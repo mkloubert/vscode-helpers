@@ -13,6 +13,7 @@ export * from './html';
 export * from './logging';
 export { from } from 'node-enumerable';
 export * from './progress';
+export * from './timers';
 export * from './workflows';
 export * from './workspaces';
 /**
@@ -25,14 +26,6 @@ export * from './workspaces';
  * @return {TResult|PromiseLike<TResult>} The result.
  */
 export declare type ForEachAsyncAction<T, TResult> = (item: T, index: number, array: T[]) => TResult | PromiseLike<TResult>;
-/**
- * An action for 'invokeAfter()' function.
- *
- * @param {any[]} [args] The arguments for the action.
- *
- * @return {TResult|PromiseLike<TResult>} The result of the action.
- */
-export declare type InvokeAfterAction<TResult = any> = (...args: any[]) => TResult | PromiseLike<TResult>;
 /**
  * Describes a simple 'completed' action.
  *
@@ -48,19 +41,6 @@ export declare type SimpleCompletedAction<TResult> = (err: any, result?: TResult
  * @return {string} The normalized string.
  */
 export declare type StringNormalizer<TStr = string> = (str: TStr) => string;
-/**
- * Additional options for 'waitWhile()' function.
- */
-export interface WaitWhileOptions {
-    /**
-     * A timeout, in milliseconds.
-     */
-    timeout?: number;
-    /**
-     * The optional time, in milliseconds, to wait until next check.
-     */
-    timeUntilNextCheck?: number;
-}
 /**
  * Stores global data for the current extension session.
  */
@@ -200,16 +180,6 @@ export declare function format(formatStr: any, ...args: any[]): string;
  */
 export declare function formatArray(formatStr: any, args: Enumerable.Sequence<any>): string;
 /**
- * Invokes an action after a timeout.
- *
- * @param {Function} action The action to invoke.
- * @param {number} [ms] The custom time, in milliseconds, after the action should be invoked.
- * @param {any[]} [args] One or more arguments for the action.
- *
- * @return {Promise<TResult>} The promise with the result.
- */
-export declare function invokeAfter<TResult = any>(action: InvokeAfterAction<TResult>, ms?: number, ...args: any[]): Promise<TResult>;
-/**
  * Checks if data is binary or text content.
  *
  * @param {Buffer} data The data to check.
@@ -278,12 +248,6 @@ export declare function randomBytes(size: number): Promise<Buffer>;
  */
 export declare function readAll(stream: Stream.Readable, enc?: string): Promise<Buffer>;
 /**
- * Waits a number of milliseconds.
- *
- * @param {number} [ms] The custom time, in milliseconds, to wait.
- */
-export declare function sleep(ms?: number): Promise<void>;
-/**
  * Returns a sequence object as new array.
  *
  * @param {Enumerable.Sequence<T>} seq The input object.
@@ -340,12 +304,3 @@ export declare function tryClearTimeout(timeoutId: NodeJS.Timer): boolean;
  * @return {Moment.Moment} The current UTC time.
  */
 export declare function utcNow(): Moment.Moment;
-/**
- * Waits while a predicate matches.
- *
- * @param {Function} predicate The predicate.
- * @param {WaitWhileOptions} {opts} Additional options.
- *
- * @return {Promise<boolean>} The promise that indicates if timeout reached (false) or not (true).
- */
-export declare function waitWhile(predicate: () => boolean | PromiseLike<boolean>, opts?: WaitWhileOptions): Promise<boolean>;
