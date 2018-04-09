@@ -16,6 +16,7 @@
  */
 
 import * as Moment from 'moment';
+import * as vscode from 'vscode';
 import * as vscode_helpers from '../index';
 
 /**
@@ -79,6 +80,60 @@ export class StopWatch {
             return NOW.diff(START_TIME, 'ms', true);
         }
     }
+}
+
+/**
+ * Creates a disposable interval.
+ *
+ * @param {Function} callback The callback.
+ * @param {number} ms The interval in milliseconds.
+ * @param {any[]} [args] The arguments for the callback.
+ *
+ * @return {vscode.Disposable} The disposable for the interval.
+ */
+export function createInterval(callback: Function, ms: number, ...args: any[]): vscode.Disposable {
+    ms = parseInt( vscode_helpers.toStringSafe(ms).trim() );
+    if (isNaN(ms)) {
+        ms = 1000;
+    }
+
+    const TIMER = setInterval.apply(
+        null,
+        [ <any>callback, ms ].concat( vscode_helpers.asArray(args, false) )
+    );
+
+    return {
+        dispose: () => {
+            clearInterval(TIMER);
+        },
+    };
+}
+
+/**
+ * Creates a disposable timeout.
+ *
+ * @param {Function} callback The callback.
+ * @param {number} ms The timeout in milliseconds.
+ * @param {any[]} [args] The arguments for the callback.
+ *
+ * @return {vscode.Disposable} The disposable for the timeout.
+ */
+export function createTimeout(callback: Function, ms: number, ...args: any[]): vscode.Disposable {
+    ms = parseInt( vscode_helpers.toStringSafe(ms).trim() );
+    if (isNaN(ms)) {
+        ms = 1000;
+    }
+
+    const TIMER = setTimeout.apply(
+        null,
+        [ <any>callback, ms ].concat( vscode_helpers.asArray(args, false) )
+    );
+
+    return {
+        dispose: () => {
+            clearTimeout(TIMER);
+        },
+    };
 }
 
 /**

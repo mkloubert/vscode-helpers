@@ -1,3 +1,4 @@
+import * as vscode from 'vscode';
 import * as vscode_helpers from '../index';
 /**
  * An action for 'invokeAfter()' function.
@@ -42,6 +43,26 @@ export declare class StopWatch {
      */
     stop(): number;
 }
+/**
+ * Creates a disposable interval.
+ *
+ * @param {Function} callback The callback.
+ * @param {number} ms The interval in milliseconds.
+ * @param {any[]} [args] The arguments for the callback.
+ *
+ * @return {vscode.Disposable} The disposable for the interval.
+ */
+export declare function createInterval(callback: Function, ms: number, ...args: any[]): vscode.Disposable;
+/**
+ * Creates a disposable timeout.
+ *
+ * @param {Function} callback The callback.
+ * @param {number} ms The timeout in milliseconds.
+ * @param {any[]} [args] The arguments for the callback.
+ *
+ * @return {vscode.Disposable} The disposable for the timeout.
+ */
+export declare function createTimeout(callback: Function, ms: number, ...args: any[]): vscode.Disposable;
 /**
  * Invokes an action after a timeout.
  *

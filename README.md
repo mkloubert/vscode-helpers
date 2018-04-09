@@ -23,7 +23,9 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [compareValuesBy](#comparevaluesby-)
      * [createCompletedAction](#createcompletedaction-)
      * [createDirectoryIfNeeded](#createdirectoryifneeded-)
+     * [createInterval](#createinterval-)
      * [createLogger](#createlogger-)
+     * [createTimeout](#createtimeout-)
      * [doesMatch](#doesmatch-)
      * [exists](#exists-)
      * [forEachAsync](#foreachasync-)
@@ -327,6 +329,16 @@ function loadMyFileAsync() {
 }
 ```
 
+#### createInterval [[&uarr;](#functions-)]
+
+```typescript
+const INTERVAL = vscode_helpers.createInterval(() => {
+    //TODO
+}, 1000);
+
+INTERVAL.dispose();  // same as 'clearInterval'
+```
+
 #### createLogger [[&uarr;](#functions-)]
 
 ```typescript
@@ -337,6 +349,16 @@ const LOGGER = vscode_helpers.createLogger((log) => {
 });
 
 LOGGER.info('Hello, LOG!');
+```
+
+#### createTimeout [[&uarr;](#functions-)]
+
+```typescript
+const TIMEOUT = vscode_helpers.createTimeout(() => {
+    //TODO
+}, 10000);
+
+TIMEOUT.dispose();  // same as 'clearTimeout'
 ```
 
 #### doesMatch [[&uarr;](#functions-)]
