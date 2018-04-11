@@ -71,3 +71,13 @@ export declare function makeNonDisposable<TObj extends vscode.Disposable>(obj: T
  * @return {boolean} Operation was successful or not.
  */
 export declare function tryDispose(obj: vscode.Disposable): boolean;
+/**
+ * Tries to dispose an object inside another, parent object and deletes it there.
+ *
+ * @param {any} obj The "other" / parent object.
+ * @param {PropertyKey} key The key inside 'obj', where the disposable object is stored and should be removed.
+ * @param {boolean} [alwaysDelete] Delete even if operation failed or not.
+ *
+ * @return {vscode.Disposable|false} The disposed and removed object or (false) if failed.
+ */
+export declare function tryDisposeAndDelete(obj: any, key: PropertyKey, alwaysDelete?: boolean): false | vscode.Disposable;

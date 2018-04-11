@@ -175,3 +175,39 @@ export function tryDispose(obj: vscode.Disposable): boolean {
         return false;
     }
 }
+
+/**
+ * Tries to dispose an object inside another, parent object and deletes it there.
+ *
+ * @param {any} obj The "other" / parent object.
+ * @param {PropertyKey} key The key inside 'obj', where the disposable object is stored and should be removed.
+ * @param {boolean} [alwaysDelete] Delete even if operation failed or not.
+ *
+ * @return {vscode.Disposable|false} The disposed and removed object or (false) if failed.
+ */
+export function tryDisposeAndDelete(obj: any, key: PropertyKey, alwaysDelete = true): false | vscode.Disposable {
+    alwaysDelete = vscode_helpers.toBooleanSafe(alwaysDelete, true);
+
+    let result: false | vscode.Disposable;
+
+    try {
+        if (obj) {
+            let deleteObject = true;
+            result = obj[key];
+
+            if (!tryDispose( <vscode.Disposable>result )) {
+                deleteObject = alwaysDelete;
+            }
+
+            if (deleteObject) {
+                delete obj[key];
+            } else {
+                result = false;
+            }
+        }
+    } catch {
+        result = false;
+    }
+
+    return result;
+}

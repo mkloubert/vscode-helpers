@@ -69,6 +69,7 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [tryClearInterval](#tryclearinterval-)
      * [tryClearTimeout](#trycleartimeout-)
      * [tryDispose](#trydispose-)
+     * [tryDisposeAndDelete](#trydisposeanddelete-)
      * [tryRemoveAllListeners](#tryremovealllisteners-)
      * [tryRemoveListener](#tryremovelistener-)
      * [utcNow](#utcnow-)
@@ -824,6 +825,21 @@ const OBJ = {
 vscode_helpers.tryDispose( OBJ );
 ```
 
+#### tryDisposeAndDelete [[&uarr;](#functions-)]
+
+```typescript
+const OBJ = {
+    dispose: () => {
+        //TODO
+    }
+};
+
+const PARENT = { 'obj_key': OBJ };
+
+vscode_helpers.tryDisposeAndDelete( PARENT, 'obj_key' );
+// 'PARENT' should not contain an object in 'obj_key' anymore
+```
+
 #### tryRemoveAllListeners [[&uarr;](#functions-)]
 
 ```typescript
@@ -896,6 +912,8 @@ import { ProgressLocation } from 'vscode';
 
 vscode_helpers.withProgress((context) => {
     let res = 0;
+
+    context.increment = 10;  // increment by 10% after each update
 
     for (let i = 0; i < 10; i++) {
         context.message = `Task ${i + 1} of 10 ...`;
@@ -996,7 +1014,7 @@ class MyWorkspace extends vscode_helpers.WorkspaceBase {
 
 ```typescript
 vscode_helpers.EVENTS.on('myEvent', (a, b) => {
-    console.log('myEvent' + (a + b));
+    console.log('myEvent: ' + (a + b));
 });
 
 vscode_helpers.EVENTS
