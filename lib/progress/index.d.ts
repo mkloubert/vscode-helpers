@@ -4,6 +4,13 @@ import * as vscode from 'vscode';
  */
 export interface ProgressContext {
     /**
+     * The base context provided by Visual Studio Code.
+     */
+    baseContext: vscode.Progress<{
+        message?: string;
+        increment?: number;
+    }>;
+    /**
      * If cancellable, this contains the "cancellation token".
      */
     cancellationToken?: vscode.CancellationToken;

@@ -24,6 +24,10 @@ import * as vscode_helpers from '../index';
  */
 export interface ProgressContext {
     /**
+     * The base context provided by Visual Studio Code.
+     */
+    baseContext: vscode.Progress<{ message?: string; increment?: number }>;
+    /**
      * If cancellable, this contains the "cancellation token".
      */
     cancellationToken?: vscode.CancellationToken;
@@ -102,7 +106,11 @@ export async function withProgress<TResult = any>(task: ProgressTask<TResult>,
         let handledItems: any[] = [];
 
         try {
+            let msg: string;
+            let increment: number;
+
             const CTX: ProgressContext = {
+                baseContext: p,
                 cancellationToken: ct,
                 increment: undefined,
                 incrementIfNeeded: function(item, msg) {
@@ -118,8 +126,6 @@ export async function withProgress<TResult = any>(task: ProgressTask<TResult>,
                 message: undefined,
             };
 
-            let msg: string;
-            let increment: number;
             const UPDATE_PROGRESS = () => {
                 p.report({
                     increment: increment,
