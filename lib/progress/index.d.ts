@@ -8,9 +8,18 @@ export interface ProgressContext {
      */
     cancellationToken?: vscode.CancellationToken;
     /**
-     * The progress value.
+     * The increment value.
      */
     increment: number;
+    /**
+     * Increments the progress value only if an item has not been handled yet.
+     *
+     * @param {any} item The item to check.
+     * @param {string} message The new message.
+     *
+     * @return {boolean} Value has been increased or not.
+     */
+    incrementIfNeeded: (item: any, message: string) => boolean;
     /**
      * Gets or sets the status message.
      */

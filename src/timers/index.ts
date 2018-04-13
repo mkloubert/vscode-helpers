@@ -15,6 +15,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import * as _ from 'lodash';
 import * as Moment from 'moment';
 import * as vscode from 'vscode';
 import * as vscode_helpers from '../index';
@@ -196,6 +197,44 @@ export async function sleep(ms?: number) {
  */
 export function startWatch() {
     return (new StopWatch()).start();
+}
+
+/**
+ * Tries to clear an interval.
+ *
+ * @param {NodeJS.Timer} intervalId The interval (ID).
+ *
+ * @return {boolean} Operation was successfull or not.
+ */
+export function tryClearInterval(intervalId: NodeJS.Timer): boolean {
+    try {
+        if (!_.isNil(intervalId)) {
+            clearInterval(intervalId);
+        }
+
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
+/**
+ * Tries to clear a timeout.
+ *
+ * @param {NodeJS.Timer} timeoutId The timeout (ID).
+ *
+ * @return {boolean} Operation was successfull or not.
+ */
+export function tryClearTimeout(timeoutId: NodeJS.Timer): boolean {
+    try {
+        if (!_.isNil(timeoutId)) {
+            clearTimeout(timeoutId);
+        }
+
+        return true;
+    } catch (e) {
+        return false;
+    }
 }
 
 /**

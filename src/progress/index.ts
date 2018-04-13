@@ -28,9 +28,18 @@ export interface ProgressContext {
      */
     cancellationToken?: vscode.CancellationToken;
     /**
-     * The progress value.
+     * The increment value.
      */
     increment: number;
+    /**
+     * Increments the progress value only if an item has not been handled yet.
+     *
+     * @param {any} item The item to check.
+     * @param {string} message The new message.
+     *
+     * @return {boolean} Value has been increased or not.
+     */
+    incrementIfNeeded: (item: any, message: string) => boolean;
     /**
      * Gets or sets the status message.
      */
@@ -90,60 +99,76 @@ export async function withProgress<TResult = any>(task: ProgressTask<TResult>,
     };
 
     return vscode.window.withProgress(OPTS, (p, ct) => {
-        const CTX: ProgressContext = {
-            cancellationToken: ct,
-            increment: undefined,
-            message: undefined,
-        };
+        let handledItems: any[] = [];
 
-        let msg: string;
-        let increment: number;
-        const UPDATE_PROGRESS = () => {
-            p.report({
-                increment: increment,
-                message: msg,
+        try {
+            const CTX: ProgressContext = {
+                cancellationToken: ct,
+                increment: undefined,
+                incrementIfNeeded: function(item, msg) {
+                    if (handledItems.indexOf(item) < 0) {
+                        handledItems.push(item);
+                        this.message = msg;
+
+                        return true;
+                    }
+
+                    return false;
+                },
+                message: undefined,
+            };
+
+            let msg: string;
+            let increment: number;
+            const UPDATE_PROGRESS = () => {
+                p.report({
+                    increment: increment,
+                    message: msg,
+                });
+            };
+
+            // CTX.increment
+            Object.defineProperty(CTX, 'increment', {
+                enumerable: true,
+
+                get: () => {
+                    return increment;
+                },
+
+                set: (newValue) => {
+                    if (!_.isNil(newValue)) {
+                        newValue = parseFloat( vscode_helpers.toStringSafe(newValue).trim() );
+                    }
+
+                    increment = newValue;
+                }
             });
-        };
 
-        // CTX.increment
-        Object.defineProperty(CTX, 'increment', {
-            enumerable: true,
+            // CTX.message
+            Object.defineProperty(CTX, 'message', {
+                enumerable: true,
 
-            get: () => {
-                return increment;
-            },
+                get: () => {
+                    return msg;
+                },
 
-            set: (newValue) => {
-                if (!_.isNil(newValue)) {
-                    newValue = parseFloat( vscode_helpers.toStringSafe(newValue).trim() );
+                set: (newValue) => {
+                    if (_.isNil(newValue)) {
+                        newValue = undefined;
+                    } else {
+                        newValue = vscode_helpers.toStringSafe(newValue);
+                    }
+
+                    msg = newValue;
+                    UPDATE_PROGRESS();
                 }
+            });
 
-                increment = newValue;
-            }
-        });
-
-        // CTX.message
-        Object.defineProperty(CTX, 'message', {
-            enumerable: true,
-
-            get: () => {
-                return msg;
-            },
-
-            set: (newValue) => {
-                if (_.isNil(newValue)) {
-                    newValue = undefined;
-                } else {
-                    newValue = vscode_helpers.toStringSafe(newValue);
-                }
-
-                msg = newValue;
-                UPDATE_PROGRESS();
-            }
-        });
-
-        return Promise.resolve(
-            task(CTX)
-        );
+            return Promise.resolve(
+                task(CTX)
+            );
+        } finally {
+            handledItems = null;
+        }
     });
 }

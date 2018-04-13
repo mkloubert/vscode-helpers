@@ -72,6 +72,8 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [tryDisposeAndDelete](#trydisposeanddelete-)
      * [tryRemoveAllListeners](#tryremovealllisteners-)
      * [tryRemoveListener](#tryremovelistener-)
+     * [using](#using-)
+     * [usingSync](#usingsync-)
      * [utcNow](#utcnow-)
      * [waitWhile](#waitwhile-)
      * [withProgress](#withprogress-)
@@ -878,6 +880,43 @@ STREAM.on('data', DATA_LISTENER);
 STREAM.once('end', () => {
     vscode_helpers.tryRemoveListener(STREAM,
                                      'data', DATA_LISTENER);
+});
+```
+
+#### using [[&uarr;](#functions-)]
+
+```typescript
+const MY_OBJECT = {
+    value: 5979,
+
+    dispose: function() {
+        console.log("I have been disposed with value " + this.value);
+    }
+};
+
+vscode_helpers.using(MY_OBJECT, (obj) => {
+    return obj.value + 23979;
+}).then((result) => {
+    // result === 29958
+}, (err) => {
+    // on error
+});
+```
+
+#### usingSync [[&uarr;](#functions-)]
+
+```typescript
+const MY_OBJECT = {
+    value: 23979,
+
+    dispose: function() {
+        console.log("I have been disposed with value " + this.value);
+    }
+};
+
+// RESULT === 29958
+const RESULT = vscode_helpers.usingSync(MY_OBJECT, (obj) => {
+    return obj.value + 5979;
 });
 ```
 

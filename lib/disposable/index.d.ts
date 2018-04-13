@@ -81,3 +81,25 @@ export declare function tryDispose(obj: vscode.Disposable): boolean;
  * @return {vscode.Disposable|false} The disposed and removed object or (false) if failed.
  */
 export declare function tryDisposeAndDelete(obj: any, key: PropertyKey, alwaysDelete?: boolean): false | vscode.Disposable;
+/**
+ * Invokes a function for a disposable object and keeps sure, that this object will be disposed,
+ * even on error.
+ *
+ * @param {TObj} obj The object.
+ * @param {Function} func The function to invoke.
+ * @param {any[]} [args] One or more additional arguments for the function.
+ *
+ * @return Promise<TResult> The promise with the result of the function.
+ */
+export declare function using<TObj extends vscode.Disposable = vscode.Disposable, TResult = any>(obj: TObj, func: (o: TObj, ...args: any[]) => TResult | PromiseLike<TResult>, ...args: any[]): Promise<TResult>;
+/**
+ * Invokes a function for a disposable object sync and keeps sure, that this object will be disposed,
+ * even on error.
+ *
+ * @param {TObj} obj The object.
+ * @param {Function} func The function to invoke.
+ * @param {any[]} [args] One or more additional arguments for the function.
+ *
+ * @return TResult The result of the function.
+ */
+export declare function usingSync<TObj extends vscode.Disposable = vscode.Disposable, TResult = any>(obj: TObj, func: (o: TObj, ...args: any[]) => TResult, ...args: any[]): TResult;

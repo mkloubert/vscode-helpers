@@ -839,44 +839,6 @@ export function toStringSafe(val: any, defaultVal = ''): string {
 }
 
 /**
- * Tries to clear an interval.
- *
- * @param {NodeJS.Timer} intervalId The timeout (ID).
- *
- * @return {boolean} Operation was successfull or not.
- */
-export function tryClearInterval(intervalId: NodeJS.Timer): boolean {
-    try {
-        if (!_.isNil(intervalId)) {
-            clearInterval(intervalId);
-        }
-
-        return true;
-    } catch (e) {
-        return false;
-    }
-}
-
-/**
- * Tries to clear a timeout.
- *
- * @param {NodeJS.Timer} timeoutId The timeout (ID).
- *
- * @return {boolean} Operation was successfull or not.
- */
-export function tryClearTimeout(timeoutId: NodeJS.Timer): boolean {
-    try {
-        if (!_.isNil(timeoutId)) {
-            clearTimeout(timeoutId);
-        }
-
-        return true;
-    } catch (e) {
-        return false;
-    }
-}
-
-/**
  * Returns the current UTC time.
  *
  * @return {Moment.Moment} The current UTC time.

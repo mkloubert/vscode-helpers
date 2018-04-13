@@ -211,3 +211,55 @@ export function tryDisposeAndDelete(obj: any, key: PropertyKey, alwaysDelete = t
 
     return result;
 }
+
+/**
+ * Invokes a function for a disposable object and keeps sure, that this object will be disposed,
+ * even on error.
+ *
+ * @param {TObj} obj The object.
+ * @param {Function} func The function to invoke.
+ * @param {any[]} [args] One or more additional arguments for the function.
+ *
+ * @return Promise<TResult> The promise with the result of the function.
+ */
+export async function using<TObj extends vscode.Disposable = vscode.Disposable, TResult = any>(
+    obj: TObj,
+    func: (o: TObj, ...args: any[]) => TResult | PromiseLike<TResult>,
+    ...args: any[]
+): Promise<TResult> {
+    try {
+        return await Promise.resolve(
+            func.apply(null,
+                       [ obj ].concat(args))
+        );
+    } finally {
+        if (obj) {
+            obj.dispose();
+        }
+    }
+}
+
+/**
+ * Invokes a function for a disposable object sync and keeps sure, that this object will be disposed,
+ * even on error.
+ *
+ * @param {TObj} obj The object.
+ * @param {Function} func The function to invoke.
+ * @param {any[]} [args] One or more additional arguments for the function.
+ *
+ * @return TResult The result of the function.
+ */
+export function usingSync<TObj extends vscode.Disposable = vscode.Disposable, TResult = any>(
+    obj: TObj,
+    func: (o: TObj, ...args: any[]) => TResult,
+    ...args: any[]
+): TResult {
+    try {
+        return func.apply(null,
+                          [ obj ].concat(args));
+    } finally {
+        if (obj) {
+            obj.dispose();
+        }
+    }
+}

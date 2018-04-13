@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import * as vscode from 'vscode';
 import * as vscode_helpers from '../index';
 /**
@@ -85,6 +86,22 @@ export declare function sleep(ms?: number): Promise<void>;
  * @return {StopWatch} The new, started watch.
  */
 export declare function startWatch(): vscode_helpers.StopWatch;
+/**
+ * Tries to clear an interval.
+ *
+ * @param {NodeJS.Timer} intervalId The interval (ID).
+ *
+ * @return {boolean} Operation was successfull or not.
+ */
+export declare function tryClearInterval(intervalId: NodeJS.Timer): boolean;
+/**
+ * Tries to clear a timeout.
+ *
+ * @param {NodeJS.Timer} timeoutId The timeout (ID).
+ *
+ * @return {boolean} Operation was successfull or not.
+ */
+export declare function tryClearTimeout(timeoutId: NodeJS.Timer): boolean;
 /**
  * Waits while a predicate matches.
  *
