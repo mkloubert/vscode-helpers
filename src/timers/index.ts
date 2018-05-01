@@ -270,7 +270,7 @@ export async function waitWhile(predicate: () => boolean | PromiseLike<boolean>,
         const NOW = Moment.utc();
 
         if (false !== runUntil) {
-            if (runUntil.isAfter(NOW)) {
+            if (NOW.isAfter(runUntil)) {
                 return false;
             }
         }
