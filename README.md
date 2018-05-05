@@ -62,6 +62,8 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [readAll](#readall-)
      * [sleep](#sleep-)
      * [startWatch](#startwatch-)
+     * [tempFile](#tempfile-)
+     * [tempFileSync](#tempfilesync-)
      * [toArray](#toarray-)
      * [toBooleanSafe](#tobooleansafe-)
      * [toEOL](#toeol-)
@@ -763,6 +765,32 @@ vscode_helpers.sleep(1000).then(() => {
 const bool_1 = vscode_helpers.toBooleanSafe( true );  // (true)
 const bool_2 = vscode_helpers.toBooleanSafe( null );  // (false)
 const bool_3 = vscode_helpers.toBooleanSafe( undefined, true );  // (true)
+```
+
+#### tempFile [[&uarr;](#functions-)]
+
+```typescript
+vscode_helpers.tempFile((pathToTempFile: string) => {
+    //TODO
+
+    return 5979;
+}).then((result) => {
+    // result === 5979
+}, (err) => {
+    // ERROR!
+});
+```
+
+#### tempFileSync [[&uarr;](#functions-)]
+
+```typescript
+let result = vscode_helpers.tempFileSync((pathToTempFile: string) => {
+    //TODO
+
+    return 23979;
+});
+
+// result === 23979
 ```
 
 #### toArray [[&uarr;](#functions-)]
