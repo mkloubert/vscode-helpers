@@ -20,8 +20,33 @@ import * as FSExtra from 'fs-extra';
 import * as Glob from 'glob';
 const MergeDeep = require('merge-deep');
 import * as Path from 'path';
+import * as TMP from 'tmp';
 import * as vscode_helpers from '../index';
 import * as vscode_workflows from '../workflows';
+
+/**
+ * Options for a temp file.
+ */
+export interface TempFileOptions {
+    /**
+     * The custom directory for the file.
+     */
+    dir?: string;
+    /**
+     * Keep temp file or not.
+     */
+    keep?: boolean;
+    /**
+     * The optional prefix for the name of the file.
+     */
+    prefix?: string;
+    /**
+     * The optional suffix for the name of the file.
+     */
+    suffix?: string;
+}
+
+type TempFilePath = string | false;
 
 /**
  * Creates a directory (if needed).
@@ -414,4 +439,135 @@ function normalizeGlobOptions(opts: Glob.IOptions, callerDefaultOpts: Glob.IOpti
     return MergeDeep({},
                      DEFAULT_OPTS, callerDefaultOpts,
                      opts);
+}
+
+function normalizeTempFileOptions(opts: TempFileOptions) {
+    const DEFAULT_OPTS: TempFileOptions = {
+    };
+
+    opts = MergeDeep({},
+                     DEFAULT_OPTS, opts);
+
+    opts.dir = vscode_helpers.toStringSafe(opts.dir);
+    if (vscode_helpers.isEmptyString(opts.dir)) {
+        opts.dir = undefined;
+    }
+
+    opts.prefix = vscode_helpers.toStringSafe(opts.prefix);
+    if ('' === opts.prefix) {
+        opts.prefix = undefined;
+    }
+
+    opts.suffix = vscode_helpers.toStringSafe(opts.suffix);
+    if ('' === opts.suffix) {
+        opts.suffix = undefined;
+    }
+
+    return opts;
+}
+
+/**
+ * Invokes an action for a temp file.
+ *
+ * @param {Function} action The action to invoke.
+ * @param {TempFileOptions} [opts] The custom options.
+ *
+ * @return {Promise<TResult>} The promise with the result of the action.
+ */
+export function tempFile<TResult = any>(
+    action: (file: string) => TResult | PromiseLike<TResult>,
+    opts?: TempFileOptions,
+): Promise<TResult> {
+    opts = normalizeTempFileOptions(opts);
+
+    return new Promise<TResult>((resolve, reject) => {
+        let completedInvoked = false;
+        let tempFile: TempFilePath = false;
+        const COMPLETED = (err: any, result?: TResult) => {
+            if (completedInvoked) {
+                return;
+            }
+            completedInvoked = true;
+
+            try {
+                if (err) {
+                    reject( err );
+                } else {
+                    resolve( result );
+                }
+            } finally {
+                tryUnlinkTempFile(tempFile, opts);
+            }
+        };
+
+        try {
+            TMP.tmpName(toTmpSimpleOptions(opts), (err, path) => {
+                if (err) {
+                    COMPLETED(err);
+                } else {
+                    tempFile = path;
+
+                    try {
+                        Promise.resolve( action(tempFile) ).then((result) => {
+                            COMPLETED(null, result);
+                        }).catch((e) => {
+                            COMPLETED(e);
+                        });
+                    } catch (e) {
+                        COMPLETED(e);
+                    }
+                }
+            });
+        } catch (e) {
+            COMPLETED(e);
+        }
+    });
+}
+
+function toTmpSimpleOptions(opts: TempFileOptions): TMP.SimpleOptions {
+    return {
+        dir: opts.dir,
+        keep: true,
+        prefix: opts.prefix,
+        postfix: opts.suffix,
+    };
+}
+
+/**
+ * Invokes an action for a temp file (sync).
+ *
+ * @param {Function} action The action to invoke.
+ * @param {TempFileOptions} [opts] The custom options.
+ *
+ * @return {TResult} The result of the action.
+ */
+export function tempFileSync<TResult = any>(
+    action: (file: string) => TResult, opts?: TempFileOptions
+): TResult {
+    opts = normalizeTempFileOptions(opts);
+
+    let tempFile: TempFilePath = false;
+    try {
+        tempFile = TMP.tmpNameSync(
+            toTmpSimpleOptions(opts)
+        );
+
+        return action(tempFile);
+    } finally {
+        tryUnlinkTempFile(tempFile, opts);
+    }
+}
+
+function tryUnlinkTempFile(file: TempFilePath, opts?: TempFileOptions) {
+    try {
+        if (false !== file) {
+            if (!vscode_helpers.toBooleanSafe(opts.keep)) {
+                FSExtra.unlinkSync( file );
+            }
+        }
+
+        return true;
+    } catch {
+        return false;
+    }
 }

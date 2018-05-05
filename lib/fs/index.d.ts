@@ -2,6 +2,27 @@
 /// <reference types="glob" />
 import * as Glob from 'glob';
 /**
+ * Options for a temp file.
+ */
+export interface TempFileOptions {
+    /**
+     * The custom directory for the file.
+     */
+    dir?: string;
+    /**
+     * Keep temp file or not.
+     */
+    keep?: boolean;
+    /**
+     * The optional prefix for the name of the file.
+     */
+    prefix?: string;
+    /**
+     * The optional suffix for the name of the file.
+     */
+    suffix?: string;
+}
+/**
  * Creates a directory (if needed).
  *
  * @param {string} dir The path of the directory to create.
@@ -161,3 +182,21 @@ export declare function isSymbolicLink(path: string, useLSTAT?: boolean): Promis
  * @return {boolean} A value that indicates if condition matches or not.
  */
 export declare function isSymbolicLinkSync(path: string, useLSTAT?: boolean): boolean;
+/**
+ * Invokes an action for a temp file.
+ *
+ * @param {Function} action The action to invoke.
+ * @param {TempFileOptions} [opts] The custom options.
+ *
+ * @return {Promise<TResult>} The promise with the result of the action.
+ */
+export declare function tempFile<TResult = any>(action: (file: string) => TResult | PromiseLike<TResult>, opts?: TempFileOptions): Promise<TResult>;
+/**
+ * Invokes an action for a temp file (sync).
+ *
+ * @param {Function} action The action to invoke.
+ * @param {TempFileOptions} [opts] The custom options.
+ *
+ * @return {TResult} The result of the action.
+ */
+export declare function tempFileSync<TResult = any>(action: (file: string) => TResult, opts?: TempFileOptions): TResult;

@@ -1,7 +1,7 @@
 {
     "name": "vscode-helpers",
     "author": "Marcel Joachim Kloubert",
-    "version": "1.10.1",
+    "version": "2.0.0",
     "description": "Helper functions and classes for VS Code (extensions)",
     "tags": [
         "functions",
@@ -47,32 +47,34 @@
         "test": "echo 'Test is not enabled for this package'"
     },
     "dependencies": {
-        "@types/fs-extra": "^5.0.1",
+        "@types/fs-extra": "^5.0.2",
         "@types/glob": "^5.0.35",
         "@types/is-stream": "^1.1.0",
-        "@types/lodash": "^4.14.106",
+        "@types/lodash": "^4.14.108",
         "@types/marked": "^0.3.0",
         "@types/minimatch": "^3.0.3",
         "@types/moment-timezone": "^0.5.4",
-        "@types/node": "^7.0.59",
+        "@types/node": "^7.0.63",
+        "@types/tmp": "0.0.33",
         "fs-extra": "^5.0.0",
         "glob": "^7.1.2",
         "is-stream": "^1.1.0",
         "isbinaryfile": "^3.0.2",
-        "lodash": "^4.17.5",
+        "lodash": "^4.17.10",
         "marked": "^0.3.19",
         "merge-deep": "^3.0.1",
         "minimatch": "^3.0.4",
-        "moment": "^2.22.0",
-        "moment-timezone": "^0.5.14",
-        "node-enumerable": "^3.9.0"
+        "moment": "^2.22.1",
+        "moment-timezone": "^0.5.16",
+        "node-enumerable": "^3.9.0",
+        "tmp": "0.0.33"
     },
     "devDependencies": {
-        "tslint": "^5.7.0",
-        "typescript": "^2.8.1",
-        "vscode": "^1.1.14"
+        "tslint": "^5.10.0",
+        "typescript": "^2.8.3",
+        "vscode": "^1.1.17"
     },
     "engines": {
-        "vscode": "^1.22.0"
+        "vscode": "^1.23.0"
     }
 }
