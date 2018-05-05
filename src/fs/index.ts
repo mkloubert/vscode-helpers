@@ -562,7 +562,9 @@ function tryUnlinkTempFile(file: TempFilePath, opts?: TempFileOptions) {
     try {
         if (false !== file) {
             if (!vscode_helpers.toBooleanSafe(opts.keep)) {
-                FSExtra.unlinkSync( file );
+                if (isFileSync(file)) {
+                    FSExtra.unlinkSync( file );
+                }
             }
         }
 
