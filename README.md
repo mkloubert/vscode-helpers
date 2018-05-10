@@ -60,6 +60,8 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [randomBytes](#randombytes-)
      * [registerWorkspaceWatcher](#registerworkspacewatcher-)
      * [readAll](#readall-)
+     * [size](#size-)
+     * [sizeSync](#sizeSync-)
      * [sleep](#sleep-)
      * [startWatch](#startwatch-)
      * [tempFile](#tempfile-)
@@ -737,6 +739,32 @@ vscode_helpers.registerWorkspaceWatcher(async (event, folder, workspace?) => {
         return NEW_WORKSPACE;
     }
 });
+```
+
+#### size [[&uarr;](#functions-)]
+
+```typescript
+vscode_helpers.size('/path/to/a/file').then((fileSize: number) => {
+    // 'fileSize' stores the file size in bytes
+}, (err) => {
+    // ERROR
+});
+
+// use 'stat()' function instead
+// s. https://nodejs.org/api/fs.html#fs_fs_stat_path_callback
+vscode_helpers.size('/path/to/a/file', false).then((fileSize: number) => {    
+}, (err) => {
+});
+```
+
+#### sizeSync [[&uarr;](#functions-)]
+
+```typescript
+const FILESIZE_1 = vscode_helpers.sizeSync('/path/to/a/file');
+
+// use 'statSync()' function instead
+// s. https://nodejs.org/api/fs.html#fs_fs_statsync_path
+const FILESIZE_2 = vscode_helpers.sizeSync('/path/to/a/file', false);
 ```
 
 #### sleep [[&uarr;](#functions-)]

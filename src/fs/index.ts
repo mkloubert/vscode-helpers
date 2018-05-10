@@ -467,6 +467,36 @@ function normalizeTempFileOptions(opts: TempFileOptions) {
 }
 
 /**
+ * Returns the size of a file system element.
+ *
+ * @param {string|Buffer} path The path to the element.
+ * @param {boolean} [useLSTAT] Use 'lstat()' (true) or 'stat()' (false) function.
+ *
+ * @return {Promise<number>} The promise with the size.
+ */
+export async function size(path: string | Buffer, useLSTAT = true) {
+    useLSTAT = vscode_helpers.toBooleanSafe(useLSTAT, true);
+
+    return useLSTAT ? (await FSExtra.lstat(path)).size
+                    : (await FSExtra.stat(path)).size;
+}
+
+/**
+ * Returns the size of a file system element (sync).
+ *
+ * @param {string|Buffer} path The path to the element.
+ * @param {boolean} [useLSTAT] Use 'lstatSync()' (true) or 'statSync()' (false) function.
+ *
+ * @return {number} The size.
+ */
+export function sizeSync(path: string | Buffer, useLSTAT = true) {
+    useLSTAT = vscode_helpers.toBooleanSafe(useLSTAT, true);
+
+    return useLSTAT ? FSExtra.lstatSync(path).size
+                    : FSExtra.statSync(path).size;
+}
+
+/**
  * Invokes an action for a temp file.
  *
  * @param {Function} action The action to invoke.

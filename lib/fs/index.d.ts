@@ -183,6 +183,24 @@ export declare function isSymbolicLink(path: string, useLSTAT?: boolean): Promis
  */
 export declare function isSymbolicLinkSync(path: string, useLSTAT?: boolean): boolean;
 /**
+ * Returns the size of a file system element.
+ *
+ * @param {string|Buffer} path The path to the element.
+ * @param {boolean} [useLSTAT] Use 'lstat()' (true) or 'stat()' (false) function.
+ *
+ * @return {Promise<number>} The promise with the size.
+ */
+export declare function size(path: string | Buffer, useLSTAT?: boolean): Promise<number>;
+/**
+ * Returns the size of a file system element (sync).
+ *
+ * @param {string|Buffer} path The path to the element.
+ * @param {boolean} [useLSTAT] Use 'lstatSync()' (true) or 'statSync()' (false) function.
+ *
+ * @return {number} The size.
+ */
+export declare function sizeSync(path: string | Buffer, useLSTAT?: boolean): number;
+/**
  * Invokes an action for a temp file.
  *
  * @param {Function} action The action to invoke.
