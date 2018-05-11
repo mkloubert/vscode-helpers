@@ -57,6 +57,7 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [makeNonDisposable](#makenondisposable-)
      * [normalizeString](#normalizestring-)
      * [now](#now-)
+     * [openAndShowTextDocument](#openandshowtextdocument-)
      * [randomBytes](#randombytes-)
      * [registerWorkspaceWatcher](#registerworkspacewatcher-)
      * [readAll](#readall-)
@@ -676,17 +677,22 @@ const NOW = vscode_helpers.now('America/New_York')  // optional
                           .format('DD.MM.YYYY HH:mm:ss');
 ```
 
-#### readAll [[&uarr;](#functions-)]
+#### openAndShowTextDocument [[&uarr;](#functions-)]
 
 ```typescript
-import * as fs from 'fs';
+// empty (plain text)
+const EDITOR_1 = await vscode_helpers.openAndShowTextDocument();
 
-const STREAM = fs.createReadStream('./my-file.txt');
+// from file
+const EDITOR_2 = await vscode_helpers.openAndShowTextDocument('/path/to/file');
 
-readAll( STREAM ).then((data: Buffer) => {
-    // all data read
-}, (err) => {
-    // error
+// with initial content
+const EDITOR_3 = await vscode_helpers.openAndShowTextDocument({
+    language: 'typescript',
+    content: `interface Pet {
+    name: string;
+    owner: string;
+}`,
 });
 ```
 
@@ -696,6 +702,20 @@ readAll( STREAM ).then((data: Buffer) => {
 vscode_helpers.randomBytes(5979).then((bytes) => {
     // 5979 random bytes are stored
     // in 'bytes' now
+}, (err) => {
+    // error
+});
+```
+
+#### readAll [[&uarr;](#functions-)]
+
+```typescript
+import * as fs from 'fs';
+
+const STREAM = fs.createReadStream('./my-file.txt');
+
+readAll( STREAM ).then((data: Buffer) => {
+    // all data read
 }, (err) => {
     // error
 });

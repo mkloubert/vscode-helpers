@@ -56,6 +56,20 @@ export * from './workspaces';
 export type ForEachAsyncAction<T, TResult> = (item: T, index: number, array: T[]) => TResult | PromiseLike<TResult>;
 
 /**
+ * Options for 'openAndShowTextDocument()' function.
+ */
+export type OpenAndShowTextDocumentOptions = string | {
+    /**
+     * The initial content.
+     */
+    content?: string;
+    /**
+     * The language.
+     */
+    language?: string;
+};
+
+/**
  * Describes a simple 'completed' action.
  *
  * @param {any} err The occurred error.
@@ -624,6 +638,26 @@ export function now(timezone?: string): Moment.Moment {
     const NOW = Moment();
     return '' === timezone ? NOW
                            : NOW.tz(timezone);
+}
+
+/**
+ * Opens and shows a new text document / editor.
+ *
+ * @param {OpenAndShowTextDocumentOptions} [filenameOrOpts] The custom options or the path to the file to open.
+ *
+ * @return {vscode.TextEditor} The promise with the new, opened text editor.
+ */
+export async function openAndShowTextDocument(filenameOrOpts?: OpenAndShowTextDocumentOptions) {
+    if (_.isNil(filenameOrOpts)) {
+        filenameOrOpts = {
+            content: '',
+            language: 'plaintext',
+        };
+    }
+
+    return await vscode.window.showTextDocument(
+        await vscode.workspace.openTextDocument( <any>filenameOrOpts )
+    );
 }
 
 /**

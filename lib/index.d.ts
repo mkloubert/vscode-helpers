@@ -27,6 +27,19 @@ export * from './workspaces';
  */
 export declare type ForEachAsyncAction<T, TResult> = (item: T, index: number, array: T[]) => TResult | PromiseLike<TResult>;
 /**
+ * Options for 'openAndShowTextDocument()' function.
+ */
+export declare type OpenAndShowTextDocumentOptions = string | {
+    /**
+     * The initial content.
+     */
+    content?: string;
+    /**
+     * The language.
+     */
+    language?: string;
+};
+/**
  * Describes a simple 'completed' action.
  *
  * @param {any} err The occurred error.
@@ -230,6 +243,14 @@ export declare function normalizeString(val: any, normalizer?: StringNormalizer)
  * @return {Moment.Moment} The current time.
  */
 export declare function now(timezone?: string): Moment.Moment;
+/**
+ * Opens and shows a new text document / editor.
+ *
+ * @param {OpenAndShowTextDocumentOptions} [filenameOrOpts] The custom options or the path to the file to open.
+ *
+ * @return {vscode.TextEditor} The promise with the new, opened text editor.
+ */
+export declare function openAndShowTextDocument(filenameOrOpts?: OpenAndShowTextDocumentOptions): Promise<vscode.TextEditor>;
 /**
  * Promise version of 'crypto.randomBytes()' function.
  *
