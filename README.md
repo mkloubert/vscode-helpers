@@ -91,8 +91,9 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
    * [Constants and variables](#constants-and-variables-)
      * [EVENTS](#events-)
      * [SESSION](#session-)
-4. [Support and contribute](#support-and-contribute-)
-5. [Documentation](#documentation-)
+4. [Branches](#branches-)     
+5. [Support and contribute](#support-and-contribute-)
+6. [Documentation](#documentation-)
 
 ## Install [[&uarr;](#table-of-contents)]
 
@@ -1147,6 +1148,14 @@ let var_2 = vscode_helpers.SESSION['a'];  // 5979
 delete vscode_helpers.SESSION['a'];
 let var_3 = vscode_helpers.SESSION['a'];  // undefined
 ```
+
+## Branches [[&uarr;](#table-of-contents)]
+
+| Name | minimum Visual Studio Code version |
+| ---- | --------- |
+| [v2](https://github.com/mkloubert/vscode-helpers/tree/v2) (current) | `^1.23.0` |
+| [v1](https://github.com/mkloubert/vscode-helpers/tree/v1) | `^1.22.0` |
+| [beta](https://github.com/mkloubert/vscode-helpers/tree/beta) | `^1.20.0` |
 
 ## Support and contribute [[&uarr;](#table-of-contents)]
 
