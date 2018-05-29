@@ -23,6 +23,7 @@
  * https://github.com/eamodio/vscode-gitlens/blob/master/LICENSE
  */
 
+import * as _ from 'lodash';
 import * as ChildProcess from 'child_process';
 import * as FSExtra from 'fs-extra';
 const MergeDeep = require('merge-deep');
@@ -109,7 +110,7 @@ export class GitClient implements vscode_helpers_scm.SourceControlClient {
      *
      * @return {string} The result.
      */
-    public execSync(args: any[], opts?: ChildProcess.ExecFileOptions) {
+    public execSync(args: any[], opts?: ChildProcess.ExecFileOptions): string {
         const DEFAULT_OPTS: ChildProcess.ExecFileOptions = {
             cwd: this.cwd,
         };
@@ -121,6 +122,16 @@ export class GitClient implements vscode_helpers_scm.SourceControlClient {
             MergeDeep(DEFAULT_OPTS, opts),
         );
     }
+}
+
+function asString(val: any) {
+    if (!_.isNil(val)) {
+        if (Buffer.isBuffer(val)) {
+            val = val.toString('utf8');
+        }
+    }
+
+    return vscode_helpers.toStringSafe(val);
 }
 
 function findExecutableSync(exe: string, args: string[]): Executable {
@@ -272,11 +283,13 @@ function parseVersion(raw: string) {
     return raw.replace(/^git version /, '');
 }
 
-function runCommandSync(command: string, args: any[]) {
-    return ChildProcess.execFileSync(
-        vscode_helpers.toStringSafe(command),
-        vscode_helpers.asArray(args, false)
-                      .map(x => vscode_helpers.toStringSafe(x)),
+function runCommandSync(command: string, args: any[]): string {
+    return asString(
+        ChildProcess.execFileSync(
+            vscode_helpers.toStringSafe(command),
+            vscode_helpers.asArray(args, false)
+                          .map(x => vscode_helpers.toStringSafe(x)),
+        )
     );
 }
 

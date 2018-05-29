@@ -1,7 +1,7 @@
 {
     "name": "vscode-helpers",
     "author": "Marcel Joachim Kloubert",
-    "version": "2.3.0",
+    "version": "2.3.1",
     "description": "Helper functions and classes for VS Code (extensions)",
     "tags": [
         "functions",
