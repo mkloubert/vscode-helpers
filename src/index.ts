@@ -554,8 +554,6 @@ export async function execFile(command: string, args?: any[], opts?: ChildProces
                         (async () => {
                             RESULT.stdErr = await asBuffer(stderr, 'utf8');
                             RESULT.stdOut = await asBuffer(stdout, 'utf8');
-
-                            COMPLETED(null);
                         })().then(() => {
                             COMPLETED(null);
                         }, (err) => {
