@@ -1,10 +1,12 @@
 /// <reference types="node" />
 /// <reference types="minimatch" />
+import * as ChildProcess from 'child_process';
 import * as Enumerable from 'node-enumerable';
 import * as Minimatch from 'minimatch';
 import * as Moment from 'moment';
 import * as Stream from 'stream';
 import * as vscode from 'vscode';
+import * as vscode_helpers_scm_git from './scm/git';
 export * from './cache';
 export * from './disposable';
 export * from './events';
@@ -16,6 +18,23 @@ export * from './progress';
 export * from './timers';
 export * from './workflows';
 export * from './workspaces';
+/**
+ * Result of a file execution.
+ */
+export interface ExecFileResult {
+    /**
+     * The output from 'standard error' stream.
+     */
+    stdErr: string;
+    /**
+     * The output from 'standard output' stream.
+     */
+    stdOut: string;
+    /**
+     * The underlying process.
+     */
+    process: ChildProcess.ChildProcess;
+}
 /**
  * Action for 'forEachAsync()' function.
  *
@@ -54,6 +73,34 @@ export declare type SimpleCompletedAction<TResult> = (err: any, result?: TResult
  * @return {string} The normalized string.
  */
 export declare type StringNormalizer<TStr = string> = (str: TStr) => string;
+/**
+ * Is AIX or not.
+ */
+export declare const IS_AIX: boolean;
+/**
+ * Is Free BSD or not.
+ */
+export declare const IS_FREE_BSD: boolean;
+/**
+ * Is Linux or not.
+ */
+export declare const IS_LINUX: boolean;
+/**
+ * Is Sun OS or not.
+ */
+export declare const IS_MAC: boolean;
+/**
+ * Is Open BSD or not.
+ */
+export declare const IS_OPEN_BSD: boolean;
+/**
+ * Is Sun OS or not.
+ */
+export declare const IS_SUNOS: boolean;
+/**
+ * Is Windows or not.
+ */
+export declare const IS_WINDOWS: boolean;
 /**
  * Stores global data for the current extension session.
  */
@@ -155,6 +202,24 @@ export declare function compareValuesBy<T, U>(x: T, y: T, selector: (t: T) => U)
  */
 export declare function createCompletedAction<TResult = any>(resolve: (value?: TResult | PromiseLike<TResult>) => void, reject?: (reason: any) => void): SimpleCompletedAction<TResult>;
 /**
+ * Creates a Git client.
+ *
+ * @param {string} [cwd] The custom working directory.
+ * @param {string} [path] The optional specific path where to search first.
+ *
+ * @return {Promise<vscode_helpers_scm_git.GitClient|false>} The promise with the client or (false) if no client found.
+ */
+export declare function createGitClient(cwd?: string, path?: string): Promise<vscode_helpers_scm_git.GitClient>;
+/**
+ * Creates a Git client (sync).
+ *
+ * @param {string} [cwd] The custom working directory.
+ * @param {string} [path] The optional specific path where to search first.
+ *
+ * @return {vscode_helpers_scm_git.GitClient|false} The client or (false) if no client found.
+ */
+export declare function createGitClientSync(cwd?: string, path?: string): vscode_helpers_scm_git.GitClient;
+/**
  * Handles a value as string and checks if it does match at least one (minimatch) pattern.
  *
  * @param {any} val The value to check.
@@ -164,6 +229,16 @@ export declare function createCompletedAction<TResult = any>(resolve: (value?: T
  * @return {boolean} Does match or not.
  */
 export declare function doesMatch(val: any, patterns: string | string[], options?: Minimatch.IOptions): boolean;
+/**
+ * Executes a file.
+ *
+ * @param {string} command The thing / command to execute.
+ * @param {any[]} [args] One or more argument for the execution.
+ * @param {ChildProcess.ExecFileOptions} [opts] Custom options.
+ *
+ * @return {Promise<ExecFileResult>} The promise with the result.
+ */
+export declare function execFile(command: string, args?: any[], opts?: ChildProcess.ExecFileOptions): Promise<ExecFileResult>;
 /**
  * Async 'forEach'.
  *
@@ -303,6 +378,24 @@ export declare function toEOL(eol?: vscode.EndOfLine): string;
  * @return {string} 'val' as string.
  */
 export declare function toStringSafe(val: any, defaultVal?: string): string;
+/**
+ * Tries to create a Git client.
+ *
+ * @param {string} [cwd] The custom working directory.
+ * @param {string} [path] The optional specific path where to search first.
+ *
+ * @return {Promise<vscode_helpers_scm_git.GitClient|false>} The promise with the client or (false) if no client found.
+ */
+export declare function tryCreateGitClient(cwd?: string, path?: string): Promise<boolean | vscode_helpers_scm_git.GitClient>;
+/**
+ * Tries to create a Git client (sync).
+ *
+ * @param {string} [cwd] The custom working directory.
+ * @param {string} [path] The optional specific path where to search first.
+ *
+ * @return {vscode_helpers_scm_git.GitClient|false} The client or (false) if no client found.
+ */
+export declare function tryCreateGitClientSync(cwd?: string, path?: string): vscode_helpers_scm_git.GitClient | false;
 /**
  * Returns the current UTC time.
  *

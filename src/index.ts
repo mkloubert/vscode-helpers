@@ -16,6 +16,7 @@
  */
 
 import * as _ from 'lodash';
+import * as ChildProcess from 'child_process';
 import * as Crypto from 'crypto';
 import * as Enumerable from 'node-enumerable';
 const IsBinaryFile = require("isbinaryfile");
@@ -27,6 +28,7 @@ import * as Path from 'path';
 import * as Stream from 'stream';
 import * as vscode from 'vscode';
 import * as vscode_helpers_events from './events';
+import * as vscode_helpers_scm_git from './scm/git';
 
 // !!!THESE MUST BE INCLUDED AFTER UPPER INCLUDED MODULES!!!
 import * as MomentTimeZone from 'moment-timezone';
@@ -43,6 +45,24 @@ export * from './progress';
 export * from './timers';
 export * from './workflows';
 export * from './workspaces';
+
+/**
+ * Result of a file execution.
+ */
+export interface ExecFileResult {
+    /**
+     * The output from 'standard error' stream.
+     */
+    stdErr: string;
+    /**
+     * The output from 'standard output' stream.
+     */
+    stdOut: string;
+    /**
+     * The underlying process.
+     */
+    process: ChildProcess.ChildProcess;
+}
 
 /**
  * Action for 'forEachAsync()' function.
@@ -85,6 +105,35 @@ export type SimpleCompletedAction<TResult> = (err: any, result?: TResult) => voi
  * @return {string} The normalized string.
  */
 export type StringNormalizer<TStr = string> = (str: TStr) => string;
+
+/**
+ * Is AIX or not.
+ */
+export const IS_AIX = process.platform === 'aix';
+/**
+ * Is Free BSD or not.
+ */
+export const IS_FREE_BSD = process.platform === 'freebsd';
+/**
+ * Is Linux or not.
+ */
+export const IS_LINUX = process.platform === 'linux';
+/**
+ * Is Sun OS or not.
+ */
+export const IS_MAC = process.platform === 'darwin';
+/**
+ * Is Open BSD or not.
+ */
+export const IS_OPEN_BSD = process.platform === 'openbsd';
+/**
+ * Is Sun OS or not.
+ */
+export const IS_SUNOS = process.platform === 'sunos';
+/**
+ * Is Windows or not.
+ */
+export const IS_WINDOWS = process.platform === 'win32';
 
 /**
  * Stores global data for the current extension session.
@@ -394,6 +443,37 @@ export function createCompletedAction<TResult = any>(resolve: (value?: TResult |
 }
 
 /**
+ * Creates a Git client.
+ *
+ * @param {string} [cwd] The custom working directory.
+ * @param {string} [path] The optional specific path where to search first.
+ *
+ * @return {Promise<vscode_helpers_scm_git.GitClient|false>} The promise with the client or (false) if no client found.
+ */
+export function createGitClient(cwd?: string, path?: string) {
+    return Promise.resolve(
+        createGitClientSync(cwd, path)
+    );
+}
+
+/**
+ * Creates a Git client (sync).
+ *
+ * @param {string} [cwd] The custom working directory.
+ * @param {string} [path] The optional specific path where to search first.
+ *
+ * @return {vscode_helpers_scm_git.GitClient|false} The client or (false) if no client found.
+ */
+export function createGitClientSync(cwd?: string, path?: string): vscode_helpers_scm_git.GitClient {
+    const CLIENT = tryCreateGitClientSync(cwd, path);
+    if (false === CLIENT) {
+        throw new Error('No git client found!');
+    }
+
+    return CLIENT;
+}
+
+/**
  * Handles a value as string and checks if it does match at least one (minimatch) pattern.
  *
  * @param {any} val The value to check.
@@ -416,6 +496,57 @@ export function doesMatch(val: any, patterns: string | string[], options?: Minim
     }
 
     return false;
+}
+
+/**
+ * Executes a file.
+ *
+ * @param {string} command The thing / command to execute.
+ * @param {any[]} [args] One or more argument for the execution.
+ * @param {ChildProcess.ExecFileOptions} [opts] Custom options.
+ *
+ * @return {Promise<ExecFileResult>} The promise with the result.
+ */
+export async function execFile(command: string, args?: any[], opts?: ChildProcess.ExecFileOptions) {
+    command = toStringSafe(command);
+
+    args = asArray(args, false).map(a => {
+        return toStringSafe(a);
+    });
+
+    if (!opts) {
+        opts = {};
+    }
+
+    if (_.isNil(opts.env)) {
+        opts.env = process.env;
+    }
+
+    return new Promise<ExecFileResult>((resolve, reject) => {
+        const COMPLETED = createCompletedAction(resolve, reject);
+
+        try {
+            const RESULT: ExecFileResult = {
+                stdErr: undefined,
+                stdOut: undefined,
+                process: undefined,
+            };
+
+            const P = ChildProcess.execFile(command, args, opts, (err, stdout, stderr) => {
+                if (err) {
+                    COMPLETED(err);
+                } else {
+                    RESULT.process = P;
+                    RESULT.stdErr = stderr;
+                    RESULT.stdOut = stdout;
+
+                    COMPLETED(null, RESULT);
+                }
+            });
+        } catch (e) {
+            COMPLETED(e);
+        }
+    });
 }
 
 /**
@@ -870,6 +1001,37 @@ export function toStringSafe(val: any, defaultVal = ''): string {
     } catch { }
 
     return '' + val;
+}
+
+/**
+ * Tries to create a Git client.
+ *
+ * @param {string} [cwd] The custom working directory.
+ * @param {string} [path] The optional specific path where to search first.
+ *
+ * @return {Promise<vscode_helpers_scm_git.GitClient|false>} The promise with the client or (false) if no client found.
+ */
+export function tryCreateGitClient(cwd?: string, path?: string) {
+    return Promise.resolve(
+        tryCreateGitClientSync(cwd, path)
+    );
+}
+
+/**
+ * Tries to create a Git client (sync).
+ *
+ * @param {string} [cwd] The custom working directory.
+ * @param {string} [path] The optional specific path where to search first.
+ *
+ * @return {vscode_helpers_scm_git.GitClient|false} The client or (false) if no client found.
+ */
+export function tryCreateGitClientSync(cwd?: string, path?: string): vscode_helpers_scm_git.GitClient | false {
+    const GIT_EXEC = vscode_helpers_scm_git.tryFindGitPathSync(path);
+    if (false !== GIT_EXEC) {
+        return new vscode_helpers_scm_git.GitClient(GIT_EXEC, cwd);
+    }
+
+    return false;
 }
 
 /**

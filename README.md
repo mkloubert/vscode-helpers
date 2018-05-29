@@ -23,10 +23,13 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [compareValuesBy](#comparevaluesby-)
      * [createCompletedAction](#createcompletedaction-)
      * [createDirectoryIfNeeded](#createdirectoryifneeded-)
+     * [createGitClient](#creategitclient-)
+     * [createGitClientSync](#creategitclientsync-)
      * [createInterval](#createinterval-)
      * [createLogger](#createlogger-)
      * [createTimeout](#createtimeout-)
      * [doesMatch](#doesmatch-)
+     * [execFile](#execfile-)
      * [exists](#exists-)
      * [forEachAsync](#foreachasync-)
      * [format](#format-)
@@ -75,6 +78,8 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [tryClearTimeout](#trycleartimeout-)
      * [tryDispose](#trydispose-)
      * [tryDisposeAndDelete](#trydisposeanddelete-)
+     * [tryCreateGitClient](#trycreategitclient-)
+     * [tryCreateGitClientSync](#trycreategitclientsync-)
      * [tryRemoveAllListeners](#tryremovealllisteners-)
      * [tryRemoveListener](#tryremovelistener-)
      * [using](#using-)
@@ -90,6 +95,7 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [WorkspaceBase](#workspacebase-)
    * [Constants and variables](#constants-and-variables-)
      * [EVENTS](#events-)
+     * [IS_*](#is_-)
      * [SESSION](#session-)
 4. [Branches](#branches-)     
 5. [Support and contribute](#support-and-contribute-)
@@ -312,16 +318,6 @@ const SORTED_OBJS = [ OBJ_1, OBJ_2 ].sort((x, y) => {
 });
 ```
 
-#### createDirectoryIfNeeded [[&uarr;](#functions-)]
-
-```typescript
-vscode_helpers.createDirectoryIfNeeded('/dir/to/create').then((hasBeenCreated: boolean) => {
-    // hasBeenCreated === (false), if directory already exists
-}, (err) => {
-    // error
-});
-```
-
 #### createCompletedAction [[&uarr;](#functions-)]
 
 ```typescript
@@ -335,6 +331,45 @@ function loadMyFileAsync() {
             COMPLETED(err, data);
         });
     });
+}
+```
+
+
+#### createDirectoryIfNeeded [[&uarr;](#functions-)]
+
+```typescript
+vscode_helpers.createDirectoryIfNeeded('/dir/to/create').then((hasBeenCreated: boolean) => {
+    // hasBeenCreated === (false), if directory already exists
+}, (err) => {
+    // error
+});
+```
+
+#### createGitClient [[&uarr;](#functions-)]
+
+```typescript
+try {
+    const CLIENT = await vscode_helpers.createGitClient();
+
+    console.log(
+        await CLIENT.exec([ '--version' ]);
+    );
+} catch (e) {
+    // no git client found
+}
+```
+
+#### createGitClientSync [[&uarr;](#functions-)]
+
+```typescript
+try {
+    const CLIENT = vscode_helpers.createGitClientSync();
+
+    console.log(
+        CLIENT.execSync([ '--version' ]);
+    );
+} catch (e) {
+    // no git client found
 }
 ```
 
@@ -376,6 +411,15 @@ TIMEOUT.dispose();  // same as 'clearTimeout'
 vscode_helpers.doesMatch('my-file.txt', '*.txt');  // (true)
 vscode_helpers.doesMatch('my-picture.jpg', [ '*.txt' ]);  // (false)
 vscode_helpers.doesMatch('my-picture.jpg', [ '*.txt', '*.jpg' ]);  // (true)
+```
+
+#### execFile [[&uarr;](#functions-)]
+
+```typescript
+const RESULT = await vscode_helpers.execFile('/path/to/execiutable', [ '--version' ]);
+
+const STD_ERR = RESULT.stdErr;
+const STD_OUT = RESULT.stdOut;
 ```
 
 #### exists [[&uarr;](#functions-)]
@@ -891,6 +935,34 @@ let timer = setTimeout(() => {
 vscode_helpers.tryClearTimeout( timer );
 ```
 
+#### tryCreateGitClient [[&uarr;](#functions-)]
+
+```typescript
+const CLIENT = await vscode_helpers.tryCreateGitClient();
+
+if (false !== CLIENT) {
+    console.log(
+        await CLIENT.exec([ '--version' ]);
+    );
+} else {
+    // no git client found
+}
+```
+
+#### tryCreateGitClientSync [[&uarr;](#functions-)]
+
+```typescript
+const CLIENT = vscode_helpers.tryCreateGitClientSync();
+
+if (false !== CLIENT) {
+    console.log(
+        CLIENT.execSync([ '--version' ]);
+    );
+} else {
+    // no git client found
+}
+```
+
 #### tryDispose [[&uarr;](#functions-)]
 
 ```typescript
@@ -1135,6 +1207,18 @@ vscode_helpers.EVENTS.on('myEvent', (a, b) => {
 
 vscode_helpers.EVENTS
               .emit('myEvent', 5979, 23979);
+```
+
+#### IS_* [[&uarr;](#constants-and-variables-)]
+
+```typescript
+vscode_helpers.IS_AIX;  // AIX
+vscode_helpers.IS_FREE_BSD;  // Free BSD
+vscode_helpers.IS_LINUX;  // Linux
+vscode_helpers.IS_MAC;  // Mac OS
+vscode_helpers.IS_OPEN_BSD;  // Open BSD
+vscode_helpers.IS_SUNOS;  // Sun OS
+vscode_helpers.IS_WINDOWS;  // Windows
 ```
 
 #### SESSION [[&uarr;](#constants-and-variables-)]
