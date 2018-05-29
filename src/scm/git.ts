@@ -115,11 +115,13 @@ export class GitClient implements vscode_helpers_scm.SourceControlClient {
             cwd: this.cwd,
         };
 
-        return ChildProcess.execFileSync(
-            this.executable.path,
-            vscode_helpers.asArray(args, false)
-                          .map(x => vscode_helpers.toStringSafe(x)),
-            MergeDeep(DEFAULT_OPTS, opts),
+        return asString(
+            ChildProcess.execFileSync(
+                this.executable.path,
+                vscode_helpers.asArray(args, false)
+                              .map(x => vscode_helpers.toStringSafe(x)),
+                MergeDeep(DEFAULT_OPTS, opts),
+            )
         );
     }
 }
