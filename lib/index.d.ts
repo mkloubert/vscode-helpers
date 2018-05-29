@@ -23,10 +23,6 @@ export * from './workspaces';
  */
 export interface ExecFileResult {
     /**
-     * The exit code.
-     */
-    code: number;
-    /**
      * The output from 'standard error' stream.
      */
     stdErr: Buffer;
