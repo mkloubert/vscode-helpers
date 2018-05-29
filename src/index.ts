@@ -543,6 +543,8 @@ export async function execFile(command: string, args?: any[], opts?: ChildProces
                     COMPLETED(null, RESULT);
                 }
             });
+
+            P.unref();
         } catch (e) {
             COMPLETED(e);
         }
