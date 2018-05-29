@@ -23,13 +23,17 @@ export * from './workspaces';
  */
 export interface ExecFileResult {
     /**
+     * The exit code.
+     */
+    code: number;
+    /**
      * The output from 'standard error' stream.
      */
-    stdErr: string;
+    stdErr: Buffer;
     /**
      * The output from 'standard output' stream.
      */
-    stdOut: string;
+    stdOut: Buffer;
     /**
      * The underlying process.
      */

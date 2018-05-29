@@ -51,13 +51,17 @@ export * from './workspaces';
  */
 export interface ExecFileResult {
     /**
+     * The exit code.
+     */
+    code: number;
+    /**
      * The output from 'standard error' stream.
      */
-    stdErr: string;
+    stdErr: Buffer;
     /**
      * The output from 'standard output' stream.
      */
-    stdOut: string;
+    stdOut: Buffer;
     /**
      * The underlying process.
      */
@@ -523,28 +527,44 @@ export async function execFile(command: string, args?: any[], opts?: ChildProces
     }
 
     return new Promise<ExecFileResult>((resolve, reject) => {
-        const COMPLETED = createCompletedAction(resolve, reject);
+        const RESULT: ExecFileResult = {
+            code: undefined,
+            stdErr: undefined,
+            stdOut: undefined,
+            process: undefined,
+        };
+
+        const COMPLETED = (err: any) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(RESULT);
+            }
+        };
 
         try {
-            const RESULT: ExecFileResult = {
-                stdErr: undefined,
-                stdOut: undefined,
-                process: undefined,
-            };
+            const P = ChildProcess.execFile(command, args, opts);
 
-            const P = ChildProcess.execFile(command, args, opts, (err, stdout, stderr) => {
-                if (err) {
-                    COMPLETED(err);
-                } else {
-                    RESULT.process = P;
-                    RESULT.stdErr = stderr;
-                    RESULT.stdOut = stdout;
-
-                    COMPLETED(null, RESULT);
-                }
+            P.once('error', (err) => {
+                COMPLETED(err);
             });
 
-            P.unref();
+            P.once('close', function (code) {
+                try {
+                    RESULT.code = code;
+
+                    (async () => {
+                        RESULT.stdErr = await readAll(P.stderr);
+                        RESULT.stdOut = await readAll(P.stdout);
+                    })().then(() => {
+                        COMPLETED(null);
+                    }, (err) => {
+                        COMPLETED(err);
+                    });
+                } catch (e) {
+                    COMPLETED(e);
+                }
+            });
         } catch (e) {
             COMPLETED(e);
         }
