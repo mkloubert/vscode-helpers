@@ -386,7 +386,7 @@ export declare function toStringSafe(val: any, defaultVal?: string): string;
  *
  * @return {Promise<vscode_helpers_scm_git.GitClient|false>} The promise with the client or (false) if no client found.
  */
-export declare function tryCreateGitClient(cwd?: string, path?: string): Promise<boolean | vscode_helpers_scm_git.GitClient>;
+export declare function tryCreateGitClient(cwd?: string, path?: string): Promise<vscode_helpers_scm_git.GitClient | false>;
 /**
  * Tries to create a Git client (sync).
  *
