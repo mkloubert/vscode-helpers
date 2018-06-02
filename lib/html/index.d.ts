@@ -1,4 +1,3 @@
-/// <reference types="marked" />
 /**
  * This file is part of the vscode-helpers distribution.
  * Copyright (c) Marcel Joachim Kloubert.

@@ -1,4 +1,3 @@
-/// <reference types="node" />
 /**
  * This file is part of the vscode-helpers distribution.
  * Copyright (c) Marcel Joachim Kloubert.
@@ -15,6 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+/// <reference types="node" />
 import * as Events from 'events';
 import * as Moment from 'moment';
 /**
@@ -147,7 +147,7 @@ export declare enum LogType {
     /**
      * Trace
      */
-    Trace = 8,
+    Trace = 8
 }
 /**
  * A basic logger.

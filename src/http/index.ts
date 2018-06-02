@@ -99,7 +99,7 @@ export function DELETE(url: HTTPRequestURL, body?: HTTPRequestBody, headers?: an
  * @return {Promise<HTTPRequestResult>} The promsie with the HTTP response / result.
  */
 export function GET(url: HTTPRequestURL, headers?: any, opts?: HTTPRequestOptions) {
-    return request('GET', url, headers, null, opts);
+    return request('GET', url, null, headers, opts);
 }
 
 /**

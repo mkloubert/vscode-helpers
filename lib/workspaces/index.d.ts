@@ -1,3 +1,19 @@
+/**
+ * This file is part of the vscode-helpers distribution.
+ * Copyright (c) Marcel Joachim Kloubert.
+ *
+ * vscode-helpers is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, version 3.
+ *
+ * vscode-helpers is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 /// <reference types="node" />
 import * as vscode from 'vscode';
 import * as vscode_disposable from '../disposable';
@@ -97,7 +113,7 @@ export declare enum WorkspaceWatcherEvent {
     /**
      * A workspace is going to be removed.
      */
-    Removed = 2,
+    Removed = 2
 }
 /**
  * A basic workspace.
@@ -111,7 +127,7 @@ export declare abstract class WorkspaceBase extends vscode_disposable.Disposable
      */
     constructor(folder: vscode.WorkspaceFolder);
     /** @inheritdoc */
-    readonly abstract configSource: WorkspaceConfigSource;
+    abstract readonly configSource: WorkspaceConfigSource;
     /** @inheritdoc */
     onDidChangeConfiguration(e: vscode.ConfigurationChangeEvent): Promise<void>;
     /** @inheritdoc */
