@@ -776,7 +776,7 @@ const RESULT = await vscode_helpers.PATCH('https://example.com/api/users/23979',
 #### POST [[&uarr;](#functions-)]
 
 ```typescript
-const RESULT = await vscode_helpers.PUT('https://example.com/api/users/23979', JSON.stringify({
+const RESULT = await vscode_helpers.POST('https://example.com/api/users/23979', JSON.stringify({
     displayName: 'Marcel Kloubert',
     userName: 'mkloubert',
     country: 'Germany',
