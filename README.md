@@ -28,6 +28,7 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [createInterval](#createinterval-)
      * [createLogger](#createlogger-)
      * [createTimeout](#createtimeout-)
+     * [DELETE](#delete-)
      * [doesMatch](#doesmatch-)
      * [execFile](#execfile-)
      * [exists](#exists-)
@@ -36,6 +37,7 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [formatArray](#formatarray-)
      * [from](#from-)
      * [fromMarkdown](#frommarkdown-)
+     * [GET](#get-)
      * [glob](#glob-)
      * [globSync](#globsync-)
      * [invokeAfter](#invokeafter-)
@@ -61,9 +63,13 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [normalizeString](#normalizestring-)
      * [now](#now-)
      * [openAndShowTextDocument](#openandshowtextdocument-)
+     * [PATCH](#patch-)
+     * [POST](#post-)
+     * [PUT](#put-)
      * [randomBytes](#randombytes-)
      * [registerWorkspaceWatcher](#registerworkspacewatcher-)
      * [readAll](#readall-)
+     * [request](#request-)
      * [size](#size-)
      * [sizeSync](#sizeSync-)
      * [sleep](#sleep-)
@@ -351,9 +357,9 @@ vscode_helpers.createDirectoryIfNeeded('/dir/to/create').then((hasBeenCreated: b
 try {
     const CLIENT = await vscode_helpers.createGitClient();
 
-    console.log(
-        await CLIENT.exec([ '--version' ]);
-    );
+    const STD_OUT: string = (await CLIENT.exec([ '--version' ])).stdOut;
+
+    console.log( STD_OUT );
 } catch (e) {
     // no git client found
 }
@@ -403,6 +409,12 @@ const TIMEOUT = vscode_helpers.createTimeout(() => {
 }, 10000);
 
 TIMEOUT.dispose();  // same as 'clearTimeout'
+```
+
+#### DELETE [[&uarr;](#functions-)]
+
+```typescript
+const RESULT = await vscode_helpers.DELETE('https://example.com/api/users/19861222');
 ```
 
 #### doesMatch [[&uarr;](#functions-)]
@@ -490,6 +502,16 @@ for (const ITEM of seq) {
 ```typescript
 let htmlFromMarkdown = vscode_helpers.fromMarkdown(
     'Vessel     | Captain\n-----------|-------------\nNCC-1701   | James T Kirk\nNCC-1701 A | James T Kirk\nNCC-1701 D | Picard'
+);
+```
+
+#### GET [[&uarr;](#functions-)]
+
+```typescript
+const RESULT = await vscode_helpers.GET('https://example.com/api/users/5979');
+
+const USER_DATA = JSON.parse(
+    (await RESULT.readBody()).toString('utf8')
 );
 ```
 
@@ -741,6 +763,38 @@ const EDITOR_3 = await vscode_helpers.openAndShowTextDocument({
 });
 ```
 
+#### PATCH [[&uarr;](#functions-)]
+
+```typescript
+const RESULT = await vscode_helpers.PATCH('https://example.com/api/users/23979', JSON.stringify({
+    displayName: 'Marcel Kloubert',
+}), {
+    'Content-Type': 'application/json; charset=utf8',
+});
+```
+
+#### POST [[&uarr;](#functions-)]
+
+```typescript
+const RESULT = await vscode_helpers.PUT('https://example.com/api/users/23979', JSON.stringify({
+    displayName: 'Marcel Kloubert',
+    userName: 'mkloubert',
+    country: 'Germany',
+}), {
+    'Content-Type': 'application/json; charset=utf8',
+});
+```
+
+#### PUT [[&uarr;](#functions-)]
+
+```typescript
+const RESULT = await vscode_helpers.PUT('https://example.com/api/users/23979', JSON.stringify({
+    displayName: 'Marcel Kloubert',
+}), {
+    'Content-Type': 'application/json; charset=utf8',
+});
+```
+
 #### randomBytes [[&uarr;](#functions-)]
 
 ```typescript
@@ -803,6 +857,18 @@ vscode_helpers.registerWorkspaceWatcher(async (event, folder, workspace?) => {
         
         return NEW_WORKSPACE;
     }
+});
+```
+
+#### request [[&uarr;](#functions-)]
+
+```typescript
+const RESULT = await vscode_helpers.request('POST', 'https://example.com/api/users/23979', JSON.stringify({
+    displayName: 'Marcel Kloubert',
+    userName: 'mkloubert',
+    country: 'Germany',
+}), {
+    'Content-Type': 'application/json; charset=utf8',
 });
 ```
 
@@ -941,9 +1007,9 @@ vscode_helpers.tryClearTimeout( timer );
 const CLIENT = await vscode_helpers.tryCreateGitClient();
 
 if (false !== CLIENT) {
-    console.log(
-        await CLIENT.exec([ '--version' ]);
-    );
+    const STD_OUT: string = (await CLIENT.exec([ '--version' ])).stdOut;
+
+    console.log( STD_OUT );
 } else {
     // no git client found
 }

@@ -12,6 +12,7 @@ export * from './disposable';
 export * from './events';
 export * from './fs';
 export * from './html';
+export * from './http';
 export * from './logging';
 export { from } from 'node-enumerable';
 export * from './progress';

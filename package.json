@@ -1,8 +1,8 @@
 {
     "name": "vscode-helpers",
     "author": "Marcel Joachim Kloubert",
-    "version": "2.5.1",
-    "description": "Helper functions and classes for VS Code (extensions)",
+    "version": "2.6.0",
+    "description": "Helper functions and classes for own VS Code (extensions)",
     "tags": [
         "functions",
         "classes",
@@ -58,6 +58,7 @@
         "@types/tmp": "0.0.33",
         "fs-extra": "^5.0.0",
         "glob": "^7.1.2",
+        "header-case-normalizer": "^1.0.3",
         "is-stream": "^1.1.0",
         "isbinaryfile": "^3.0.2",
         "lodash": "^4.17.10",
