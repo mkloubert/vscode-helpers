@@ -40,6 +40,7 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [GET](#get-)
      * [glob](#glob-)
      * [globSync](#globsync-)
+     * [guid](#guid-)
      * [invokeAfter](#invokeafter-)
      * [isBinaryContent](#isbinarycontent-)
      * [isBinaryContentSync](#isbinarycontentsync-)
@@ -91,6 +92,7 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [using](#using-)
      * [usingSync](#usingsync-)
      * [utcNow](#utcnow-)
+     * [uuid](#uuid-)
      * [waitWhile](#waitwhile-)
      * [withProgress](#withprogress-)
    * [Classes](#classes-)
@@ -537,6 +539,20 @@ let matches: string[] = vscode_helpers.globSync([ '**/*.txt' ], {
     ignore: [ '/log/**/*' ],
     root: '/path/to/directory',
 });
+```
+
+#### guid [[&uarr;](#functions-)]
+
+```typescript
+let guid_v4_1 = vscode_helpers.guid();
+let guid_v4_2 = vscode_helpers.guid('4');
+let guid_v4_3 = vscode_helpers.guid('v4');
+
+let guid_v5_1 = vscode_helpers.guid('5');
+let guid_v5_2 = vscode_helpers.guid('v5');
+
+let guid_v1_1 = vscode_helpers.guid('1');
+let guid_v1_2 = vscode_helpers.guid('v1');
 ```
 
 #### invokeAfter [[&uarr;](#functions-)]
@@ -1140,6 +1156,20 @@ const RESULT = vscode_helpers.usingSync(MY_OBJECT, (obj) => {
 ```typescript
 const UTC_NOW = vscode_helpers.utcNow()
                               .format('DD.MM.YYYY HH:mm:ss');
+```
+
+#### uuid [[&uarr;](#functions-)]
+
+```typescript
+let uuid_v4_1 = vscode_helpers.uuid();
+let uuid_v4_2 = vscode_helpers.uuid('4');
+let uuid_v4_3 = vscode_helpers.uuid('v4');
+
+let uuid_v5_1 = vscode_helpers.uuid('5');
+let uuid_v5_2 = vscode_helpers.uuid('v5');
+
+let uuid_v1_1 = vscode_helpers.uuid('1');
+let uuid_v1_2 = vscode_helpers.uuid('v1');
 ```
 
 #### waitWhile [[&uarr;](#functions-)]

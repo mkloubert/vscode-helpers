@@ -284,6 +284,10 @@ export declare function format(formatStr: any, ...args: any[]): string;
  */
 export declare function formatArray(formatStr: any, args: Enumerable.Sequence<any>): string;
 /**
+ * Alias for 'uuid'.
+ */
+export declare function guid(ver?: string, ...args: any[]): string;
+/**
  * Checks if data is binary or text content.
  *
  * @param {Buffer} data The data to check.
@@ -418,3 +422,12 @@ export declare function tryCreateGitClientSync(cwd?: string, path?: string): vsc
  * @return {Moment.Moment} The current UTC time.
  */
 export declare function utcNow(): Moment.Moment;
+/**
+ * Generates a new unique ID.
+ *
+ * @param {string} [ver] The custom version to use. Default: '4'.
+ * @param {any[]} [args] Additional arguments for the function.
+ *
+ * @return {string} The generated ID.
+ */
+export declare function uuid(ver?: string, ...args: any[]): string;

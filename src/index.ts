@@ -26,6 +26,7 @@ import * as Moment from 'moment';
 import * as OS from 'os';
 import * as Path from 'path';
 import * as Stream from 'stream';
+import * as UUID from 'uuid';
 import * as vscode from 'vscode';
 import * as vscode_helpers_events from './events';
 import * as vscode_helpers_scm_git from './scm/git';
@@ -692,6 +693,14 @@ export function formatArray(formatStr: any, args: Enumerable.Sequence<any>): str
 }
 
 /**
+ * Alias for 'uuid'.
+ */
+export function guid(ver?: string, ...args: any[]): string {
+    return uuid.apply(this,
+                      arguments);
+}
+
+/**
  * Checks if data is binary or text content.
  *
  * @param {Buffer} data The data to check.
@@ -1063,4 +1072,43 @@ export function tryCreateGitClientSync(cwd?: string, path?: string): vscode_help
  */
 export function utcNow(): Moment.Moment {
     return Moment.utc();
+}
+
+/**
+ * Generates a new unique ID.
+ *
+ * @param {string} [ver] The custom version to use. Default: '4'.
+ * @param {any[]} [args] Additional arguments for the function.
+ *
+ * @return {string} The generated ID.
+ */
+export function uuid(ver?: string, ...args: any[]): string {
+    const UUID = require('uuid');
+
+    ver = normalizeString(ver);
+
+    let func: Function | false = false;
+    switch (ver) {
+        case '':
+        case '4':
+        case 'v4':
+            func = UUID.v4;
+            break;
+
+        case '1':
+        case 'v1':
+            func = UUID.v1;
+            break;
+
+        case '5':
+        case 'v5':
+            func = UUID.v5;
+            break;
+    }
+
+    if (false === func) {
+        throw new Error(`Version '${ ver }' is not supported!`);
+    }
+
+    return func.apply(null, args);
 }
