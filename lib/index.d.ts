@@ -19,6 +19,7 @@ import * as ChildProcess from 'child_process';
 import * as Enumerable from 'node-enumerable';
 import * as Minimatch from 'minimatch';
 import * as Moment from 'moment';
+import * as PQueue from 'p-queue';
 import * as Stream from 'stream';
 import * as vscode from 'vscode';
 import * as vscode_helpers_scm_git from './scm/git';
@@ -29,7 +30,7 @@ export * from './fs';
 export * from './html';
 export * from './http';
 export * from './logging';
-export { from } from 'node-enumerable';
+export { from, range, repeat } from 'node-enumerable';
 export * from './progress';
 export * from './timers';
 export * from './workflows';
@@ -117,6 +118,10 @@ export declare const IS_SUNOS: boolean;
  * Is Windows or not.
  */
 export declare const IS_WINDOWS: boolean;
+/**
+ * Global execution queue, which only allows one execution at the same time.
+ */
+export declare const QUEUE: PQueue<PQueue.DefaultAddOptions>;
 /**
  * Stores global data for the current extension session.
  */
