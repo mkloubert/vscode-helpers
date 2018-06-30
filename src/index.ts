@@ -25,6 +25,7 @@ import * as Minimatch from 'minimatch';
 import * as Moment from 'moment';
 import * as OS from 'os';
 import * as Path from 'path';
+import * as PQueue from 'p-queue';
 import * as Stream from 'stream';
 import * as UUID from 'uuid';
 import * as vscode from 'vscode';
@@ -42,7 +43,7 @@ export * from './fs';
 export * from './html';
 export * from './http';
 export * from './logging';
-export { from } from 'node-enumerable';
+export { from, range, repeat } from 'node-enumerable';
 export * from './progress';
 export * from './timers';
 export * from './workflows';
@@ -136,6 +137,14 @@ export const IS_SUNOS = process.platform === 'sunos';
  * Is Windows or not.
  */
 export const IS_WINDOWS = process.platform === 'win32';
+
+/**
+ * Global execution queue, which only allows one execution at the same time.
+ */
+export const QUEUE = new PQueue({
+    autoStart: true,
+    concurrency: 1,
+});
 
 /**
  * Stores global data for the current extension session.

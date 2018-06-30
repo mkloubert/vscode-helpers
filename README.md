@@ -68,8 +68,10 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [POST](#post-)
      * [PUT](#put-)
      * [randomBytes](#randombytes-)
+     * [range](#range-)
      * [registerWorkspaceWatcher](#registerworkspacewatcher-)
      * [readAll](#readall-)
+     * [repeat](#repeat-)
      * [request](#request-)
      * [size](#size-)
      * [sizeSync](#sizeSync-)
@@ -104,6 +106,7 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
    * [Constants and variables](#constants-and-variables-)
      * [EVENTS](#events-)
      * [IS_*](#is_-)
+     * [QUEUE](#queue-)
      * [SESSION](#session-)
 4. [Branches](#branches-)     
 5. [Support and contribute](#support-and-contribute-)
@@ -814,11 +817,25 @@ const RESULT = await vscode_helpers.PUT('https://example.com/api/users/23979', J
 #### randomBytes [[&uarr;](#functions-)]
 
 ```typescript
-vscode_helpers.randomBytes(5979).then((bytes) => {
+vscode_helpers.randomBytes(5979).then((bytes: Buffer) => {
     // 5979 random bytes are stored
     // in 'bytes' now
 }, (err) => {
     // error
+});
+```
+
+#### range [[&uarr;](#functions-)]
+
+s. [node-enumerable](https://github.com/mkloubert/node-enumerable)
+
+```typescript
+vscode_helpers.range(1, 5).forEach((x) => {
+    // x[0] === 1
+    // x[1] === 2
+    // x[2] === 3
+    // x[3] === 4
+    // x[4] === 5
 });
 ```
 
@@ -873,6 +890,17 @@ vscode_helpers.registerWorkspaceWatcher(async (event, folder, workspace?) => {
         
         return NEW_WORKSPACE;
     }
+});
+```
+
+#### repeat [[&uarr;](#functions-)]
+
+s. [node-enumerable](https://github.com/mkloubert/node-enumerable)
+
+```typescript
+// 5979 'TM' strings
+vscode_helpers.repeat('TM', 5979).forEach((x) => {
+    //TODO
 });
 ```
 
@@ -1315,6 +1343,26 @@ vscode_helpers.IS_MAC;  // Mac OS
 vscode_helpers.IS_OPEN_BSD;  // Open BSD
 vscode_helpers.IS_SUNOS;  // Sun OS
 vscode_helpers.IS_WINDOWS;  // Windows
+```
+
+#### QUEUE [[&uarr;](#constants-and-variables-)]
+
+```typescript
+vscode_helpers.range(0, 5979).forEach((x) => {
+
+    vscode_helpers.QUEUE.add(async () => {
+        return await vscode_helpers.invokeAfter(() => {
+            return x * 23979;
+        }, 100));
+    }).then((result: number) => {
+        // succeeded
+
+        console.log( `QUEUE result of '${ x }': ${ result }` );
+    }).catch((err) => {
+        // error
+    });
+
+});
 ```
 
 #### SESSION [[&uarr;](#constants-and-variables-)]
