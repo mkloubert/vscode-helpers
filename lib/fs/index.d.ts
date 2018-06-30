@@ -62,7 +62,7 @@ export declare function exists(path: string | Buffer): Promise<boolean>;
  *
  * @return {Promise<FastGlob.EntryItem[]>} Promise with the found files / directories.
  */
-export declare function fastGlob(patterns: string | string[], opts?: FastGlob.Options): Promise<import("../../../../../VS Code/proj/vscode-helpers/node_modules/fast-glob/out/types/entries").EntryItem[]>;
+export declare function fastGlob(patterns: string | string[], opts?: FastGlob.Options): Promise<import("../../node_modules/fast-glob/out/types/entries").EntryItem[]>;
 /**
  * Fast version of 'node-glob' (sync).
  *
@@ -71,7 +71,7 @@ export declare function fastGlob(patterns: string | string[], opts?: FastGlob.Op
  *
  * @return {FastGlob.EntryItem[]} The found files / directories.
  */
-export declare function fastGlobSync(patterns: string | string[], opts?: FastGlob.Options): import("../../../../../VS Code/proj/vscode-helpers/node_modules/fast-glob/out/types/entries").EntryItem[];
+export declare function fastGlobSync(patterns: string | string[], opts?: FastGlob.Options): import("../../node_modules/fast-glob/out/types/entries").EntryItem[];
 /**
  * Promise version of 'Glob()' function.
  *
