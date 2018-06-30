@@ -21,6 +21,7 @@ import * as Crypto from 'crypto';
 import * as Enumerable from 'node-enumerable';
 const IsBinaryFile = require("isbinaryfile");
 import * as IsStream from 'is-stream';
+const MergeDeep = require('merge-deep');
 import * as Minimatch from 'minimatch';
 import * as Moment from 'moment';
 import * as OS from 'os';
@@ -482,6 +483,26 @@ export function createGitClientSync(cwd?: string, path?: string): vscode_helpers
     }
 
     return CLIENT;
+}
+
+/**
+ * Creates a new queue.
+ *
+ * @param {TOpts} [opts] The custom options.
+ *
+ * @return {PQueue<PQueue.DefaultAddOptions>} The new queue.
+ */
+export function createQueue<TOpts extends PQueue.QueueAddOptions = PQueue.DefaultAddOptions>(
+    opts?: TOpts
+) {
+    const DEFAULT_OPTS: PQueue.QueueAddOptions = {
+        autoStart: true,
+        concurrency: 1,
+    };
+
+    return new PQueue(
+        MergeDeep(DEFAULT_OPTS, opts)
+    );
 }
 
 /**

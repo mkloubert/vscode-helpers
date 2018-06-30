@@ -241,6 +241,14 @@ export declare function createGitClient(cwd?: string, path?: string): Promise<vs
  */
 export declare function createGitClientSync(cwd?: string, path?: string): vscode_helpers_scm_git.GitClient;
 /**
+ * Creates a new queue.
+ *
+ * @param {TOpts} [opts] The custom options.
+ *
+ * @return {PQueue<PQueue.DefaultAddOptions>} The new queue.
+ */
+export declare function createQueue<TOpts extends PQueue.QueueAddOptions = PQueue.DefaultAddOptions>(opts?: TOpts): PQueue<PQueue.DefaultAddOptions>;
+/**
  * Handles a value as string and checks if it does match at least one (minimatch) pattern.
  *
  * @param {any} val The value to check.

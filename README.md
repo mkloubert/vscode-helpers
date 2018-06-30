@@ -27,6 +27,7 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [createGitClientSync](#creategitclientsync-)
      * [createInterval](#createinterval-)
      * [createLogger](#createlogger-)
+     * [createQueue](#createqueue-)
      * [createTimeout](#createtimeout-)
      * [DELETE](#delete-)
      * [doesMatch](#doesmatch-)
@@ -345,7 +346,6 @@ function loadMyFileAsync() {
 }
 ```
 
-
 #### createDirectoryIfNeeded [[&uarr;](#functions-)]
 
 ```typescript
@@ -404,6 +404,36 @@ const LOGGER = vscode_helpers.createLogger((log) => {
 });
 
 LOGGER.info('Hello, LOG!');
+```
+
+#### createQueue [[&uarr;](#functions-)]
+
+```typescript
+/**
+ * (Default) Options:
+ * 
+ * {
+ *     autoStart: true,
+ *     concurrency: 1,
+ * }
+ */
+const MY_QUEUE = vscode_helpers.createQueue();
+
+vscode_helpers.range(0, 23979).forEach((x) => {
+
+    MY_QUEUE.add(async () => {
+        return await vscode_helpers.invokeAfter(() => {
+            return x * 5979;
+        }, 100));
+    }).then((result: number) => {
+        // succeeded
+
+        console.log( `MY_QUEUE result of '${ x }': ${ result }` );
+    }).catch((err) => {
+        // error
+    });
+
+});
 ```
 
 #### createTimeout [[&uarr;](#functions-)]
