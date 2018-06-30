@@ -16,7 +16,14 @@
  */
 /// <reference types="node" />
 import * as FastGlob from 'fast-glob';
+import * as FS from 'fs';
 import * as Glob from 'glob';
+export declare type FastGlobEntryItem = string | IFastGlobEntry;
+export declare type FastGlobOptions = FastGlob.Options;
+export interface IFastGlobEntry extends FS.Stats {
+    path: string;
+    depth: number;
+}
 /**
  * Options for a temp file.
  */
@@ -60,18 +67,18 @@ export declare function exists(path: string | Buffer): Promise<boolean>;
  * @param {string|string[]} patterns One or more patterns to search for.
  * @param {FastGlob.Options} [opts] Custom options.
  *
- * @return {Promise<FastGlob.EntryItem[]>} Promise with the found files / directories.
+ * @return {Promise<FastGlobEntryItem[]>} Promise with the found files / directories.
  */
-export declare function fastGlob(patterns: string | string[], opts?: FastGlob.Options): Promise<import("../../node_modules/fast-glob/out/types/entries").EntryItem[]>;
+export declare function fastGlob(patterns: string | string[], opts?: FastGlob.Options): Promise<FastGlobEntryItem[]>;
 /**
  * Fast version of 'node-glob' (sync).
  *
  * @param {string|string[]} patterns One or more patterns to search for.
  * @param {FastGlob.Options} [opts] Custom options.
  *
- * @return {FastGlob.EntryItem[]} The found files / directories.
+ * @return {FastGlobEntryItem[]} The found files / directories.
  */
-export declare function fastGlobSync(patterns: string | string[], opts?: FastGlob.Options): import("../../node_modules/fast-glob/out/types/entries").EntryItem[];
+export declare function fastGlobSync(patterns: string | string[], opts?: FastGlob.Options): FastGlobEntryItem[];
 /**
  * Promise version of 'Glob()' function.
  *

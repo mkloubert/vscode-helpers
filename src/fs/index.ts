@@ -25,6 +25,15 @@ import * as TMP from 'tmp';
 import * as vscode_helpers from '../index';
 import * as vscode_workflows from '../workflows';
 
+export declare type FastGlobEntryItem = string | IFastGlobEntry;
+
+export type FastGlobOptions = FastGlob.Options;
+
+export interface IFastGlobEntry extends FS.Stats {
+    path: string;
+    depth: number;
+}
+
 /**
  * Options for a temp file.
  */
@@ -95,9 +104,9 @@ export function exists(path: string | Buffer) {
  * @param {string|string[]} patterns One or more patterns to search for.
  * @param {FastGlob.Options} [opts] Custom options.
  *
- * @return {Promise<FastGlob.EntryItem[]>} Promise with the found files / directories.
+ * @return {Promise<FastGlobEntryItem[]>} Promise with the found files / directories.
  */
-export function fastGlob(patterns: string | string[], opts?: FastGlob.Options) {
+export function fastGlob(patterns: string | string[], opts?: FastGlob.Options): Promise<FastGlobEntryItem[]> {
     return FastGlob(patterns, opts);
 }
 
@@ -107,9 +116,9 @@ export function fastGlob(patterns: string | string[], opts?: FastGlob.Options) {
  * @param {string|string[]} patterns One or more patterns to search for.
  * @param {FastGlob.Options} [opts] Custom options.
  *
- * @return {FastGlob.EntryItem[]} The found files / directories.
+ * @return {FastGlobEntryItem[]} The found files / directories.
  */
-export function fastGlobSync(patterns: string | string[], opts?: FastGlob.Options) {
+export function fastGlobSync(patterns: string | string[], opts?: FastGlob.Options): FastGlobEntryItem[] {
     return FastGlob.sync(patterns, opts);
 }
 
