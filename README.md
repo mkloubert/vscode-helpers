@@ -33,6 +33,8 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [doesMatch](#doesmatch-)
      * [execFile](#execfile-)
      * [exists](#exists-)
+     * [fastGlob](#fastglob-)
+     * [fastGlobSync](#fastglobsync-)
      * [forEachAsync](#foreachasync-)
      * [format](#format-)
      * [formatArray](#formatarray-)
@@ -476,6 +478,24 @@ vscode_helpers.exists('/path/of/thing/to/check', (doesExist: boolean) => {
     //TODO    
 }, (err) => {
     // error
+});
+```
+
+#### fastGlob [[&uarr;](#functions-)]
+
+```typescript
+const MATCHES = await vscode_helpers.fastGlob([ '**/*.txt' ], {
+    cwd: '/path/to/directory',
+    ignore: [ '/log/**/*' ],
+});
+```
+
+#### fastGlobSync [[&uarr;](#functions-)]
+
+```typescript
+const MATCHES = vscode_helpers.fastGlobSync([ '**/*.txt' ], {
+    cwd: '/path/to/directory',
+    ignore: [ '/log/**/*' ],
 });
 ```
 

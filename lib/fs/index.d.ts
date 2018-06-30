@@ -15,6 +15,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 /// <reference types="node" />
+import * as FastGlob from 'fast-glob';
 import * as Glob from 'glob';
 /**
  * Options for a temp file.
@@ -53,6 +54,24 @@ export declare function createDirectoryIfNeeded(dir: string): Promise<boolean>;
  * @return {Promise<boolean>} The promise that indicates if path exists or not.
  */
 export declare function exists(path: string | Buffer): Promise<boolean>;
+/**
+ * Fast version of 'node-glob'.
+ *
+ * @param {string|string[]} patterns One or more patterns to search for.
+ * @param {FastGlob.Options} [opts] Custom options.
+ *
+ * @return {Promise<FastGlob.EntryItem[]>} Promise with the found files / directories.
+ */
+export declare function fastGlob(patterns: string | string[], opts?: FastGlob.Options): Promise<import("../../node_modules/fast-glob/out/types/entries").EntryItem[]>;
+/**
+ * Fast version of 'node-glob' (sync).
+ *
+ * @param {string|string[]} patterns One or more patterns to search for.
+ * @param {FastGlob.Options} [opts] Custom options.
+ *
+ * @return {FastGlob.EntryItem[]} The found files / directories.
+ */
+export declare function fastGlobSync(patterns: string | string[], opts?: FastGlob.Options): import("../../node_modules/fast-glob/out/types/entries").EntryItem[];
 /**
  * Promise version of 'Glob()' function.
  *

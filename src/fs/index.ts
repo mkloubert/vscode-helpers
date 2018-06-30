@@ -15,6 +15,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import * as FastGlob from 'fast-glob';
 import * as FS from 'fs';
 import * as FSExtra from 'fs-extra';
 import * as Glob from 'glob';
@@ -86,6 +87,30 @@ export function exists(path: string | Buffer) {
             COMPLETED(e);
         }
     });
+}
+
+/**
+ * Fast version of 'node-glob'.
+ *
+ * @param {string|string[]} patterns One or more patterns to search for.
+ * @param {FastGlob.Options} [opts] Custom options.
+ *
+ * @return {Promise<FastGlob.EntryItem[]>} Promise with the found files / directories.
+ */
+export function fastGlob(patterns: string | string[], opts?: FastGlob.Options) {
+    return FastGlob(patterns, opts);
+}
+
+/**
+ * Fast version of 'node-glob' (sync).
+ *
+ * @param {string|string[]} patterns One or more patterns to search for.
+ * @param {FastGlob.Options} [opts] Custom options.
+ *
+ * @return {FastGlob.EntryItem[]} The found files / directories.
+ */
+export function fastGlobSync(patterns: string | string[], opts?: FastGlob.Options) {
+    return FastGlob.sync(patterns, opts);
 }
 
 /**
