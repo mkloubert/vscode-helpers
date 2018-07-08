@@ -18,6 +18,7 @@
 import * as _ from 'lodash';
 import * as vscode from 'vscode';
 import * as vscode_helpers from '../index';
+import * as vscode_helpers_disposable from '../disposable/index';
 import * as vscode_helpers_events from '../events/index';
 import * as vscode_helpers_http from '../http/index';
 import * as WebSocket from 'ws';
@@ -107,7 +108,7 @@ export type SendToBrowserItemCallback = (message: any) => any;
 /**
  * A DevTools client.
  */
-export class DevToolsClient extends vscode_helpers.DisposableBase {
+export class DevToolsClient extends vscode_helpers_disposable.DisposableBase {
     /**
      * Initializes a new instance of that class.
      *
@@ -224,7 +225,7 @@ export class DevToolsClient extends vscode_helpers.DisposableBase {
     }
 }
 
-abstract class BrowserItemBase extends vscode_helpers.DisposableBase implements BrowserItem {
+abstract class BrowserItemBase extends vscode_helpers_disposable.DisposableBase implements BrowserItem {
     private _nextId = 0;
     private _sendCallbacks: { [id: number]: SendToBrowserItemCallback };
     private _socket: WebSocket;

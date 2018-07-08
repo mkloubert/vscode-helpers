@@ -17,6 +17,7 @@
 /// <reference types="node" />
 import * as vscode from 'vscode';
 import * as vscode_helpers from '../index';
+import * as vscode_helpers_disposable from '../disposable/index';
 /**
  * A browser item.
  */
@@ -97,7 +98,7 @@ export declare type SendToBrowserItemCallback = (message: any) => any;
 /**
  * A DevTools client.
  */
-export declare class DevToolsClient extends vscode_helpers.DisposableBase {
+export declare class DevToolsClient extends vscode_helpers_disposable.DisposableBase {
     /**
      * Initializes a new instance of that class.
      *
