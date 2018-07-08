@@ -21,7 +21,9 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [cloneObjectFlat](#cloneobjectflat-)
      * [compareValues](#comparevalues-)
      * [compareValuesBy](#comparevaluesby-)
+     * [createChromeClient](#createchromeclient-)
      * [createCompletedAction](#createcompletedaction-)
+     * [createDevToolsClient](#createdevtoolsclient-)
      * [createDirectoryIfNeeded](#createdirectoryifneeded-)
      * [createGitClient](#creategitclient-)
      * [createGitClientSync](#creategitclientsync-)
@@ -332,6 +334,20 @@ const SORTED_OBJS = [ OBJ_1, OBJ_2 ].sort((x, y) => {
 });
 ```
 
+#### createChromeClient [[&uarr;](#functions-)]
+
+```typescript
+const CLIENT = vscode_helpers.createChromeClient({
+    host: 'localhost',
+    port: 9222,
+});
+
+const PAGES = await CLIENT.getPages();
+for (const P of PAGES) {
+    //TODO
+}
+```
+
 #### createCompletedAction [[&uarr;](#functions-)]
 
 ```typescript
@@ -345,6 +361,20 @@ function loadMyFileAsync() {
             COMPLETED(err, data);
         });
     });
+}
+```
+
+#### createDevToolsClient [[&uarr;](#functions-)]
+
+```typescript
+const CLIENT = vscode_helpers.createDevToolsClient({
+    host: 'localhost',
+    port: 9222,
+});
+
+const PAGES = await CLIENT.getPages();
+for (const P of PAGES) {
+    //TODO
 }
 ```
 

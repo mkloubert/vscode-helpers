@@ -22,8 +22,10 @@ import * as Moment from 'moment';
 import * as PQueue from 'p-queue';
 import * as Stream from 'stream';
 import * as vscode from 'vscode';
+import * as vscode_helpers_devtools from './devtools';
 import * as vscode_helpers_scm_git from './scm/git';
 export * from './cache';
+export * from './devtools';
 export * from './disposable';
 export * from './events';
 export * from './fs';
@@ -214,6 +216,10 @@ export declare function compareValues<T>(x: T, y: T): number;
  */
 export declare function compareValuesBy<T, U>(x: T, y: T, selector: (t: T) => U): number;
 /**
+ * Alias for 'createDevToolsClient'.
+ */
+export declare function createChromeClient(opts?: vscode_helpers_devtools.DevToolsClientOptions): vscode_helpers_devtools.DevToolsClient;
+/**
  * Creates a simple 'completed' callback for a promise.
  *
  * @param {Function} resolve The 'succeeded' callback.
@@ -222,6 +228,15 @@ export declare function compareValuesBy<T, U>(x: T, y: T, selector: (t: T) => U)
  * @return {SimpleCompletedAction<TResult>} The created action.
  */
 export declare function createCompletedAction<TResult = any>(resolve: (value?: TResult | PromiseLike<TResult>) => void, reject?: (reason: any) => void): SimpleCompletedAction<TResult>;
+/**
+ * Creates a new instance of a client, which can connect to a DevTools compatible
+ * browser like Google Chrome.
+ *
+ * @param {vscode_helpers_devtools.DevToolsClientOptions} [opts] Custom options.
+ *
+ * @return {vscode_helpers_devtools.DevToolsClient} The new client instance.
+ */
+export declare function createDevToolsClient(opts?: vscode_helpers_devtools.DevToolsClientOptions): vscode_helpers_devtools.DevToolsClient;
 /**
  * Creates a Git client.
  *

@@ -1,7 +1,7 @@
 {
     "name": "vscode-helpers",
     "author": "Marcel Joachim Kloubert",
-    "version": "2.10.3",
+    "version": "2.11.0",
     "description": "Helper functions and classes for own VS Code (extensions)",
     "tags": [
         "functions",
@@ -54,10 +54,11 @@
         "@types/marked": "^0.3.0",
         "@types/minimatch": "^3.0.3",
         "@types/moment-timezone": "^0.5.6",
-        "@types/node": "^7.0.66",
+        "@types/node": "^7.0.67",
         "@types/p-queue": "^2.3.1",
         "@types/tmp": "0.0.33",
         "@types/uuid": "^3.4.3",
+        "@types/ws": "^5.1.2",
         "fast-glob": "^2.2.2",
         "fs-extra": "^5.0.0",
         "glob": "^7.1.2",
@@ -73,7 +74,8 @@
         "node-enumerable": "^3.9.0",
         "p-queue": "^2.4.2",
         "tmp": "0.0.33",
-        "uuid": "^3.3.2"
+        "uuid": "^3.3.2",
+        "ws": "^5.2.1"
     },
     "devDependencies": {
         "tslint": "^5.10.0",

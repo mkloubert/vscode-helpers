@@ -28,8 +28,8 @@ import * as OS from 'os';
 import * as Path from 'path';
 import * as PQueue from 'p-queue';
 import * as Stream from 'stream';
-import * as UUID from 'uuid';
 import * as vscode from 'vscode';
+import * as vscode_helpers_devtools from './devtools';
 import * as vscode_helpers_events from './events';
 import * as vscode_helpers_scm_git from './scm/git';
 
@@ -38,6 +38,7 @@ import * as MomentTimeZone from 'moment-timezone';
 
 // sub modules
 export * from './cache';
+export * from './devtools';
 export * from './disposable';
 export * from './events';
 export * from './fs';
@@ -425,6 +426,13 @@ export function compareValuesBy<T, U>(x: T, y: T,
 }
 
 /**
+ * Alias for 'createDevToolsClient'.
+ */
+export function createChromeClient(opts?: vscode_helpers_devtools.DevToolsClientOptions): vscode_helpers_devtools.DevToolsClient {
+    return createDevToolsClient.apply(null, arguments);
+}
+
+/**
  * Creates a simple 'completed' callback for a promise.
  *
  * @param {Function} resolve The 'succeeded' callback.
@@ -452,6 +460,18 @@ export function createCompletedAction<TResult = any>(resolve: (value?: TResult |
             }
         }
     };
+}
+
+/**
+ * Creates a new instance of a client, which can connect to a DevTools compatible
+ * browser like Google Chrome.
+ *
+ * @param {vscode_helpers_devtools.DevToolsClientOptions} [opts] Custom options.
+ *
+ * @return {vscode_helpers_devtools.DevToolsClient} The new client instance.
+ */
+export function createDevToolsClient(opts?: vscode_helpers_devtools.DevToolsClientOptions) {
+    return new vscode_helpers_devtools.DevToolsClient( opts );
 }
 
 /**
