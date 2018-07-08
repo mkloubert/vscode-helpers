@@ -33,6 +33,7 @@ export * from './html';
 export * from './http';
 export * from './logging';
 export { from, range, repeat } from 'node-enumerable';
+export * from './notifications';
 export * from './progress';
 export * from './timers';
 export * from './workflows';
@@ -64,6 +65,23 @@ export interface ExecFileResult {
  * @return {TResult|PromiseLike<TResult>} The result.
  */
 export declare type ForEachAsyncAction<T, TResult> = (item: T, index: number, array: T[]) => TResult | PromiseLike<TResult>;
+/**
+ * Describes the structure of the package file (package.json).
+ */
+export interface PackageFile {
+    /**
+     * The display name.
+     */
+    displayName?: string;
+    /**
+     * The (internal) name.
+     */
+    name?: string;
+    /**
+     * The version string.
+     */
+    version?: string;
+}
 /**
  * Options for 'openAndShowTextDocument()' function.
  */
@@ -312,6 +330,28 @@ export declare function format(formatStr: any, ...args: any[]): string;
  */
 export declare function formatArray(formatStr: any, args: Enumerable.Sequence<any>): string;
 /**
+ * Gets the root directory of the extension.
+ *
+ * @return {string} The root directory of the extension.
+ */
+export declare function getExtensionRoot(): string;
+/**
+ * Loads the package file (package.json) of the extension.
+ *
+ * @param {string} [packageJson] The custom path to the file.
+ *
+ * @return {Promise<PackageFile>} The promise with the meta data of the file.
+ */
+export declare function getPackageFile(packageJson?: string): Promise<PackageFile>;
+/**
+ * Loads the package file (package.json) of the extension sync.
+ *
+ * @param {string} [packageJson] The custom path to the file.
+ *
+ * @return {PackageFile} The meta data of the file.
+ */
+export declare function getPackageFileSync(packageJson?: string): PackageFile;
+/**
  * Alias for 'uuid'.
  */
 export declare function guid(ver?: string, ...args: any[]): string;
@@ -391,6 +431,14 @@ export declare function randomBytes(size: number): Promise<Buffer>;
  * @returns {Promise<Buffer>} The promise with the content.
  */
 export declare function readAll(stream: Stream.Readable, enc?: string): Promise<Buffer>;
+/**
+ * Sets the root directory of the extension.
+ *
+ * @param {string} path The path of the extension.
+ *
+ * @return {string} The new value.
+ */
+export declare function setExtensionRoot(path: string): string;
 /**
  * Returns a sequence object as new array.
  *
