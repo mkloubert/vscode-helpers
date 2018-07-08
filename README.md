@@ -37,12 +37,17 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [exists](#exists-)
      * [fastGlob](#fastglob-)
      * [fastGlobSync](#fastglobsync-)
+     * [filterExtensionNotifications](#filterextensionnotifications-)
      * [forEachAsync](#foreachasync-)
      * [format](#format-)
      * [formatArray](#formatarray-)
      * [from](#from-)
      * [fromMarkdown](#frommarkdown-)
      * [GET](#get-)
+     * [getExtensionNotifications](#getextensionnotifications-)
+     * [getExtensionRoot](#getextensionroot-)
+     * [getPackageFile](#getpackagefile-)
+     * [getPackageFileSync](#getpackagefilesync-)
      * [glob](#glob-)
      * [globSync](#globsync-)
      * [guid](#guid-)
@@ -78,6 +83,7 @@ Helper functions and classes for [Visual Studio Code extensions](https://code.vi
      * [readAll](#readall-)
      * [repeat](#repeat-)
      * [request](#request-)
+     * [setExtensionRoot](#setextensionroot-)
      * [size](#size-)
      * [sizeSync](#sizeSync-)
      * [sleep](#sleep-)
@@ -529,6 +535,25 @@ const MATCHES = vscode_helpers.fastGlobSync([ '**/*.txt' ], {
 });
 ```
 
+#### filterExtensionNotifications [[&uarr;](#functions-)]
+
+```typescript
+const ALL_NOTIFICATIONS: vscode_helpers.ExtensionNotification[] =
+    await vscode_helpers.getExtensionNotifications('https://mkloubert.github.io/notifications/vscode-deploy-reloaded.json');
+
+const FILTERED_NOTIFICATION = vscode_helpers.filterExtensionNotifications(
+    ALL_NOTIFICATIONS, {
+        'version': '1.0.0'  // version of the current extension
+    }
+);
+
+for (const NOTE of FILTERED_NOTIFICATION) {
+    console.log(
+        NOTE.title
+    );
+}
+```
+
 #### forEachAsync [[&uarr;](#functions-)]
 
 ```typescript
@@ -597,6 +622,49 @@ const RESULT = await vscode_helpers.GET('https://example.com/api/users/5979');
 
 const USER_DATA = JSON.parse(
     (await RESULT.readBody()).toString('utf8')
+);
+```
+
+#### getExtensionNotifications [[&uarr;](#functions-)]
+
+```typescript
+const NOTIFICATIONS: vscode_helpers.ExtensionNotification[] =
+    await vscode_helpers.getExtensionNotifications('https://mkloubert.github.io/notifications/vscode-deploy-reloaded.json');
+
+for (const NOTE of NOTIFICATIONS) {
+    console.log(
+        NOTE.title
+    );
+}
+```
+
+#### getExtensionRoot [[&uarr;](#functions-)]
+
+```typescript
+console.log(
+    vscode_helpers.getExtensionRoot()
+);
+```
+
+#### getPackageFile [[&uarr;](#functions-)]
+
+```typescript
+const PACKAGE_JSON: vscode_helpers.PackageFile = 
+    await vscode_helpers.getPackageFile();
+
+console.log(
+    PACKAGE_JSON.name + ' ' + PACKAGE_JSON.version
+);
+```
+
+#### getPackageFileSync [[&uarr;](#functions-)]
+
+```typescript
+const PACKAGE_JSON: vscode_helpers.PackageFile = 
+    vscode_helpers.getPackageFileSync();
+
+console.log(
+    PACKAGE_JSON.name + ' ' + PACKAGE_JSON.version
 );
 ```
 
@@ -994,6 +1062,18 @@ const RESULT = await vscode_helpers.request('POST', 'https://example.com/api/use
 }), {
     'Content-Type': 'application/json; charset=utf8',
 });
+```
+
+#### setExtensionRoot [[&uarr;](#functions-)]
+
+```typescript
+vscode_helpers.setExtensionRoot(
+    __dirname
+);
+
+console.log(
+    vscode_helpers.getExtensionRoot()
+);
 ```
 
 #### size [[&uarr;](#functions-)]

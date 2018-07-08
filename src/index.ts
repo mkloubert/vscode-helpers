@@ -19,6 +19,7 @@ import * as _ from 'lodash';
 import * as ChildProcess from 'child_process';
 import * as Crypto from 'crypto';
 import * as Enumerable from 'node-enumerable';
+import * as FSExtra from 'fs-extra';
 const IsBinaryFile = require("isbinaryfile");
 import * as IsStream from 'is-stream';
 const MergeDeep = require('merge-deep');
@@ -46,6 +47,7 @@ export * from './html';
 export * from './http';
 export * from './logging';
 export { from, range, repeat } from 'node-enumerable';
+export * from './notifications';
 export * from './progress';
 export * from './timers';
 export * from './workflows';
@@ -81,6 +83,24 @@ export interface ExecFileResult {
 export type ForEachAsyncAction<T, TResult> = (item: T, index: number, array: T[]) => TResult | PromiseLike<TResult>;
 
 /**
+ * Describes the structure of the package file (package.json).
+ */
+export interface PackageFile {
+    /**
+     * The display name.
+     */
+    displayName?: string;
+    /**
+     * The (internal) name.
+     */
+    name?: string;
+    /**
+     * The version string.
+     */
+    version?: string;
+}
+
+/**
  * Options for 'openAndShowTextDocument()' function.
  */
 export type OpenAndShowTextDocumentOptions = string | {
@@ -110,6 +130,8 @@ export type SimpleCompletedAction<TResult> = (err: any, result?: TResult) => voi
  * @return {string} The normalized string.
  */
 export type StringNormalizer<TStr = string> = (str: TStr) => string;
+
+let extensionRoot: string;
 
 /**
  * Is AIX or not.
@@ -743,6 +765,66 @@ export function formatArray(formatStr: any, args: Enumerable.Sequence<any>): str
 }
 
 /**
+ * Gets the root directory of the extension.
+ *
+ * @return {string} The root directory of the extension.
+ */
+export function getExtensionRoot() {
+    return extensionRoot;
+}
+
+/**
+ * Loads the package file (package.json) of the extension.
+ *
+ * @param {string} [packageJson] The custom path to the file.
+ *
+ * @return {Promise<PackageFile>} The promise with the meta data of the file.
+ */
+export async function getPackageFile(
+    packageJson = '../package.json'
+): Promise<PackageFile> {
+    return JSON.parse(
+        (await FSExtra.readFile(
+            getPackageFilePath(packageJson)
+        )).toString('utf8')
+    );
+}
+
+function getPackageFilePath(
+    packageJson?: string
+) {
+    packageJson = toStringSafe(packageJson);
+    if ('' === packageJson.trim()) {
+        packageJson = '../package.json';
+    }
+
+    if (!Path.isAbsolute(packageJson)) {
+        packageJson = Path.join(
+            getExtensionRoot(), packageJson
+        );
+    }
+
+    return Path.resolve( packageJson );
+}
+
+/**
+ * Loads the package file (package.json) of the extension sync.
+ *
+ * @param {string} [packageJson] The custom path to the file.
+ *
+ * @return {PackageFile} The meta data of the file.
+ */
+export function getPackageFileSync(
+    packageJson = '../package.json'
+): PackageFile {
+    return JSON.parse(
+        (FSExtra.readFileSync(
+            getPackageFilePath(packageJson)
+        )).toString('utf8')
+    );
+}
+
+/**
  * Alias for 'uuid'.
  */
 export function guid(ver?: string, ...args: any[]): string {
@@ -977,6 +1059,31 @@ export function readAll(stream: Stream.Readable, enc?: string): Promise<Buffer> 
             COMPLETED(e);
         }
     });
+}
+
+/**
+ * Sets the root directory of the extension.
+ *
+ * @param {string} path The path of the extension.
+ *
+ * @return {string} The new value.
+ */
+export function setExtensionRoot(path: string) {
+    path = toStringSafe(path);
+    if ('' === path.trim()) {
+        path = undefined;
+    } else {
+        if (!Path.isAbsolute(path)) {
+            path = Path.join(
+                process.cwd(), path
+            );
+        }
+
+        path = Path.resolve( path );
+    }
+
+    extensionRoot = path;
+    return path;
 }
 
 /**
