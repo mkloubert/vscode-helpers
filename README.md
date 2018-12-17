@@ -899,7 +899,7 @@ OBJ_2.dispose();  // throws an exception
 ```typescript
 const str_1 = vscode_helpers.normalizeString('aBc');  // 'abc'
 const str_2 = vscode_helpers.normalizeString(null);  // ''
-const str_3 = vscode_helpers.normalizeString('aBc', s => s.troUpperCase());  // 'ABC'
+const str_3 = vscode_helpers.normalizeString('aBc', s => s.toUpperCase());  // 'ABC'
 ```
 
 #### now [[&uarr;](#functions-)]
