@@ -71,7 +71,7 @@ export declare class GitClient implements vscode_helpers_scm.SourceControlClient
  *
  * @return {Promise<GitExecutable|false>} The promise with the executable or (false) if not found.
  */
-export declare function tryFindGitPath(path?: string): Promise<boolean | GitExecutable>;
+export declare function tryFindGitPath(path?: string): Promise<false | GitExecutable>;
 /**
  * Tries to find the path of the Git executable (sync).
  *

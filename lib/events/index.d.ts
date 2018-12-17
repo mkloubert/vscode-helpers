@@ -42,4 +42,4 @@ export declare function tryRemoveAllListeners(obj: NodeJS.EventEmitter, ev?: str
  *
  * @return {boolean} Operation was successfull or not.
  */
-export declare function tryRemoveListener(obj: NodeJS.EventEmitter, ev: string | symbol, listener: Function): boolean;
+export declare function tryRemoveListener(obj: NodeJS.EventEmitter, ev: string | symbol, listener: (...args: any[]) => void): boolean;

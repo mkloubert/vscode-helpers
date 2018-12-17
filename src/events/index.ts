@@ -64,7 +64,8 @@ export function tryRemoveAllListeners(obj: NodeJS.EventEmitter, ev?: string | sy
  */
 export function tryRemoveListener(
     obj: NodeJS.EventEmitter,
-    ev: string | symbol, listener: Function,
+    ev: string | symbol,
+    listener: (...args: any[]) => void,
 ) {
     try {
         if (obj && obj.removeListener) {
