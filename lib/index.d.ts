@@ -19,7 +19,7 @@ import * as ChildProcess from 'child_process';
 import * as Enumerable from 'node-enumerable';
 import * as Minimatch from 'minimatch';
 import * as Moment from 'moment';
-import * as PQueue from 'p-queue';
+import { default as PQueue, QueueAddOptions } from 'p-queue';
 import * as Stream from 'stream';
 import * as vscode from 'vscode';
 import * as vscode_helpers_devtools from './devtools';
@@ -141,7 +141,7 @@ export declare const IS_WINDOWS: boolean;
 /**
  * Global execution queue, which only allows one execution at the same time.
  */
-export declare const QUEUE: PQueue<PQueue.DefaultAddOptions>;
+export declare const QUEUE: PQueue<import("p-queue").DefaultAddOptions>;
 /**
  * Stores global data for the current extension session.
  */
@@ -278,9 +278,9 @@ export declare function createGitClientSync(cwd?: string, path?: string): vscode
  *
  * @param {TOpts} [opts] The custom options.
  *
- * @return {PQueue<PQueue.DefaultAddOptions>} The new queue.
+ * @return {PQueue} The new queue.
  */
-export declare function createQueue<TOpts extends PQueue.QueueAddOptions = PQueue.DefaultAddOptions>(opts?: TOpts): PQueue<PQueue.DefaultAddOptions>;
+export declare function createQueue<TOpts extends QueueAddOptions = QueueAddOptions>(opts?: TOpts): PQueue<import("p-queue").DefaultAddOptions>;
 /**
  * Handles a value as string and checks if it does match at least one (minimatch) pattern.
  *

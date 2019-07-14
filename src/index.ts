@@ -27,7 +27,7 @@ import * as Minimatch from 'minimatch';
 import * as Moment from 'moment';
 import * as OS from 'os';
 import * as Path from 'path';
-import * as PQueue from 'p-queue';
+import { default as PQueue, QueueAddOptions } from 'p-queue';
 import * as Stream from 'stream';
 import * as vscode from 'vscode';
 import * as vscode_helpers_devtools from './devtools';
@@ -532,12 +532,12 @@ export function createGitClientSync(cwd?: string, path?: string): vscode_helpers
  *
  * @param {TOpts} [opts] The custom options.
  *
- * @return {PQueue<PQueue.DefaultAddOptions>} The new queue.
+ * @return {PQueue} The new queue.
  */
-export function createQueue<TOpts extends PQueue.QueueAddOptions = PQueue.DefaultAddOptions>(
+export function createQueue<TOpts extends QueueAddOptions = QueueAddOptions>(
     opts?: TOpts
 ) {
-    const DEFAULT_OPTS: PQueue.QueueAddOptions = {
+    const DEFAULT_OPTS: any = {
         autoStart: true,
         concurrency: 1,
     };

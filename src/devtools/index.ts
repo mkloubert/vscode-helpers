@@ -307,7 +307,7 @@ abstract class BrowserItemBase extends vscode_helpers_disposable.DisposableBase 
                                 );
                             }
 
-                            if (_.isObject(msg)) {
+                            if (_.isPlainObject(msg)) {
                                 const MSG_ID = parseInt(
                                     vscode_helpers.toStringSafe(msg.id).trim()
                                 );
