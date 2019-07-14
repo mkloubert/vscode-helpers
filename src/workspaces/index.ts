@@ -200,7 +200,7 @@ export function registerWorkspaceWatcher<TWorkspace extends Workspace = Workspac
         }
     };
 
-    const WORKSPACE_FOLDERS_CHANGED_LISTENER = async (added: vscode.WorkspaceFolder[], removed?: vscode.WorkspaceFolder[]) => {
+    const WORKSPACE_FOLDERS_CHANGED_LISTENER = async (added: ReadonlyArray<vscode.WorkspaceFolder>, removed?: ReadonlyArray<vscode.WorkspaceFolder>) => {
         if (removed) {
             for (const WF of removed) {
                 try {
