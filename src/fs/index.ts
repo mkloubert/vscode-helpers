@@ -588,7 +588,7 @@ export function tempFile<TResult = any>(
     });
 }
 
-function toTmpSimpleOptions(opts: TempFileOptions): TMP.SimpleOptions {
+function toTmpSimpleOptions(opts: TempFileOptions): any {
     return {
         dir: opts.dir,
         keep: true,

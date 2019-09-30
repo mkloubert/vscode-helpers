@@ -141,7 +141,7 @@ export declare const IS_WINDOWS: boolean;
 /**
  * Global execution queue, which only allows one execution at the same time.
  */
-export declare const QUEUE: PQueue<import("p-queue").DefaultAddOptions>;
+export declare const QUEUE: PQueue<import("p-queue/dist/priority-queue").default, import("p-queue/dist").DefaultAddOptions>;
 /**
  * Stores global data for the current extension session.
  */
@@ -280,7 +280,7 @@ export declare function createGitClientSync(cwd?: string, path?: string): vscode
  *
  * @return {PQueue} The new queue.
  */
-export declare function createQueue<TOpts extends QueueAddOptions = QueueAddOptions>(opts?: TOpts): PQueue<import("p-queue").DefaultAddOptions>;
+export declare function createQueue<TOpts extends QueueAddOptions = QueueAddOptions>(opts?: TOpts): PQueue<import("p-queue/dist/priority-queue").default, import("p-queue/dist").DefaultAddOptions>;
 /**
  * Handles a value as string and checks if it does match at least one (minimatch) pattern.
  *
