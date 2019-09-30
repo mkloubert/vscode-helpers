@@ -47,7 +47,7 @@ export interface HTTPRequestResult {
     /**
      * The response context.
      */
-    response: HTTP.ClientResponse;
+    response: HTTP.IncomingMessage;
     /**
      * The status (message).
      */
