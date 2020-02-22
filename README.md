@@ -1541,7 +1541,8 @@ let var_3 = vscode_helpers.SESSION['a'];  // undefined
 
 | Name | minimum Visual Studio Code version |
 | ---- | --------- |
-| [v6](https://github.com/mkloubert/vscode-helpers/tree/v6) (current) | `^1.38.0` |
+| [v7](https://github.com/mkloubert/vscode-helpers/tree/v7) (current) | `^1.42.0` |
+| [v6](https://github.com/mkloubert/vscode-helpers/tree/v6) | `^1.38.0` |
 | [v5](https://github.com/mkloubert/vscode-helpers/tree/v5) | `^1.36.0` |
 | [v4](https://github.com/mkloubert/vscode-helpers/tree/v4) | `^1.30.0` |
 | [v3](https://github.com/mkloubert/vscode-helpers/tree/v3) | `^1.30.0` |

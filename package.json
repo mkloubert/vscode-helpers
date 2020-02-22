@@ -1,7 +1,7 @@
 {
     "name": "vscode-helpers",
     "author": "Marcel Joachim Kloubert",
-    "version": "6.0.0",
+    "version": "7.0.0",
     "description": "Helper functions and classes for own VS Code (extensions)",
     "tags": [
         "functions",
@@ -47,41 +47,42 @@
         "test": "echo 'Test is not enabled for this package'"
     },
     "dependencies": {
-        "@types/fs-extra": "^8.0.0",
+        "@types/fs-extra": "^8.1.0",
         "@types/glob": "^7.1.1",
-        "@types/lodash": "^4.14.141",
+        "@types/lodash": "^4.14.149",
         "@types/marked": "^0.6.5",
         "@types/minimatch": "^3.0.3",
         "@types/moment-timezone": "^0.5.12",
-        "@types/node": "10.11.0",
+        "@types/node": "12.0.12",
         "@types/tmp": "^0.1.0",
-        "@types/uuid": "^3.4.5",
-        "@types/ws": "^6.0.3",
-        "compare-versions": "^3.5.1",
-        "fast-glob": "^3.0.4",
+        "@types/uuid": "^3.4.7",
+        "@types/ws": "^6.0.4",
+        "compare-versions": "^3.6.0",
+        "fast-glob": "^3.2.2",
         "fs-extra": "^8.1.0",
-        "glob": "^7.1.4",
+        "glob": "^7.1.6",
         "header-case-normalizer": "^1.0.3",
         "is-stream": "^2.0.0",
-        "isbinaryfile": "^4.0.2",
+        "isbinaryfile": "^4.0.4",
         "lodash": "^4.17.15",
         "marked": "^0.7.0",
         "merge-deep": "^3.0.2",
         "minimatch": "^3.0.4",
         "moment": "^2.24.0",
-        "moment-timezone": "^0.5.26",
+        "moment-timezone": "^0.5.28",
         "node-enumerable": "^5.0.1",
-        "p-queue": "^6.1.1",
+        "p-queue": "^6.3.0",
         "tmp": "^0.1.0",
-        "uuid": "^3.3.3",
-        "ws": "^7.1.2"
+        "uuid": "^3.4.0",
+        "ws": "^7.2.1"
     },
     "devDependencies": {
-        "tslint": "^5.20.0",
-        "typescript": "3.4.5",
+        "tslint": "^5.20.1",
+        "typescript": "^3.8.2",
+        "vsce": "^1.73.0",
         "vscode": "^1.1.36"
     },
     "engines": {
-        "vscode": "^1.38.0"
+        "vscode": "^1.42.0"
     }
 }
