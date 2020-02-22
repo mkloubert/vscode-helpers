@@ -56,15 +56,15 @@ export declare abstract class DisposableBase extends Events.EventEmitter impleme
     /**
      * Gets if object has been disposed or not.
      */
-    readonly isDisposed: boolean;
+    get isDisposed(): boolean;
     /**
      * Gets if the 'dispose()' method is currently executed or not.
      */
-    readonly isDisposing: boolean;
+    get isDisposing(): boolean;
     /**
      * Gets if the object is disposed or currently disposing.
      */
-    readonly isInFinalizeState: boolean;
+    get isInFinalizeState(): boolean;
     /**
      * Additional logic for the 'dispose()' method.
      */

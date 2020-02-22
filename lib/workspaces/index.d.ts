@@ -127,11 +127,11 @@ export declare abstract class WorkspaceBase extends vscode_disposable.Disposable
      */
     constructor(folder: vscode.WorkspaceFolder);
     /** @inheritdoc */
-    abstract readonly configSource: WorkspaceConfigSource;
+    abstract get configSource(): WorkspaceConfigSource;
     /** @inheritdoc */
     onDidChangeConfiguration(e: vscode.ConfigurationChangeEvent): Promise<void>;
     /** @inheritdoc */
-    readonly rootPath: string;
+    get rootPath(): string;
 }
 /**
  * Registers a workspace watcher.

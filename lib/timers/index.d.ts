@@ -46,7 +46,7 @@ export declare class StopWatch {
     /**
      * Gets if the stop watch is running or not.
      */
-    readonly isRunning: boolean;
+    get isRunning(): boolean;
     /**
      * (Re-)Starts the stop watch.
      *

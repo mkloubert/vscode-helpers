@@ -279,11 +279,13 @@ async function asBufferInner(val: any, enc?: string,
     if (_.isObject(val)) {
         // JSON object
         return new Buffer(JSON.stringify(val),
+                          // @ts-ignore
                           enc);
     }
 
     // handle as string
     return new Buffer(toStringSafe(val),
+                      // @ts-ignore
                       enc);
 }
 
@@ -1034,9 +1036,11 @@ export function readAll(stream: Stream.Readable, enc?: string): Promise<Buffer> 
                 }
 
                 if (_.isString(chunk)) {
+                    // @ts-ignore
                     chunk = new Buffer(chunk, enc);
                 }
 
+                // @ts-ignore
                 buff = Buffer.concat([ buff, chunk ]);
             } catch (e) {
                 COMPLETED(e);

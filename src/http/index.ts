@@ -191,7 +191,7 @@ export function request(method: string, url: HTTPRequestURL, body?: HTTPRequestB
                 path: reqURL.path,
             };
 
-            const CALLBACK = (response: HTTP.ClientResponse) => {
+            const CALLBACK = (response: any) => {
                 let body: false | Buffer = false;
 
                 const RESP: HTTPRequestResult = {

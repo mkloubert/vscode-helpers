@@ -121,7 +121,7 @@ export declare class DevToolsClient extends vscode_helpers_disposable.Disposable
     /**
      * Gets the host address.
      */
-    readonly host: string;
+    get host(): string;
     /**
      * Gets the options for the client.
      */
@@ -129,5 +129,5 @@ export declare class DevToolsClient extends vscode_helpers_disposable.Disposable
     /**
      * Gets the TCP port.
      */
-    readonly port: number;
+    get port(): number;
 }
