@@ -35,8 +35,7 @@ export function fromMarkdown(md: any, opts?: Marked.MarkedOptions): string {
     const DEFAULT_OPTS: Marked.MarkedOptions = {
         breaks: true,
         gfm: true,
-        langPrefix: '',
-        tables: true,
+        langPrefix: '',        
     };
 
     md = vscode_helpers.toStringSafe(md);

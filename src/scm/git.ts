@@ -25,7 +25,7 @@
 
 import * as _ from 'lodash';
 import * as ChildProcess from 'child_process';
-import * as FSExtra from 'fs-extra';
+import * as FS from 'fs';
 const MergeDeep = require('merge-deep');
 import * as Path from 'path';
 import * as vscode_helpers from '../index';
@@ -145,7 +145,7 @@ function findExecutableSync(exe: string, args: string[]): Executable {
         };
     }
 
-    if (!FSExtra.existsSync(exe)) {
+    if (!FS.existsSync(exe)) {
         // NB: When you write something like `surf-client ... -- surf-build` on Windows,
         // a shell would normally convert that to surf-build.cmd, but since it's passed
         // in as an argument, it doesn't happen
@@ -154,7 +154,7 @@ function findExecutableSync(exe: string, args: string[]): Executable {
         for (const EXT of POSSIBLE_EXTENSIONS) {
             const FULL_PATH = runDownPathSync(`${exe}${EXT}`);
 
-            if (FSExtra.existsSync(FULL_PATH)) {
+            if (FS.existsSync(FULL_PATH)) {
                 return findExecutableSync(FULL_PATH, args);
             }
         }

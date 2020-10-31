@@ -19,7 +19,7 @@ import * as _ from 'lodash';
 import * as ChildProcess from 'child_process';
 import * as Crypto from 'crypto';
 import * as Enumerable from 'node-enumerable';
-import * as FSExtra from 'fs-extra';
+import * as FS from 'fs';
 const IsBinaryFile = require("isbinaryfile");
 import * as IsStream from 'is-stream';
 const MergeDeep = require('merge-deep');
@@ -131,6 +131,8 @@ export type SimpleCompletedAction<TResult> = (err: any, result?: TResult) => voi
  */
 export type StringNormalizer<TStr = string> = (str: TStr) => string;
 
+const readFile = FS.promises.readFile;
+
 let extensionRoot: string;
 
 /**
@@ -206,15 +208,15 @@ export function applyFuncFor<TFunc extends Function = Function>(
 /**
  * Returns a value as array.
  *
- * @param {T|T[]} val The value.
+ * @param {T|T[]|ReadonlyArray<T>} val The value.
  * @param {boolean} [removeEmpty] Remove items that are (null) / (undefined) or not.
  *
  * @return {T[]} The value as (new) array.
  */
-export function asArray<T>(val: T | T[], removeEmpty = true): T[] {
+export function asArray<T>(val: T | T[] | ReadonlyArray<T>, removeEmpty = true): T[] {
     removeEmpty = toBooleanSafe(removeEmpty, true);
 
-    return (_.isArray(val) ? val : [ val ]).filter(i => {
+    return (_.isArrayLike(val) ? val : [ val ]).filter(i => {
         if (removeEmpty) {
             return !_.isNil(i);
         }
@@ -786,7 +788,7 @@ export async function getPackageFile(
     packageJson = '../package.json'
 ): Promise<PackageFile> {
     return JSON.parse(
-        (await FSExtra.readFile(
+        (await readFile(
             getPackageFilePath(packageJson)
         )).toString('utf8')
     );
@@ -820,7 +822,7 @@ export function getPackageFileSync(
     packageJson = '../package.json'
 ): PackageFile {
     return JSON.parse(
-        (FSExtra.readFileSync(
+        (FS.readFileSync(
             getPackageFilePath(packageJson)
         )).toString('utf8')
     );

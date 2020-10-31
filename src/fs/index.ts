@@ -17,9 +17,9 @@
 
 import * as FastGlob from 'fast-glob';
 import * as FS from 'fs';
-import * as FSExtra from 'fs-extra';
 import * as Glob from 'glob';
 const MergeDeep = require('merge-deep');
+import * as Mkdirp from 'mkdirp';
 import * as Path from 'path';
 import * as TMP from 'tmp';
 import * as vscode_helpers from '../index';
@@ -56,6 +56,9 @@ export interface TempFileOptions {
     suffix?: string;
 }
 
+const lstat = FS.promises.lstat;
+const stat = FS.promises.stat;
+
 type TempFilePath = string | false;
 
 /**
@@ -69,7 +72,7 @@ export async function createDirectoryIfNeeded(dir: string) {
     dir = vscode_helpers.toStringSafe(dir);
 
     if (!(await exists(dir))) {
-        await FSExtra.mkdirs(dir);
+        await Mkdirp(dir);
 
         return true;
     }
@@ -205,8 +208,8 @@ async function invokeForStats<TResult = any>(
     useLSTAT = vscode_helpers.toBooleanSafe(useLSTAT, true);
 
     if (await exists(path)) {
-        const STATS = useLSTAT ? (await FSExtra.lstat(path))
-                               : (await FSExtra.stat(path));
+        const STATS = useLSTAT ? (await lstat(path))
+                               : (await stat(path));
 
         if (STATS) {
             return func(STATS);
@@ -511,8 +514,8 @@ function normalizeTempFileOptions(opts: TempFileOptions) {
 export async function size(path: string | Buffer, useLSTAT = true) {
     useLSTAT = vscode_helpers.toBooleanSafe(useLSTAT, true);
 
-    return useLSTAT ? (await FSExtra.lstat(path)).size
-                    : (await FSExtra.stat(path)).size;
+    return useLSTAT ? (await lstat(path)).size
+                    : (await stat(path)).size;
 }
 
 /**
@@ -526,8 +529,8 @@ export async function size(path: string | Buffer, useLSTAT = true) {
 export function sizeSync(path: string | Buffer, useLSTAT = true) {
     useLSTAT = vscode_helpers.toBooleanSafe(useLSTAT, true);
 
-    return useLSTAT ? FSExtra.lstatSync(path).size
-                    : FSExtra.statSync(path).size;
+    return useLSTAT ? FS.lstatSync(path).size
+                    : FS.statSync(path).size;
 }
 
 /**
@@ -627,7 +630,7 @@ function tryUnlinkTempFile(file: TempFilePath, opts?: TempFileOptions) {
         if (false !== file) {
             if (!vscode_helpers.toBooleanSafe(opts.keep)) {
                 if (isFileSync(file)) {
-                    FSExtra.unlinkSync( file );
+                    FS.unlinkSync( file );
                 }
             }
         }
