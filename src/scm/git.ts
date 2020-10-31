@@ -305,7 +305,7 @@ function runDownPathSync(exe: string): string {
 
     const TARGET = Path.join('.', exe);
     try {
-        if (FSExtra.statSync(TARGET)) {
+        if (FS.statSync(TARGET)) {
             return TARGET;
         }
     } catch { }
@@ -315,7 +315,7 @@ function runDownPathSync(exe: string): string {
         const NEEDLE = Path.join(P, exe);
 
         try {
-            if (FSExtra.statSync(NEEDLE)) {
+            if (FS.statSync(NEEDLE)) {
                 return NEEDLE;
             }
         } catch { }
