@@ -261,7 +261,7 @@ export abstract class LoggerBase extends Events.EventEmitter implements Logger {
      *
      * @return {Promise<any>} Invoke log event or not.
      */
-    protected abstract async onLog(context: LogContext): Promise<any>;
+    protected abstract onLog(context: LogContext): Promise<any>;
 
     /** @inheritdoc */
     public trace(msg: any, tag?: string): this {
