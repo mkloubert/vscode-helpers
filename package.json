@@ -63,7 +63,7 @@
         "is-stream": "2.0.0",
         "isbinaryfile": "4.0.8",
         "lodash": "4.17.21",
-        "marked": "4.0.0",
+        "marked": "4.0.10",
         "merge-deep": "3.0.3",
         "minimatch": "3.0.4",
         "mkdirp": "1.0.4",
