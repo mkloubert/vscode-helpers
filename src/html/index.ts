@@ -27,21 +27,21 @@ import * as vscode_helpers from '../index';
  *
  * @return {string} The generated HTML.
  */
-export function fromMarkdown(md: any, opts?: Marked.MarkedOptions): string {
+export function fromMarkdown(md: any, opts?: Marked.marked.MarkedOptions): string {
     if (!opts) {
         opts = <any>opts;
     }
 
-    const DEFAULT_OPTS: Marked.MarkedOptions = {
+    const DEFAULT_OPTS: Marked.marked.MarkedOptions = {
         breaks: true,
         gfm: true,
-        langPrefix: '',        
+        langPrefix: '',  
     };
 
     md = vscode_helpers.toStringSafe(md);
 
-    return Marked(
+    return Marked.marked(
         vscode_helpers.toStringSafe(md),
-        MergeDeep(DEFAULT_OPTS, opts),
+        MergeDeep(DEFAULT_OPTS, opts) as Marked.marked.MarkedOptions,
     );
 }

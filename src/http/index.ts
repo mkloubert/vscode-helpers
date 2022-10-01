@@ -271,12 +271,12 @@ export function request(method: string, url: HTTPRequestURL, body?: HTTPRequestB
             const REQUEST = requestFactory();
 
             if (!_.isNil(body)) {
-                if (IsStream.readable(body)) {
+                if (IsStream.isReadableStream(body)) {
                     body.pipe( REQUEST );
                 } else if (Buffer.isBuffer(body)) {
                     REQUEST.write( body );
                 } else {
-                    REQUEST.write( new Buffer(vscode_helpers.toStringSafe(body), 'utf8') );
+                    REQUEST.write( Buffer.from(vscode_helpers.toStringSafe(body), 'utf8') );
                 }
             }
 

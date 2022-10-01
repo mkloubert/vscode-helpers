@@ -273,22 +273,24 @@ async function asBufferInner(val: any, enc?: string,
         );
     }
 
-    if (IsStream.readable(val)) {
+    if (IsStream.isReadableStream(val)) {
         // stream
         return await readAll(val);
     }
 
     if (_.isObject(val)) {
         // JSON object
-        return new Buffer(JSON.stringify(val),
-                          // @ts-ignore
-                          enc);
+        return Buffer.from(
+            JSON.stringify(val),
+            enc as BufferEncoding
+        );
     }
 
     // handle as string
-    return new Buffer(toStringSafe(val),
-                      // @ts-ignore
-                      enc);
+    return Buffer.from(
+        toStringSafe(val),
+        enc as BufferEncoding
+    );
 }
 
 /**
@@ -1038,11 +1040,9 @@ export function readAll(stream: Stream.Readable, enc?: string): Promise<Buffer> 
                 }
 
                 if (_.isString(chunk)) {
-                    // @ts-ignore
-                    chunk = new Buffer(chunk, enc);
+                    chunk = Buffer.from(chunk, enc as BufferEncoding);
                 }
 
-                // @ts-ignore
                 buff = Buffer.concat([ buff, chunk ]);
             } catch (e) {
                 COMPLETED(e);
